@@ -18,11 +18,6 @@
 
 #include "ParserDimacs.hpp"
 
-#include <algorithm>
-
-#include "src/problem/ProblemManager.hpp"
-#include "src/problem/cnf/ProblemManagerCnf.hpp"
-
 namespace d4 {
 
 /**
@@ -34,7 +29,7 @@ namespace d4 {
  */
 void ParserDimacs::readListIntTerminatedByZero(BufferRead &in,
                                                std::vector<int> &list) {
-  int v = -1;
+  int v;
   do {
     v = in.nextInt();
     if (v) list.push_back(v);
@@ -72,8 +67,6 @@ void ParserDimacs::parseWeightedLit(BufferRead &in,
 int ParserDimacs::parse_DIMACS_main(BufferRead &in,
                                     ProblemManagerCnf *problemManager) {
   std::vector<Lit> lits;
-  std::string s;
-
   std::vector<double> &weightLit = problemManager->getWeightLit();
   std::vector<std::vector<Lit>> &clauses = problemManager->getClauses();
 
@@ -88,9 +81,7 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
       in.consumeChar();
       in.skipSpace();
 
-      bool vpActivated = false;
       if (in.currentChar() == 'p') {
-        vpActivated = true;
         in.consumeChar();
       }
       if (in.currentChar() == 'w') in.consumeChar();
@@ -103,8 +94,6 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
       nbVars = in.nextInt();
       nbClauses = in.nextInt();
 
-      if (vpActivated)
-        std::cout << "c Some variable are marked: " << in.nextInt() << "\n";
       weightLit.resize(((nbVars + 1) << 1), 1);
 
       if (nbClauses < 0) printf("parse error\n"), exit(2);

@@ -33,8 +33,6 @@ class BucketSortInfo {
   BucketSortInfo(unsigned s, unsigned e)
       : start(s), end(e), counter(0), redirected(0) {}
 
-  inline void display(std::ostream &out) { out << start << " " << end << "\n"; }
-
   inline void reset(unsigned s, unsigned e) {
     start = s;
     end = e;

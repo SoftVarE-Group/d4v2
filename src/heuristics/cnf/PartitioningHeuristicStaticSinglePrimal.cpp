@@ -58,7 +58,6 @@ PartitioningHeuristicStaticSinglePrimal::
                                             int sumSize, std::ostream &out)
     : PartitioningHeuristicStaticSingle(vm, s, om, nbClause, nbVar, sumSize,
                                         out) {
-  out << "c [CONSTRUCTOR] Static partitioner: primal\n";
 
   m_pm = PartitionerManager::makePartitioner(vm, m_nbVar, m_nbClause, sumSize,
                                              out);

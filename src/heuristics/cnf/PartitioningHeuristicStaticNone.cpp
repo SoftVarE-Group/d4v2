@@ -49,7 +49,6 @@ PartitioningHeuristicStaticNone::PartitioningHeuristicStaticNone(
     po::variables_map &vm, WrapperSolver &s, SpecManager &om, int nbClause,
     int nbVar, int sumSize, std::ostream &out)
     : PartitioningHeuristicStatic(vm, s, om, nbClause, nbVar, sumSize, out) {
-  out << "c [CONSTRUCTOR] Static partitioner: none\n";
 
   m_isInitialized = true;
 }  // constructor

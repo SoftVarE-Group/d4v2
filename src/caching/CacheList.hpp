@@ -47,7 +47,6 @@ class CacheList : public CacheManager<T> {
   CacheList(po::variables_map &vm, unsigned nbVar, SpecManager *specs,
             std::ostream &out)
       : CacheManager<T>(vm, nbVar, specs, out) {
-    out << "c [CACHE LIST CONSTRUCTOR]\n";
     initHashTable(nbVar);
   }  // constructor
 

@@ -41,7 +41,6 @@ class CacheCleaningNone : public CacheCleaningManager<T> {
   void updateCountCachedBucket(CachedBucket<T> *cb, int nbVar) {
   }                                             // nothing to do.
   void reduceCache() {}                         // nothing to do.
-  void printCleaningInfo(std::ostream &out) {}  // nothing to do.
 };
 
 }  // namespace d4

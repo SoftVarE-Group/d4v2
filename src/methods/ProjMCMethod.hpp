@@ -38,12 +38,6 @@ class ProjMCMethod : public MethodManager {
   struct CoupleNotProjClauseSelector {
     std::vector<Lit> clause;
     Lit selector;
-
-    void display() {
-      std::cout << selector << " : ";
-      for (const auto &l : clause) std::cout << l << " ";
-      std::cout << "\n";
-    }
   };
 
   // constants
@@ -100,8 +94,6 @@ class ProjMCMethod : public MethodManager {
     for (auto v : m_problem->getSelectedVar()) m_isProjectedVar[v] = true;
 
     m_refinement = vm["projMC-refinement"].as<bool>();
-    m_out << "c [CONSTRUCTOR] ProjMCMethod: refinement(" << m_refinement
-          << ")\n";
 
     std::vector<std::vector<Lit>> projClause, nprojClause, mix;
     partitionFormula(m_problem, m_isProjectedVar, projClause, nprojClause, mix);
@@ -185,9 +177,6 @@ class ProjMCMethod : public MethodManager {
     p->setClauses(clauses);
 
     // create the counter.
-    m_out << "c [CONSTRUCTOR] Create an external counter: "
-          << "counting"
-          << "\n";
     m_counter = Counter<T>::makeCounter(vm, p, "counting", isFloat, precision,
                                         m_outCounter, m_lastBreath);
   }  // initCounter
@@ -478,7 +467,6 @@ class ProjMCMethod : public MethodManager {
      \return the number of models.
    */
   T compute_(std::vector<Var> &setOfVar, std::ostream &out) {
-    showRun(out);
     m_nbCallRec++;
     // if(m_nbCallRec > 100000) exit(0);
 
@@ -587,84 +575,6 @@ class ProjMCMethod : public MethodManager {
     return compute_(setOfVar, out);
   }  // compute
 
-  /**
-   Print out information about the solving process.
-
-   @param[in] out, the stream we use to print out information.
-*/
-  inline void showInter(std::ostream &out) {
-    out << "c [PROJMC] "
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << m_nbCallRec << std::fixed
-        << std::setprecision(2) << "|" << std::setw(c_WIDTH_PRINT_COLUMN)
-        << getTimer() << "|" << std::setw(c_WIDTH_PRINT_COLUMN)
-        << m_cache->getNbPositiveHit() << "|" << std::setw(c_WIDTH_PRINT_COLUMN)
-        << m_cache->getNbNegativeHit() << "|" << std::setw(c_WIDTH_PRINT_COLUMN)
-        << m_cache->usedMemory() << "|" << std::setw(c_WIDTH_PRINT_COLUMN)
-        << m_nbSplit << "|" << std::setw(c_WIDTH_PRINT_COLUMN)
-        << MemoryStat::memUsedPeak() << "|\n";
-  }  // showInter
-
-  /**
-     Print out a line of dashes.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void separator(std::ostream &out) {
-    out << "c [PROJMC] ";
-    for (unsigned i = 0; i < c_NB_SEP; i++) out << "-";
-    out << "\n";
-  }  // separator
-
-  /**
-     Print out the header information.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void showHeader(std::ostream &out) {
-    separator(out);
-    out << "c [PROJMC] "
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << "#rec. call"
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << "time"
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << "#posHit"
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << "#negHit"
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << "memory"
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << "#split"
-        << "|" << std::setw(c_WIDTH_PRINT_COLUMN) << "mem(MB)"
-        << "|\n";
-    separator(out);
-  }  // showHeader
-
-  /**
-     Print out information when it is requiered.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void showRun(std::ostream &out) {
-    if (!(m_nbCallRec & (c_MASK_HEADER))) showHeader(out);
-    if (m_nbCallRec && !(m_nbCallRec & c_MASK_SHOWRUN)) showInter(out);
-  }  // showRun
-
-  /**
-     Print out the final stat.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void printFinalStats(std::ostream &out) {
-    out << "c [PROJMC] \n";
-    out << "c [PROJMC] \033[1m\033[31mStatistics \033[0m\n";
-    out << "c [PROJMC] \033[33mCompilation Information\033[0m\n";
-    /*
-    out << "c [PROJMC] Number of recursive call: " << nbCallCall << "\n";
-    out << "c [PROJMC] Number of split formula: " << nbSplit << "\n";
-    out << "c [PROJMC] Number of decision: " << nbDecisionNode << "\n";
-    out << "c [PROJMC] Number of paritioner calls: " << callPartitioner << "\n";
-    */
-    out << "c [PROJMC]\n";
-    m_cache->printCacheInformation(out);
-    out << "c [PROJMC] Final time: " << getTimer() << "\n";
-    out << "c\n";
-  }  // printFinalStat
-
  public:
   /**
      Run the DPLL style algorithm with the operation manager.
@@ -673,7 +583,6 @@ class ProjMCMethod : public MethodManager {
    */
   void run(po::variables_map &vm) {
     T res = compute(m_out);
-    printFinalStats(m_out);
     std::cout << "s " << res << "\n";
   }  // run
 };

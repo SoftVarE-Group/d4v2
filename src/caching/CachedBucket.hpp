@@ -48,13 +48,6 @@ class CachedBucket {
   inline unsigned nbVar() { return header.nbVar(); }
   inline void reset() { header.reset(); }
 
-  inline void display() {
-    std::cout << std::bitset<64>(header.info1) << " <<<<<<\n";
-    for (unsigned i = 0; i < header.szData(); i++)
-      std::cout << std::bitset<8>(data[i]) << " ";
-    std::cout << "\n";
-  }
-
   inline DataInfo &getDataInfo() { return header; }
   inline bool sameHeader(CachedBucket<T> &b) { return header == b.header; }
 };

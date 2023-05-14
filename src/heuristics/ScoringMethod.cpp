@@ -41,8 +41,6 @@ ScoringMethod *ScoringMethod::makeScoringMethod(po::variables_map &vm,
   std::string inType = vm["input-type"].as<std::string>();
   std::string meth = vm["scoring-method"].as<std::string>();
 
-  out << "c [CONSTRUCTOR] Variable heuristic: " << meth << "\n";
-
   if (inType == "cnf" || inType == "dimacs") {
     try {
       SpecManagerCnf &ps = dynamic_cast<SpecManagerCnf &>(p);

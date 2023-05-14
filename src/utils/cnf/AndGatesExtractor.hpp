@@ -26,12 +26,6 @@ namespace d4 {
 struct AndGate {
   Lit output;
   std::vector<Lit> input;
-
-  void display() {
-    std::cout << output << " <-> ";
-    for (auto &l : input) std::cout << l << " ";
-    std::cout << "\n";
-  }
 };
 
 class AndGatesExtractor {

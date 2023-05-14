@@ -133,20 +133,7 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
     });
 
     m_nbRemoveEntry += nbRemoveEntry;
-    std::cout << "c #rm=" << nbRemoveEntry << " #allRm=" << m_nbRemoveEntry
-              << " #entries=" << m_cache->getNbEntry() << " limit=" << limit
-              << "\n";
   }  // reduceCache
-
-  /**
-     Print out statistics about the cleaning process.
-
-     @param[in] out, the stream where are print out the information.
-   */
-  void printCleaningInfo(std::ostream &out) {
-    out << "c Number of reduce calls: " << m_nbReduceCall << "\n";
-    out << "c Number of entry removedreduce: " << m_nbRemoveEntry << "\n";
-  }
 };
 
 }  // namespace d4

@@ -52,10 +52,8 @@ class CacheCleaningManager {
     std::string crs = vm["cache-reduction-strategy"].as<std::string>();
 
     if (crs == "expectation") {
-      out << "c [CONSTRUCTOR] Cache cleaning manager: " << crs << "\n";
       return new CacheCleaningExpectation<T>(cache, nbVar);
     } else {
-      out << "c [CONSTRUCTOR] Cache cleaning manager: " << crs << "\n";
       return new CacheCleaningNone<T>(cache);
     }
 
@@ -66,7 +64,6 @@ class CacheCleaningManager {
   virtual void initCountCachedBucket(CachedBucket<T> *cb) = 0;
   virtual void updateCountCachedBucket(CachedBucket<T> *cb, int nbVar) = 0;
   virtual void reduceCache() = 0;
-  virtual void printCleaningInfo(std::ostream &out) = 0;
 
   /**
      Ask to the bucket manager to release some memory block.

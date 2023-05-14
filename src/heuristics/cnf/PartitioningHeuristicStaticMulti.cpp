@@ -112,7 +112,6 @@ void PartitioningHeuristicStaticMulti::init(std::ostream &out) {
   }
 
   m_ratio = (double)cptMarked / (double)cpt;
-  out << "c [TREE DECOMPOSITION] cover ratio: " << m_ratio << "\n";
 
   if (m_ratio < 0.5)
     m_partitionStaticUsed = m_partitionStaticDual;
@@ -120,10 +119,7 @@ void PartitioningHeuristicStaticMulti::init(std::ostream &out) {
     m_partitionStaticUsed = m_partitionStaticPrimal;
 
   // compute the decomposition.
-  out << "c [TREE DECOMPOSITION] Start tree decomposition generation ... "
-      << std::flush;
   computeDecomposition(component, m_equivClass, equivVar);
-  out << "done\n";
 
   // restore the initial state.
   m_om.postUpdate(unitEquiv);

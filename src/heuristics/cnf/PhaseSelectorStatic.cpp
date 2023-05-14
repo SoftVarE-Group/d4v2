@@ -30,8 +30,6 @@ PhaseSelectorStatic::PhaseSelectorStatic(
     PartitioningHeuristicStaticSingle *staticPartitioner, unsigned limitPhase,
     std::ostream &out)
     : PhaseSelectorManager(staticPartitioner) {
-  out << "c [CONSTRUCTOR] Switching between static and dynamic decompostion:"
-      << " static\n";
   m_limitPhase = limitPhase;
 }  // constructor
 

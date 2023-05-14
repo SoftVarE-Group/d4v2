@@ -17,8 +17,6 @@
  */
 #include "ProblemManager.hpp"
 
-#include <iostream>
-
 #include "cnf/ProblemManagerCnf.hpp"
 #include "src/exceptions/FactoryException.hpp"
 
@@ -36,8 +34,6 @@ ProblemManager *ProblemManager::makeProblemManager(po::variables_map &vm,
   std::string in = vm["input"].as<std::string>();
   std::string inType = vm["input-type"].as<std::string>();
   std::string meth = vm["method"].as<std::string>();
-
-  out << "c [CONSTRUCTOR] Problem: " << in << " " << inType << "\n";
 
   ProblemManager *ret = NULL;
   if (inType == "cnf" || inType == "dimacs") ret = new ProblemManagerCnf(in);

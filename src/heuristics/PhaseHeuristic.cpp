@@ -37,9 +37,6 @@ PhaseHeuristic *PhaseHeuristic::makePhaseHeuristic(po::variables_map &vm,
   std::string meth = vm["phase-heuristic"].as<std::string>();
   bool rev = vm["phase-heuristic-reversed"].as<bool>();
 
-  out << "c [CONSTRUCTOR] Phase heuristic: " << meth
-      << ((rev) ? "(reversed)" : "") << "\n";
-
   if (meth == "false") return new PhaseHeuristicFalse(rev);
   if (meth == "true") return new PhaseHeuristicTrue(rev);
   if (meth == "polarity") return new PhaseHeuristicPolarity(p, rev);

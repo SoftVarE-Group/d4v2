@@ -132,10 +132,8 @@ class DpllStyleMethod : public MethodManager, public Counter<T> {
 
     // select the partitioner regarding if it projected model counting or not.
     if ((m_isProjectedMode = m_problem->getNbSelectedVar())) {
-      m_out << "c [MODE] projected\n";
-      m_hCutSet = PartitioningHeuristic::makePartitioningHeuristicNone(m_out);
+      m_hCutSet = PartitioningHeuristic::makePartitioningHeuristicNone();
     } else {
-      m_out << "c [MODE] classic\n";
       m_hCutSet = PartitioningHeuristic::makePartitioningHeuristic(
           vm, *m_specs, *m_solver, m_out);
     }
@@ -155,10 +153,9 @@ class DpllStyleMethod : public MethodManager, public Counter<T> {
     nbTestCacheVarSize.resize(m_specs->getNbVariable() + 1, 0);
     nbPosHitCacheVarSize.resize(m_specs->getNbVariable() + 1, 0);
 
-    void *op = Operation<T, U>::makeOperationManager(meth, isFloat, m_problem,
-                                                     m_specs, m_solver, m_out);
+    void *op = Operation<T, U>::makeOperationManager(meth, m_problem,
+                                                     m_specs, m_solver);
     m_operation = static_cast<Operation<T, U> *>(op);
-    m_out << "c\n";
   }  // constructor
 
   /**
@@ -231,89 +228,6 @@ class DpllStyleMethod : public MethodManager, public Counter<T> {
   }  // computePrioritySet
 
   /**
-     Print out information about the solving process.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void showInter(std::ostream &out) {
-    out << "c " << std::fixed << std::setprecision(2) << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << getTimer() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_cache->getNbPositiveHit()
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC)
-        << m_cache->getNbNegativeHit() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_cache->usedMemory() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbSplit << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << MemoryStat::memUsedPeak() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbDecisionNode << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_callPartitioner << "|\n";
-  }  // showInter
-
-  /**
-     Print out a line of dashes.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void separator(std::ostream &out) {
-    out << "c ";
-    for (int i = 0; i < NB_SEP_MC; i++) out << "-";
-    out << "\n";
-  }  // separator
-
-  /**
-     Print out the header information.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void showHeader(std::ostream &out) {
-    separator(out);
-    out << "c "
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "time"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#posHit"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#negHit"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "memory"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#split"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "mem(MB)"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#dec. Node"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#cutter"
-        << "|\n";
-    separator(out);
-  }  // showHeader
-
-  /**
-     Print out information when it is requiered.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void showRun(std::ostream &out) {
-    if (!(m_nbCallCall & (MASK_HEADER))) showHeader(out);
-    if (m_nbCallCall && !(m_nbCallCall & MASK_SHOWRUN_MC)) showInter(out);
-  }  // showRun
-
-  /**
-     Print out the final stat.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void printFinalStats(std::ostream &out) {
-    separator(out);
-    out << "c\n";
-    out << "c \033[1m\033[31mStatistics \033[0m\n";
-    out << "c \033[33mCompilation Information\033[0m\n";
-    out << "c Number of recursive call: " << m_nbCallCall << "\n";
-    out << "c Number of split formula: " << m_nbSplit << "\n";
-    out << "c Number of decision: " << m_nbDecisionNode << "\n";
-    out << "c Number of paritioner calls: " << m_callPartitioner << "\n";
-    out << "c\n";
-    m_cache->printCacheInformation(out);
-    if (m_hCutSet) {
-      out << "c\n";
-      m_hCutSet->displayStat(out);
-    }
-    out << "c Final time: " << getTimer() << "\n";
-    out << "c\n";
-  }  // printFinalStat
-
-  /**
      Initialize the assumption in order to compute compiled formula under this
      one.
 
@@ -346,7 +260,6 @@ class DpllStyleMethod : public MethodManager, public Counter<T> {
   */
   U compute_(std::vector<Var> &setOfVar, std::vector<Lit> &unitsLit,
              std::vector<Var> &freeVariable, std::ostream &out) {
-    showRun(out);
     m_nbCallCall++;
 
     if (!m_solver->solve(setOfVar)) return m_operation->manageBottom();
@@ -531,7 +444,6 @@ class DpllStyleMethod : public MethodManager, public Counter<T> {
     for (int i = 1; i <= m_specs->getNbVariable(); i++) setOfVar.push_back(i);
 
     U result = compute(setOfVar, m_out);
-    printFinalStats(m_out);
     m_operation->manageResult(result, vm, m_out);
   }  // run
 };

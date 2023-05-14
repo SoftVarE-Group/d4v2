@@ -255,15 +255,6 @@ class BucketManagerCnfSym : public BucketManagerCnf<T> {
     m_vecBucketSortInfo.resize(0);
   }  // initSortBucket
 
-  inline void showListBucketSort(std::vector<BucketSortInfo> &v,
-                                 std::ostream &out) {
-    out << "size = " << v.size() << "\n";
-    for (auto &e : v)
-      out << "[" << e.start << " " << e.end << " " << e.counter << " "
-          << e.redirected << "]";
-    out << "\n";
-  }  // showListBucketSort
-
   /**
      Compute the number of bytes requiered to store the data.
    */

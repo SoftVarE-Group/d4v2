@@ -137,7 +137,9 @@ class DecisionDNNFOperation : public Operation<T, U> {
      @param[in] out, the output stream.
   */
   void manageResult(U &result, po::variables_map &vm, std::ostream &out) {
-    if (vm.count("dump-ddnnf")) {
+    if (vm.count("dump-ddnnf-stdout")) {
+			m_nodeManager->printNNF(result, std::cout);
+    } else if (vm.count("dump-ddnnf")) {
       std::ofstream outFile;
       std::string fileName = vm["dump-ddnnf"].as<std::string>();
       outFile.open(fileName);
@@ -150,7 +152,7 @@ class DecisionDNNFOperation : public Operation<T, U> {
 
       std::string fileName = vm["query"].as<std::string>();
       QueryManager queryManager(fileName);
-      TypeQuery typeQuery = TypeQuery::QueryEnd;
+      TypeQuery typeQuery;
 
       do {
         typeQuery = queryManager.next(query);
@@ -161,12 +163,7 @@ class DecisionDNNFOperation : public Operation<T, U> {
         }
 
         if (typeQuery == TypeQuery::QueryCounting) {
-          out << "s " << std::fixed
-              << m_nodeManager->computeNbModels(result, fixedValue, *m_problem)
-              << "\n";
-        } else if (typeQuery == TypeQuery::QueryDecision) {
-          bool res = m_nodeManager->isSAT(result, fixedValue);
-          out << "s " << ((res) ? "SAT" : "UNS") << "\n";
+          m_nodeManager->computeNbModels(result, fixedValue, *m_problem);
         }
 
         for (auto &l : query) {
@@ -177,9 +174,7 @@ class DecisionDNNFOperation : public Operation<T, U> {
     } else {
       std::vector<ValueVar> fixedValue(m_problem->getNbVar() + 1,
                                        ValueVar::isNotAssigned);
-      out << "s " << std::fixed
-          << m_nodeManager->computeNbModels(result, fixedValue, *m_problem)
-          << "\n";
+      m_nodeManager->computeNbModels(result, fixedValue, *m_problem);
     }
 
     m_nodeManager->deallocate(result);
