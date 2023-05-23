@@ -48,7 +48,6 @@ class Counter {
                                  std::string meth, bool isFloat, int precision,
                                  std::ostream &out,
                                  LastBreathPreproc &lastBreath) {
-    out << "c [CONSTRUCTOR] MethodManager: " << meth << "\n";
     boost::multiprecision::mpf_float::default_precision(
         precision);  // we set the precision
 

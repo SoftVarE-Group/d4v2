@@ -29,8 +29,6 @@ namespace d4 {
 PhaseSelectorNone::PhaseSelectorNone(
     PartitioningHeuristicStaticSingle *staticPartitioner, std::ostream &out)
     : PhaseSelectorManager(staticPartitioner) {
-  out << "c [CONSTRUCTOR] Switching between static and dynamic decomposition:"
-      << " none\n";
 }  // constructor
 
 /**

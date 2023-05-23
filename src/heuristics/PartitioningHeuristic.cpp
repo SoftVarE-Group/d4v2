@@ -17,8 +17,6 @@
  */
 #include "PartitioningHeuristic.hpp"
 
-#include <bitset>
-
 #include "PartitioningHeuristicNone.hpp"
 #include "cnf/PartitioningHeuristicBipartiteDual.hpp"
 #include "cnf/PartitioningHeuristicBipartitePrimal.hpp"
@@ -26,7 +24,6 @@
 #include "cnf/PartitioningHeuristicStaticSingleDual.hpp"
 #include "cnf/PartitioningHeuristicStaticSinglePrimal.hpp"
 #include "src/exceptions/FactoryException.hpp"
-#include "src/utils/AtMost1Extractor.hpp"
 
 namespace d4 {
 
@@ -35,9 +32,7 @@ namespace d4 {
 
    @param[in] out, the stream where is print out the log.
  */
-PartitioningHeuristic *PartitioningHeuristic::makePartitioningHeuristicNone(
-    std::ostream &out) {
-  out << "c [CONSTRUCTOR] Partitioner manager: none\n";
+PartitioningHeuristic *PartitioningHeuristic::makePartitioningHeuristicNone() {
   return new PartitioningHeuristicNone();
 }  // makePartitioningHeuristicNone
 
@@ -55,25 +50,7 @@ PartitioningHeuristic *PartitioningHeuristic::makePartitioningHeuristic(
   std::string meth = vm["partitioning-heuristic"].as<std::string>();
   std::string inType = vm["input-type"].as<std::string>();
 
-  if (meth == "none") return makePartitioningHeuristicNone(out);
-
-  bool reduceFormula =
-      vm["partitioning-heuristic-simplification-hyperedge"].as<bool>();
-  bool equivSimp =
-      vm["partitioning-heuristic-simplification-equivalence"].as<bool>();
-  int staticPhase =
-      vm["partitioning-heuristic-bipartite-phase-static"].as<int>();
-  double dynamicPhase =
-      vm["partitioning-heuristic-bipartite-phase-dynamic"].as<double>();
-  std::string phase =
-      vm["partitioning-heuristic-bipartite-phase"].as<std::string>();
-
-  out << "c [CONSTRUCTOR] Partitioner manager: " << meth << " " << inType << " "
-      << "reduceFormula(" << reduceFormula << ") "
-      << "equivSimp(" << equivSimp << ") "
-      << "phase(" << phase << ") "
-      << "dynamicPhase(" << dynamicPhase << ") "
-      << "staticPhase(" << staticPhase << ")\n";
+  if (meth == "none") return makePartitioningHeuristicNone();
 
   if (inType == "cnf" || inType == "dimacs") {
     if (meth == "bipartition-primal")

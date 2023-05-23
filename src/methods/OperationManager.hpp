@@ -43,12 +43,9 @@ class Operation {
 
      \return an operation manager regarding the given options.
   */
-  static void *makeOperationManager(std::string &meth, bool isFloat,
+  static void *makeOperationManager(std::string &meth,
                                     ProblemManager *problem, SpecManager *specs,
-                                    WrapperSolver *solver, std::ostream &out) {
-    out << "c [CONSTRUCTOR] Operation: "
-        << "method(" << meth << ") "
-        << "float(" << isFloat << ")\n";
+                                    WrapperSolver *solver) {
 
     if (meth == "counting") return new CountingOperation<T>(problem);
 

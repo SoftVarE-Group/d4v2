@@ -66,13 +66,6 @@ class BucketManager {
     unsigned long sizeAdditionalPage =
         vm["cache-size-additional-page"].as<unsigned long>();
 
-    out << "c [CONSTRUCTOR] Cache bucket manager:"
-        << " storage(" << css << ") "
-        << " representation(" << ccr << ") "
-        << " size_first_page(" << sizeFirstPage << ")"
-        << " size_additional_page(" << sizeAdditionalPage << ")"
-        << "\n";
-
     ModeStore mode = ALL;
     if (css == "not-binary") mode = NB;
     if (css == "not-touched") mode = NT;
@@ -92,11 +85,6 @@ class BucketManager {
           vm["cache-clause-representation-combi-limitVar-sym"].as<unsigned>();
       unsigned limitNbVarIndex =
           vm["cache-clause-representation-combi-limitVar-index"].as<unsigned>();
-
-      out << "c [CONSTRUCTOR] Cache bucket manager mixed strategy:"
-          << " limit #var sym(" << limitNbVarSym << ") "
-          << " limit #var index (" << limitNbVarIndex << ") "
-          << "\n";
 
       return new BucketManagerCnfCombi<T>(scnf, cache, mode, sizeFirstPage,
                                           sizeAdditionalPage, limitNbVarSym,

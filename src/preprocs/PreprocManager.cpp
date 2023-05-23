@@ -33,8 +33,6 @@ PreprocManager *PreprocManager::makePreprocManager(po::variables_map &vm,
   std::string meth = vm["preproc"].as<std::string>();
   std::string inputType = vm["input-type"].as<std::string>();
 
-  out << "c [CONSTRUCTOR] Preproc: " << meth << " " << inputType << "\n";
-
   if (inputType == "cnf" || inputType == "dimacs") {
     if (meth == "basic") return new PreprocBasicCnf(vm, out);
     if (meth == "backbone") return new PreprocBackboneCnf(vm, out);

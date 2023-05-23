@@ -159,7 +159,6 @@ public:
 
     m_stampIdx = 0;
     m_stampVar.resize(m_specs->getNbVariable() + 1, 0);
-    m_out << "c\n";
 
     // init the memory requierd for storing interpretation.
     m_memoryPages.push_back(new u_int8_t[c_sizePage]);
@@ -184,90 +183,12 @@ public:
   } // destructor
 
 private:
-  /**
-     Print out information about the solving process.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void showInter(std::ostream &out) {
-    out << "c "
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbCallCall << std::fixed
-        << std::setprecision(2) << "|" << std::setw(WIDTH_PRINT_COLUMN_MC)
-        << getTimer() << "|" << std::setw(WIDTH_PRINT_COLUMN_MC)
-        << m_cacheInd->getNbPositiveHit() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_cacheInd->getNbNegativeHit()
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << m_cacheInd->usedMemory()
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbSplit << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << MemoryStat::memUsedPeak() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbDecisionNode << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_minCount << "|\n";
-  } // showInter
-
-  /**
-     Print out a line of dashes.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void separator(std::ostream &out) {
-    out << "c ";
-    for (int i = 0; i < NB_SEP; i++)
-      out << "-";
-    out << "\n";
-  } // separator
-
-  /**
-     Print out the header information.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void showHeader(std::ostream &out) {
-    separator(out);
-    out << "c "
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#compile"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "time"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#posHit"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#negHit"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "memory"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#split"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "mem(MB)"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#dec. Node"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "max#count"
-        << "|\n";
-    separator(out);
-  } // showHeader
-
-  /**
-     Print out information when it is requiered.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void showRun(std::ostream &out) {
-    if (!(m_nbCallCall & (MASK_HEADER)))
-      showHeader(out);
-    if (m_nbCallCall && !(m_nbCallCall & MASK_SHOWRUN_MC))
-      showInter(out);
-  } // showRun
 
   /**
      Print out the final stat.
 
      @param[in] out, the stream we use to print out information.
    */
-  inline void printFinalStats(std::ostream &out) {
-    separator(out);
-    out << "c\n";
-    out << "c \033[1m\033[31mStatistics \033[0m\n";
-    out << "c \033[33mCompilation Information\033[0m\n";
-    out << "c Number of recursive call: " << m_nbCallCall << "\n";
-    out << "c Number of split formula: " << m_nbSplit << "\n";
-    out << "c Number of decision: " << m_nbDecisionNode << "\n";
-    out << "c\n";
-    m_cacheInd->printCacheInformation(out);
-    out << "c\n";
-    m_cacheMax->printCacheInformation(out);
-    out << "c Final time: " << getTimer() << "\n";
-    out << "c\n";
-  } // printFinalStat
 
   /**
    * @brief Get a pointer on an allocated array of size m_sizeArray (which is
@@ -330,7 +251,6 @@ private:
                           std::vector<Lit> &unitsLit,
                           std::vector<Var> &freeVariable, std::ostream &out,
                           MinSharpSatResult &result) {
-    showRun(out);
     m_nbCallCall++;
 
     // is the problem still satisifiable?
@@ -503,7 +423,6 @@ private:
    */
   T countInd_(std::vector<Var> &setOfVar, std::vector<Lit> &unitsLit,
               std::vector<Var> &freeVariable, std::ostream &out) {
-    showRun(out);
     m_nbCallCall++;
 
     if (!m_solver->solve(setOfVar))
@@ -620,7 +539,6 @@ public:
 
     MinSharpSatResult result;
     compute(setOfVar, m_out, result);
-    printFinalStats(m_out);
     std::cout << "v ";
     for (unsigned i = 0; i < m_problem->getMaxVar().size(); i++)
       std::cout << ((result.valuation[i]) ? "" : "-")

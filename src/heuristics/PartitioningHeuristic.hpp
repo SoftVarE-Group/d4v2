@@ -46,8 +46,7 @@ class PartitioningHeuristic {
                                                           WrapperSolver &ws,
                                                           std::ostream &out);
 
-  static PartitioningHeuristic *makePartitioningHeuristicNone(
-      std::ostream &out);
+  static PartitioningHeuristic *makePartitioningHeuristicNone();
 
   /**
      Compute a cutset regarding the subformula built on the set of given

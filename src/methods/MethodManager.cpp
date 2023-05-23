@@ -19,16 +19,12 @@
 #include "MethodManager.hpp"
 
 #include <boost/multiprecision/cpp_int.hpp>
-#include <boost/multiprecision/gmp.hpp>
 
 #include "DpllStyleMethod.hpp"
 #include "MaxSharpSAT.hpp"
 #include "MinSharpSAT.hpp"
 #include "OperationManager.hpp"
 #include "ProjMCMethod.hpp"
-#include "src/exceptions/BadBehaviourException.hpp"
-#include "src/exceptions/FactoryException.hpp"
-#include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
 namespace mpz = boost::multiprecision;
@@ -47,10 +43,6 @@ MethodManager *MethodManager::makeMethodManager(po::variables_map &vm,
 
   // the initial problem.
   ProblemManager *initProblem = ProblemManager::makeProblemManager(vm, out);
-  out << "c [INITIAL INPUT] \033[4m\033[32mStatistics about the input "
-         "formula\033[0m\n";
-  initProblem->displayStat(out, "c [INITIAL INPUT] ");
-  out << "c\n";
   assert(initProblem);
 
   MethodManager *ret =
@@ -77,13 +69,10 @@ MethodManager *MethodManager::makeMethodManager(po::variables_map &vm,
                                                 std::string meth, int precision,
                                                 bool isFloat,
                                                 std::ostream &out) {
-  out << "c [CONSTRUCTOR] MethodManager: " << meth << "\n";
   boost::multiprecision::mpf_float::default_precision(precision);
 
   LastBreathPreproc lastBreath;
   ProblemManager *runProblem = runPreproc(vm, problem, out, lastBreath);
-  displayInfoVariables(runProblem, out);
-  out << "c [MODE] Panic: " << lastBreath.panic << "\n";
 
   if (meth == "counting") {
     if (!isFloat)
@@ -132,37 +121,6 @@ MethodManager *MethodManager::makeMethodManager(po::variables_map &vm,
   throw(FactoryException("Cannot create a MethodManager", __FILE__, __LINE__));
 }  // makeMethodManager
 
-/**
- * @brief Display the projected variables in order.
- * @param[in] selected The list of projected variables.
- * @param[in] out The stream where is printed out the information.
- */
-void MethodManager::displayInfoVariables(ProblemManager *problem,
-                                         std::ostream &out) {
-  std::vector<Var> &selected = problem->getSelectedVar();
-  if (selected.size()) {
-    out << "c\nc [PROJECTED VARIABLES] list: ";
-    std::sort(selected.begin(), selected.end());
-    for (auto v : selected) out << v << " ";
-    out << "\nc\n";
-  }
-
-  std::vector<Var> &maxVar = problem->getMaxVar();
-  if (maxVar.size()) {
-    out << "c\nc [MAX VARIABLES] list: ";
-    std::sort(maxVar.begin(), maxVar.end());
-    for (auto v : maxVar) out << v << " ";
-    out << "\nc\n";
-  }
-
-  std::vector<Var> &indVar = problem->getIndVar();
-  if (indVar.size()) {
-    out << "c\nc [IND VARIABLES] list: ";
-    std::sort(indVar.begin(), indVar.end());
-    for (auto v : indVar) out << v << " ";
-    out << "\nc\n";
-  }
-}  // displayInfoProjected
 
 /**
  * @brief Run the preproc method before constructing the method.
@@ -180,10 +138,6 @@ ProblemManager *MethodManager::runPreproc(po::variables_map &vm,
   PreprocManager *preproc = PreprocManager::makePreprocManager(vm, out);
   assert(preproc);
   ProblemManager *problem = preproc->run(initProblem, lastBreath);
-  out << "c [MAIN PREPROCESSED INPUT] \033[4m\033[32mStatistics about the "
-         "preprocessed formula\033[0m\n";
-  problem->displayStat(out, "c [PREPROCESSED INPUT] ");
-  out << "c\n";
   assert(problem);
   delete preproc;  // the preproc won't be used.
 

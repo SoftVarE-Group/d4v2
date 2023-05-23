@@ -55,7 +55,6 @@ PartitioningHeuristicStaticSingleDual::PartitioningHeuristicStaticSingleDual(
     int nbVar, int sumSize, std::ostream &out)
     : PartitioningHeuristicStaticSingle(vm, s, om, nbClause, nbVar, sumSize,
                                         out) {
-  out << "c [CONSTRUCTOR] Static partitioner: dual\n";
 
   m_pm = PartitionerManager::makePartitioner(vm, m_nbClause, m_nbVar, sumSize,
                                              out);

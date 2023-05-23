@@ -52,7 +52,6 @@ class CacheNoCollision : public CacheManager<T> {
   CacheNoCollision(po::variables_map &vm, unsigned nbVar, SpecManager *specs,
                    std::ostream &out)
       : CacheManager<T>(vm, nbVar, specs, out) {
-    out << "c [CACHE NO-COLLISION CONSTRUCTOR]\n";
     initHashTable(nbVar);
   }  // constructor
 

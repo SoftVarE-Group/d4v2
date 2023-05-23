@@ -94,15 +94,6 @@ ProblemManager *PreprocBackboneCnf::run(ProblemManager *pin,
   std::vector<Lit> units;
   ws->getUnits(units);
 
-  // some statistics.
-  std::cout << "c [PREPOC BACKBONE] Number of SAT calls: " << nbSatCalls
-            << "\n";
-  std::cout << "c [PREPOC BACKBONE] Backone size: " << units.size() << "\n";
-  std::cout << "c [PREPOC BACKBONE] Number of units detected: " << nbFoundUnit
-            << "\n";
-  std::cout << "c [PREPOC BACKBONE] Panic in the preprocessing: "
-            << lastBreath.panic << "\n";
-
   return pin->getConditionedFormula(units);
 }  // run
 }  // namespace d4

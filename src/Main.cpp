@@ -19,9 +19,6 @@
 
 #include <boost/multiprecision/gmp.hpp>
 #include <boost/program_options.hpp>
-#include <cassert>
-#include <iostream>
-#include <vector>
 
 #include "src/methods/MethodManager.hpp"
 
@@ -35,7 +32,6 @@ d4::MethodManager *methodRun = nullptr;
  * @param signum is the signal.
  */
 void signalHandler(int signum) {
-  std::cout << "c [MAIN] Method stop\n";
   if (methodRun != nullptr) methodRun->interrupt();
   exit(signum);
 }  // signalHandler
@@ -64,7 +60,7 @@ int main(int argc, char **argv) {
   // help or problem with the command line
   if (vm.count("help") || !vm.count("input")) {
     if (!vm.count("help"))
-      std::cout << "Some parameters are missing, please read the README\n";
+		std::cout << "Some parameters are missing, please read the README\n";
     std::cout << "USAGE: " << argv[0] << " -i INPUT -m METH [OPTIONS]\n";
     std::cout << desc << '\n';
     exit(!vm.count("help"));

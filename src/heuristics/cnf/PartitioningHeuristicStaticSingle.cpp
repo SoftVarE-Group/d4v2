@@ -93,10 +93,7 @@ void PartitioningHeuristicStaticSingle::init(std::ostream &out) {
   m_om.preUpdate(unitEquiv);
 
   // compute the decomposition.
-  out << "c [TREE DECOMPOSITION] Start tree decomposition generation ... "
-      << std::flush;
   computeDecomposition(component, m_equivClass, equivVar, m_bucketNumber);
-  out << "done\n";
 
   // restore the initial state.
   m_om.postUpdate(unitEquiv);

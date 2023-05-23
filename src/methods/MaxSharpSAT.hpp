@@ -62,12 +62,6 @@ class MaxSharpSAT : public MethodManager {
 
     MaxSharpSatResult() : count(T(0)), valuation(NULL) {}
     MaxSharpSatResult(const T c, u_int8_t *v) : count(c), valuation(v) {}
-
-    void display(unsigned size) {
-      assert(valuation);
-      for (unsigned i = 0; i < size; i++) std::cout << (int)valuation[i] << " ";
-      std::cout << "\n";
-    }
   };
 
  private:
@@ -136,18 +130,6 @@ class MaxSharpSAT : public MethodManager {
     m_out.clear(out.rdstate());
     m_out.basic_ios<char>::rdbuf(out.rdbuf());
 
-    m_heuristicMax = vm["maxsharpsat-heuristic-phase"].as<std::string>();
-    m_out << "c [CONSTRUCTOR MAX#SAT] Heuristic on MAX variables: "
-          << m_heuristicMax << "\n";
-    m_heuristicMaxRdm = vm["maxsharpsat-heuristic-phase-random"].as<unsigned>();
-    m_out << "c [CONSTRUCTOR MAX#SAT] Use random on MAX variables: "
-          << m_heuristicMaxRdm << "\n";
-    m_threshold = vm["maxsharpsat-threshold"].as<double>();
-    m_out << "c [CONSTRUCTOR MAX#SAT] Threshold: " << m_threshold << "\n";
-    m_andDig = vm["maxsharpsat-option-and-dig"].as<bool>();
-    m_out << "c [CONSTRUCTOR MAX#SAT] Dig for a partial solution under an AND: "
-          << m_andDig << "\n";
-
     // we create the SAT solver.
     m_solver = WrapperSolver::makeWrapperSolver(vm, m_out);
     assert(m_solver);
@@ -199,16 +181,11 @@ class MaxSharpSAT : public MethodManager {
     // init the clock time.
     initTimer();
 
-    m_greedyInitActivated = vm["maxsharpsat-option-greedy-init"].as<bool>();
-    m_out << "c [MAX#SAT] Greedy init activated: " << m_greedyInitActivated
-          << "\n";
-
     m_optCached = vm["cache-activated"].as<bool>();
     m_nbCallProj = m_nbDecisionNode = m_nbSplit = m_nbCallCall = 0;
 
     m_stampIdx = 0;
     m_stampVar.resize(m_specs->getNbVariable() + 1, 0);
-    m_out << "c\n";
 
     // init the memory required for storing interpretation.
     m_memoryPages.push_back(new u_int8_t[c_sizePage]);
@@ -245,7 +222,6 @@ class MaxSharpSAT : public MethodManager {
   void printSolution(MaxSharpSatResult &solution, char status) {
     assert(solution.valuation);
     assert(m_problem->getMaxVar().size() == m_sizeArray);
-    std::cout << "v ";
     for (unsigned i = 0; i < m_problem->getMaxVar().size(); i++) {
       std::cout << ((solution.valuation[i]) ? "" : "-")
                 << m_problem->getMaxVar()[i] << " ";
@@ -254,92 +230,6 @@ class MaxSharpSAT : public MethodManager {
     std::cout << status << " " << std::fixed << std::setprecision(50)
               << solution.count << "\n";
   }  // printSolution
-
-  /**
-     Print out information about the solving process.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void showInter(std::ostream &out) {
-    out << "c "
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbCallCall << std::fixed
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbCallProj << std::fixed
-        << std::setprecision(2) << "|" << std::setw(WIDTH_PRINT_COLUMN_MC)
-        << getTimer() << "|" << std::setw(WIDTH_PRINT_COLUMN_MC)
-        << m_cacheInd->getNbPositiveHit() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_cacheInd->getNbNegativeHit()
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << m_cacheInd->usedMemory()
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbSplit << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << MemoryStat::memUsedPeak() << "|"
-        << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbDecisionNode << "|"
-        << std::scientific << std::setw(WIDTH_PRINT_COLUMN_MC)
-        << m_maxCount.count << "|\n";
-  }  // showInter
-
-  /**
-     Print out a line of dashes.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void separator(std::ostream &out) {
-    out << "c ";
-    for (int i = 0; i < NB_SEP; i++) out << "-";
-    out << "\n";
-  }  // separator
-
-  /**
-     Print out the header information.
-
-     @param[in] out, the stream we use to print out information.
-  */
-  inline void showHeader(std::ostream &out) {
-    separator(out);
-    out << "c "
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#call(m)"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#call(i)"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "time"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#posHit"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#negHit"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "memory"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#split"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "mem(MB)"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "#dec. Node"
-        << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "max#count"
-        << "|\n";
-    separator(out);
-  }  // showHeader
-
-  /**
-     Print out information when it is required.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void showRun(std::ostream &out) {
-    unsigned nbCall = m_nbCallCall + m_nbCallProj;
-    if (!(nbCall & (MASK_HEADER))) showHeader(out);
-    if (nbCall && !(nbCall & MASK_SHOWRUN_MC)) showInter(out);
-  }  // showRun
-
-  /**
-     Print out the final stat.
-
-     @param[in] out, the stream we use to print out information.
-   */
-  inline void printFinalStats(std::ostream &out) {
-    separator(out);
-    out << "c\n"
-        << "c \033[1m\033[31mStatistics \033[0m\n"
-        << "c \033[33mCompilation Information\033[0m\n"
-        << "c Number of recursive call: " << m_nbCallCall << "\n"
-        << "c Number of split formula: " << m_nbSplit << "\n"
-        << "c Number of decision: " << m_nbDecisionNode << "\n"
-        << "c\n";
-    m_cacheInd->printCacheInformation(out);
-    out << "c\n";
-    m_cacheMax->printCacheInformation(out);
-    out << "c Final time: " << getTimer() << "\n";
-    out << "c\n";
-  }  // printFinalStat
 
   /**
    * @brief Get a pointer on an allocated array of size m_sizeArray (which is
@@ -467,8 +357,6 @@ class MaxSharpSAT : public MethodManager {
                           std::vector<Var> &freeVariable, std::ostream &out,
                           MaxSharpSatResult &result) {
     if (m_stopProcess) return;
-
-    showRun(out);
     m_nbCallCall++;
 
     // is the problem still satisfiable?
@@ -677,8 +565,6 @@ class MaxSharpSAT : public MethodManager {
   T countInd_(std::vector<Var> &setOfVar, std::vector<Lit> &unitsLit,
               std::vector<Var> &freeVariable, std::ostream &out) {
     if (m_stopProcess) return T(0);
-
-    showRun(out);
     m_nbCallProj++;
 
     if (!m_solver->solve(setOfVar)) return T(0);
@@ -833,7 +719,6 @@ class MaxSharpSAT : public MethodManager {
       MaxSharpSatResult greedyResult;
       greedySearch(setOfVar, out, greedyResult);
       updateBound(greedyResult, setOfVar);
-      std::cout << "c Greedy search done: " << greedyResult.count << "\n";
     }
 
     DataBranch<T> b;
@@ -873,7 +758,6 @@ class MaxSharpSAT : public MethodManager {
 
     MaxSharpSatResult result;
     compute(setOfVar, m_out, result);
-    printFinalStats(m_out);
     if (!m_stopProcess) {
       if (m_threshold < 0)
         printSolution(result, 'o');

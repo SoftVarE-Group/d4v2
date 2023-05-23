@@ -173,8 +173,7 @@ class NodeManagerTyped : public NodeManager<T> {
   }  // isSAT
 
   void printNNF(Node<T> *node, std::ostream &out) {
-    unsigned (*func[TypeNode::count])(Node<T> * node, unsigned (*t[])(),
-                                      std::ostream &, unsigned &, unsigned);
+    unsigned (*func[TypeNode::count])(Node<T> * node, unsigned (*t[])(), std::ostream &, unsigned &, unsigned);
     func[TypeNode::TypeDecAndNode] = DecomposableAndNode<T, U>::printNNF;
     func[TypeNode::TypeIteNode] = BinaryDeterministicOrNode<T, U>::printNNF;
     func[TypeNode::TypeUnaryNode] = UnaryNode<T, U>::printNNF;
@@ -183,8 +182,7 @@ class NodeManagerTyped : public NodeManager<T> {
 
     m_globalStamp++;
     unsigned idx = 1;
-    func[node->header.typeNode](node, (unsigned (**)())func, out, idx,
-                                m_globalStamp);
+    func[node->header.typeNode](node, (unsigned (**)()) func, out, idx, m_globalStamp);
   }  // printNNF
 
   /**

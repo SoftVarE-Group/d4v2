@@ -34,8 +34,6 @@ WrapperSolver *WrapperSolver::makeWrapperSolver(po::variables_map &vm,
   std::string s = vm["solver"].as<std::string>();
   std::string inType = vm["input-type"].as<std::string>();
 
-  out << "c [CONSTRUCTOR] Solver: " << s << " " << inType << "\n";
-
   if (inType == "cnf" || inType == "dimacs") {
     if (s == "minisat") return new WrapperMinisat();
     if (s == "glucose") return new WrapperGlucose();
@@ -54,8 +52,6 @@ WrapperSolver *WrapperSolver::makeWrapperSolverPreproc(po::variables_map &vm,
                                                        std::ostream &out) {
   std::string s = vm["preproc-solver"].as<std::string>();
   std::string inType = vm["input-type"].as<std::string>();
-
-  out << "c [CONSTRUCTOR] Preproc solver: " << s << " " << inType << "\n";
 
   if (inType == "cnf" || inType == "dimacs") {
     if (s == "minisat") return new WrapperMinisat();
@@ -104,9 +100,6 @@ bool WrapperSolver::warmStart(int iteration, int sizeQuery,
   query.clear();
   setAssumption(query);
   restart();
-
-  out << "c Warm start process (" << sizeQuery << "): " << nbSAT << "/"
-      << iteration << "\n";
   return true;
 }  // warmStart
 

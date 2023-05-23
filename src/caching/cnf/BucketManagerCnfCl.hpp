@@ -69,14 +69,6 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     unsigned nbByteStoreFormula = 0;
     unsigned nbBitStoreLit = 0;
     unsigned totalByte = 0;
-
-    inline void display() {
-      std::cout << "nb bit var: " << nbBitEltVar << "\n"
-                << "nb bit lit: " << nbBitStoreLit << "\n"
-                << "nb byte store var: " << nbByteStoreVar << "\n"
-                << "nb byte store formula: " << nbByteStoreFormula << "\n"
-                << "total: " << totalByte << "\n";
-    }
   };
 
   std::vector<BucketSortInfo> m_vecBucketSortInfo;
@@ -303,20 +295,6 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
   }  // initSortBucket
 
   /**
-   * @brief Display the bucket in construction (for debugging purpose).
-   *
-   * @param v
-   * @param out
-   */
-  inline void showListBucketSort(std::vector<BucketSortInfo> &v,
-                                 std::ostream &out) {
-    out << "size = " << v.size() << "\n";
-    for (auto &e : v)
-      out << "[" << e.start << " " << e.end << " " << e.counter << " "
-          << e.redirected << "]\n";
-  }  // showListBucketSort
-
-  /**
    * @brief Search for the number of bytes needed to store the different element
    * of the bucket.
    *
@@ -378,12 +356,6 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
       p++;
     }
 
-#if 0
-    std::cout << "val " << val << "\n";
-    std::cout << "remaining " << remainingBit << "\n";
-    std::cout << "nbBit " << nbBit << "\n";
-    std::cout << "=> " << std::bitset<3>(val) << "\n";
-#endif
     while (nbBit >= remainingBit) {
       *p |= val & ((1 << remainingBit) - 1);
       val >>= remainingBit;
@@ -399,9 +371,6 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
       assert(remainingBit);
     }
 
-#if 0
-    std::cout << "<= " << std::bitset<8>(*p) << "\n";
-#endif
     return p;
   }  // addElementInData
 

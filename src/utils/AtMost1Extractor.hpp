@@ -25,11 +25,6 @@
 namespace d4 {
 struct AtMost1 {
   std::vector<Var> list;
-
-  void display() {
-    for (auto &l : list) std::cout << l << " ";
-    std::cout << "\n";
-  }
 };
 
 class AtMost1Extractor {

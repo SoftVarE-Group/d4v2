@@ -62,14 +62,5 @@ class DataInfo {
   }
 
   inline void reset() { info1 = 0; }
-
-  template <typename U>
-  void printData(void *data, int sz, std::ostream &out) {
-    char *p = (char *)data;
-    for (int i = 0; i < sz; i++) {
-      out << std::bitset<8>(p[i]) << " ";
-    }
-    out << "\n";
-  }  // printdata
 };
 }  // namespace d4

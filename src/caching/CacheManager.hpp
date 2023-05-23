@@ -113,7 +113,6 @@ class CacheManager {
                                            unsigned nbVar, SpecManager *specs,
                                            std::ostream &out) {
     std::string method = vm["cache-method"].as<std::string>();
-    out << "c [CACHE] Cache method used: " << method << "\n";
 
     if (method == "no-collision")
       return new CacheNoCollision<T>(vm, nbVar, specs, out);
@@ -162,14 +161,6 @@ class CacheManager {
   inline void releaseMemory(char *data, int size) {
     this->m_bucketManager->releaseMemory(data, size);
   }  // releaseMemory
-
-  inline void printCacheInformation(std::ostream &out) {
-    out << "c \033[1m\033[34mCache Information\033[0m\n";
-    out << "c Number of positive hit: " << m_nbPositiveHit << "\n";
-    out << "c Number of negative hit: " << m_nbNegativeHit << "\n";
-    m_cacheCleaningManager->printCleaningInfo(out);
-    out << "c\n";
-  }  // printCacheInformation
 
   /**
    * @brief Compute the hash value of an entry.
