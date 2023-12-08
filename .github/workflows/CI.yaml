@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  - workflow_dispatch
+  - push
+
+jobs:
+  Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - name: linux
+            runner: ubuntu
+            shell: bash
+          - name: windows
+            runner: windows
+            shell: msys2
+        compiler:
+          - cc: gcc
+            cxx: g++
+            msystem: ucrt64
+          - cc: clang
+            cxx: clang++
+            msystem: clang64
+        solver:
+          - minisat
+#          - glucose
+        exclude:
+          - os: { name: windows, runner: windows, shell: msys2 }
+            compiler: { cc: clang, cxx: clang++, msystem: clang64 }
+    runs-on: ${{ matrix.os.runner }}-latest
+    defaults:
+      run:
+        shell: ${{ matrix.os.shell }} {0}
+    env:
+      CC: ${{ matrix.compiler.cc }}
+      CXX: ${{ matrix.compiler.cxx }}
+      CMAKE_GENERATOR: Ninja
+      SCCACHE_GHA_ENABLED: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup MSYS2
+        if: ${{ matrix.os.runner == 'windows' }}
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.compiler.msystem }}
+          pacboy: git cmake:p ninja:p
+      - name: Install dependencies
+        if: ${{ matrix.os.runner == 'ubuntu' }}
+        run: sudo apt install ninja-build libtbb-dev libhwloc-dev libboost-program-options-dev
+      - name: Install dependencies
+        if: ${{ matrix.os.runner == 'windows' }}
+        run: |
+          pacboy -S --noconfirm toolchain:p tbb:p hwloc:p boost:p
+          mv /${{ matrix.compiler.msystem }}/lib/libtbb12.dll.a /${{ matrix.compiler.msystem }}/lib/libtbb.dll.a
+      - name: Setup sccache
+        uses: mozilla-actions/sccache-action@v0.0.3
+      - name: Setup environment
+        run: |
+          echo CMAKE_C_COMPILER_LAUNCHER="$SCCACHE_PATH" >> $GITHUB_ENV
+          echo CMAKE_CXX_COMPILER_LAUNCHER="$SCCACHE_PATH" >> $GITHUB_ENV
+          echo BUILD_ROOT=$(mktemp -d) >> $GITHUB_ENV
+      - name: Setup build directory
+        if: ${{ matrix.os.runner != 'windows' }}
+        run: echo BUILD_ROOT_EXPORT=$BUILD_ROOT >> $GITHUB_ENV
+      - name: Setup build directory
+        if: ${{ matrix.os.runner == 'windows' }}
+        run: echo BUILD_ROOT_EXPORT=$(python3 -c "import os; print(os.environ['BUILD_ROOT'])") >> $GITHUB_ENV
+      - name: Build Mt-KaHyPar
+        run: |
+          cd $(mktemp -d)
+          git clone --recursive https://github.com/kahypar/mt-kahypar.git .
+          git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+          cmake -B build -D CMAKE_INSTALL_PREFIX=$BUILD_ROOT
+          cmake --build build --target mtkahypar
+          cmake --install build
+      - name: Build glucose
+        if: ${{ matrix.solver == 'glucose' }}
+        run: |
+          cd 3rdParty/glucose-3.0
+          cmake -B build -D CMAKE_INSTALL_PREFIX=$BUILD_ROOT
+          cmake --build build
+          cmake --install build
+      - name: Configure
+        run: >-
+          cmake -B build
+          -D CMAKE_INSTALL_PREFIX=$BUILD_ROOT
+          -D MtKaHyPar_ROOT=$BUILD_ROOT
+          -D glucose_ROOT=$BUILD_ROOT
+          -D D4_SOLVER=${{ matrix.solver }}
+          -D D4_PREPROC_SOLVER=${{ matrix.solver }}
+      - name: Build
+        run: cmake --build build
+      - name: Install
+        run: cmake --install build
+      - name: Package
+        if: ${{ matrix.os.runner == 'windows' }}
+        run: |
+          ./package-msys.bash $BUILD_ROOT $BUILD_ROOT/bin/*
+          rm -f $BUILD_ROOT/bin/b2
+          rm -f $BUILD_ROOT/bin/bjam
+          rm -f $BUILD_ROOT/bin/hwloc*
+          rm -f $BUILD_ROOT/bin/lstopo*
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: d4-${{ matrix.os.name }}-${{ matrix.compiler.cc }}-${{ matrix.solver }}
+          path: ${{ env.BUILD_ROOT_EXPORT }}
