@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include <boost/math/special_functions/math_fwd.hpp>
 #include <boost/multiprecision/gmp.hpp>
 
 #include "src/problem/ProblemTypes.hpp"
