@@ -17,12 +17,19 @@ jobs:
         target:
           - os: linux
             runner: ubuntu-latest
+            triple: x86_64-unknown-linux-gnu
+            shell: bash
+          - os: macos
+            runner: macos-13
+            triple: x86_64-apple-darwin
             shell: bash
           - os: macos
             runner: macos-latest
+            triple: aarch64-apple-darwin
             shell: bash
           - os: windows
             runner: windows-latest
+            triple: x86_64-pc-windows-gnu
             shell: msys2
         compiler:
           - cc: gcc
@@ -82,7 +89,7 @@ jobs:
           mkdir -p $BUILD_ROOT/licenses/mt-kahypar
           cp LICENSE $BUILD_ROOT/licenses/mt-kahypar/
       # TODO: currently, macOS is only supported on master, move below clone to check out latest version when released.
-#          git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+      #   git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
       - name: Build glucose
         if: ${{ matrix.solver == 'glucose' }}
         run: |
@@ -122,5 +129,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: d4-${{ matrix.target.os }}-${{ matrix.compiler.cc }}-${{ matrix.solver }}
+          name: d4-${{ matrix.target.triple }}-${{ matrix.compiler.cc }}-${{ matrix.solver }}
           path: ${{ env.BUILD_ROOT_EXPORT }}
