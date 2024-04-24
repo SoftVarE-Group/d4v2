@@ -5,8 +5,6 @@ on:
 
 env:
   CMAKE_GENERATOR: Ninja
-  CMAKE_C_COMPILER_LAUNCHER: sccache
-  CMAKE_CXX_COMPILER_LAUNCHER: sccache
   SCCACHE_GHA_ENABLED: true
 
 jobs:
@@ -73,7 +71,13 @@ jobs:
           pacboy -S --noconfirm toolchain:p boost:p gmp:p hwloc:p tbb:p
           mv /${{ matrix.compiler.msystem }}/lib/libtbb12.dll.a /${{ matrix.compiler.msystem }}/lib/libtbb.dll.a
       - name: Setup sccache
-        uses: mozilla-actions/sccache-action@v0.0.3
+        if: ${{ matrix.target.triple != 'aarch64-apple-darwin' }}
+        uses: mozilla-actions/sccache-action@v0.0.4
+      - name: Setup sccache environment
+        if: ${{ matrix.target.triple != 'aarch64-apple-darwin' }}
+        run: |
+          echo CMAKE_C_COMPILER_LAUNCHER=sccache >> $GITHUB_ENV
+          echo CMAKE_CXX_COMPILER_LAUNCHER=sccache >> $GITHUB_ENV
       - name: Setup environment
         run: |
           export BUILD_ROOT=$(mktemp -d)
