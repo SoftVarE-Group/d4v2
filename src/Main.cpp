@@ -19,8 +19,8 @@
 
 #include <boost/program_options.hpp>
 #include <iostream>
-#include <vector>
 
+#include "partitioner/PartitionerKahyparMT.hpp"
 #include "src/config/ConfigConverter.hpp"
 #include "src/methods/MethodManager.hpp"
 
@@ -70,6 +70,7 @@ int main(int argc, char **argv) {
   }
 
   d4::Config config = d4::ConfigConverter::fromVariablesMap(vm);
+  d4::PartitionerKahyparMT::initPartitioner(config);
   methodRun = d4::MethodManager::makeMethodManager(config, std::cout);
   methodRun->run(config);
   delete methodRun;

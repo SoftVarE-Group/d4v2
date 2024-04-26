@@ -25,6 +25,7 @@ namespace d4 {
     int partitioning_heuristic_bipartite_phase_static;
     bool partitioning_heuristic_simplification_equivalence;
     bool partitioning_heuristic_simplification_hyperedge;
+    unsigned partitioning_threads;
     string cache_reduction_strategy;
     unsigned long cache_reduction_strategy_cachet_limit;
     unsigned long cache_reduction_strategy_expectation_limit;

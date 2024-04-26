@@ -17,11 +17,11 @@
  */
 #pragma once
 
-#include <functional>
 #include <vector>
 #include <memory>
+#include <libmtkahypar.h>
 
-#include "libmtkahypar.h"
+#include "src/config/Config.hpp"
 
 #include "PartitionerManager.hpp"
 
@@ -43,5 +43,7 @@ class PartitionerKahyparMT : public PartitionerManager {
   ~PartitionerKahyparMT();
   void computePartition(HyperGraph &hypergraph, Level level,
                         std::vector<int> &partition);
+
+  static void initPartitioner(Config &config);
 };
 }  // namespace d4

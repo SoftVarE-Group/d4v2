@@ -28,6 +28,7 @@ namespace d4 {
     config.partitioning_heuristic_bipartite_phase_static = vm["partitioning-heuristic-bipartite-phase-static"].as<int>();
     config.partitioning_heuristic_simplification_equivalence = vm["partitioning-heuristic-simplification-equivalence"].as<bool>();
     config.partitioning_heuristic_simplification_hyperedge = vm["partitioning-heuristic-simplification-hyperedge"].as<bool>();
+    config.partitioning_threads = vm["partitioning-threads"].as<unsigned>();
     config.cache_reduction_strategy = vm["cache-reduction-strategy"].as<string>();
     config.cache_reduction_strategy_cachet_limit = vm["cache-reduction-strategy-cachet-limit"].as<unsigned long>();
     config.cache_reduction_strategy_expectation_limit = vm["cache-reduction-strategy-expectation-limit"].as<unsigned long>();

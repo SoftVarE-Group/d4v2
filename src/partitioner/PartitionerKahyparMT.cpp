@@ -48,12 +48,11 @@ PartitionerKahyparMT::PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
 
   context = mt_kahypar_context_new();
   mt_kahypar_set_partitioning_parameters(context, 2 /* number of blocks */,
-                                         0.03 /* imbalance parameter */,
-                                         CUT /* objective function */);
-  mt_kahypar_set_context_parameter(context, VERBOSE, "0");
-  mt_kahypar_load_preset(context, DEFAULT);
-  mt_kahypar_set_seed(42 /* seed */);
+                                         0.05 /* imbalance parameter */,
+                                         SOED /* objective function */);
 
+  mt_kahypar_set_context_parameter(context, VERBOSE, "0");
+  mt_kahypar_load_preset(context, mt_kahypar_preset_type_t::QUALITY);
 } // constructor
 
 /**
@@ -62,6 +61,10 @@ PartitionerKahyparMT::PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
 PartitionerKahyparMT::~PartitionerKahyparMT() {
   mt_kahypar_free_context(context);
 } // destructor
+
+void PartitionerKahyparMT::initPartitioner(Config &config) {
+  mt_kahypar_initialize_thread_pool(config.partitioning_threads, true);
+}
 
 /**
    Get a partition from the hypergraph.

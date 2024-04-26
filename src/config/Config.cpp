@@ -22,6 +22,7 @@ namespace d4 {
     config.partitioning_heuristic_bipartite_phase_static = 0;
     config.partitioning_heuristic_simplification_equivalence = true;
     config.partitioning_heuristic_simplification_hyperedge = true;
+    config.partitioning_threads = 1;
     config.cache_reduction_strategy = "expectation";
     config.cache_reduction_strategy_cachet_limit = 10UL * (1<<21);
     config.cache_reduction_strategy_expectation_limit = 100000;
