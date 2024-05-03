@@ -2,7 +2,21 @@
 
 ## Installation
 
-### Prerequisites
+### Nix
+
+This project can be used and developed via a [Nix][nix] [flake][flake].
+
+With Nix installed simply run the following for a build:
+
+```
+nix build
+```
+
+The result will be at `result`.
+
+### Manual
+
+#### Prerequisites
 
  - [CMake][cmake]
  - [GMP][gmp] (with C++ bindings)
@@ -22,7 +36,7 @@ pacman -S pactoys
 pacboy -S toolchain:p cmake:p ninja:p gmp:p boost:p
 ```
 
-### Build
+#### Build
 
 This is a CMake project.
 To configure a debug build in the `build` directory (will be created), run:
@@ -62,7 +76,7 @@ cmake --build build
 
 The resulting executable will be built at `build/d4`.
 
-### Install
+#### Install
 
 To install the built files, use:
 
@@ -86,6 +100,8 @@ To compile a CNF into a d-DNNF, use:
 d4 --input /path/to/input.cnf --method ddnnf-compiler --dump-ddnnf /path/to/output.ddnnf
 ```
 
+[nix]: https://nixos.org
+[flake]: https://nixos.wiki/wiki/Flakes
 [cmake]: https://cmake.org
 [gmp]: https://gmplib.org
 [boost]: https://boost.org
