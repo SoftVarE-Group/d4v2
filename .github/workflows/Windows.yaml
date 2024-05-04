@@ -38,7 +38,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup MSYS2
-        if: ${{ matrix.target.os == 'windows' }}
         uses: msys2/setup-msys2@v2
         with:
           path-type: inherit
@@ -50,12 +49,10 @@ jobs:
           mv /${{ matrix.compiler.msystem }}/lib/libtbb12.dll.a /${{ matrix.compiler.msystem }}/lib/libtbb.dll.a
       - name: Setup sccache
         uses: mozilla-actions/sccache-action@v0.0.4
-      - name: Setup sccache environment
+      - name: Setup environment
         run: |
           echo CMAKE_C_COMPILER_LAUNCHER=sccache >> $GITHUB_ENV
           echo CMAKE_CXX_COMPILER_LAUNCHER=sccache >> $GITHUB_ENV
-      - name: Setup environment
-        run: |
           export BUILD_ROOT=$(mktemp -d)
           echo BUILD_ROOT=$BUILD_ROOT >> $GITHUB_ENV
           echo BUILD_ROOT_EXPORT=$(python3 -c "import os; print(os.environ['BUILD_ROOT'])") >> $GITHUB_ENV
@@ -67,8 +64,6 @@ jobs:
           cmake -B build -D CMAKE_INSTALL_PREFIX=$BUILD_ROOT -D MT_KAHYPAR_DISABLE_BOOST=true
           cmake --build build --target mtkahypar
           cmake --install build
-          mkdir -p $BUILD_ROOT/licenses/mt-kahypar
-          cp LICENSE $BUILD_ROOT/licenses/mt-kahypar/
       - name: Build glucose
         if: ${{ matrix.solver == 'glucose' }}
         run: |
@@ -97,12 +92,8 @@ jobs:
           rm -f $BUILD_ROOT/bin/hwloc*
           rm -f $BUILD_ROOT/bin/lstopo*
           rm -rf $BUILD_ROOT/lib
-      - name: Package
-        run: |
           rm -rf $BUILD_ROOT/include
           rm -rf $BUILD_ROOT/share
-          mkdir -p $BUILD_ROOT/licenses/d4
-          cp LICENSE $BUILD_ROOT/licenses/d4/
           cp doc/windows.md $BUILD_ROOT/README.md
       - name: Upload
         uses: actions/upload-artifact@v4
