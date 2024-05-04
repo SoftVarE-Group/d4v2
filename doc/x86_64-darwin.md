@@ -5,30 +5,24 @@ The project is licensed under the LGPL-2.1 and the source can be found at https:
 
 ## Dependencies
 
-The Mt-KaHyPar dependency is bundled with this build, other dependencies have to be installed:
-
-- TBB (https://github.com/oneapi-src/oneTBB)
-- hwloc (https://open-mpi.org/projects/hwloc)
-- Boost::program_options (https://boost.org)
+All dependencies are bundled with this build inside the `lib` directory.
+To use the binary, they have to be visible to the linker.
+This can either be accomplished by moving the `lib` directories contents to the global library path (such as `/usr/lib`)
+or by setting the `DYLD_LIBRARY_PATH` environment variable to include the `lib` directory.
 
 ## Gatekeeper
 
 The execution of downloaded binaries might be blocked by Gatekeeper.
-To resolve this, the attribute `com.apple.quarantine` has to be removed from `bin/d4` and `lib/libmtkahypar.dylib`:
+To resolve this, the attribute `com.apple.quarantine` has to be removed from `bin/d4` and the dependencies inside `lib`:
 
 ```
 xattr -d com.apple.quarantine bin/d4
-xattr -d com.apple.quarantine lib/libmtkahypar.dylib
+xattr -d com.apple.quarantine lib/*
 ```
 
 ## Usage
 
 The binary `d4` is inside `bin`.
-The Mt-KaHyPar library has to be available for `d4` to run.
-This can either be accomplished by moving the `lib` directories contents to the global library path (such as `/usr/lib`)
-or by setting the `DYLD_LIBRARY_PATH` environment variable to include the `lib` directory.
-Then, the linker will be able to find `libmtkahypar.dylib` required by `d4`.
-
 To show the help message, use:
 
 ```
