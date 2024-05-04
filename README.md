@@ -14,6 +14,12 @@ nix build
 
 The result will be at `result`.
 
+To build without the need to clone the repository, use:
+
+```
+nix build github:SoftVarE-Group/d4v2/mt-kahypar
+```
+
 ### Manual
 
 #### Prerequisites
