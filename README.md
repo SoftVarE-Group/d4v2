@@ -20,6 +20,28 @@ To build without the need to clone the repository, use:
 nix build github:SoftVarE-Group/d4v2/mt-kahypar
 ```
 
+### Container
+
+There is also a container image for usage with [Docker][docker], [Podman][podman] or any other container tool.
+
+For an overview, see [here][container].
+
+There is a tag for each branch and for each tagged release.
+Currently, the latest version is found on the `mt-kahypar` branch.
+To pull the container, use:
+
+```
+docker pull ghcr.io/softvare-group/d4v2:mt-kahypar
+```
+
+Then, you can use it like the standalone binary.
+For d4 to be able to access files, you need to create a volume.
+The following mounts `<local/directory>` on `/work` inside the container:
+
+```
+docker run -v <local/directory>:/work d4v2:mt-kahypar --input /work/input.cnf --method ddnnf-compiler --dump-ddnnf /work/output.ddnnf
+```
+
 ### Manual
 
 #### Prerequisites
@@ -115,3 +137,6 @@ d4 --input /path/to/input.cnf --method ddnnf-compiler --dump-ddnnf /path/to/outp
 [ninja]: https://github.com/ninja-build/ninja
 [mtkahypar]: https://github.com/kahypar/mt-kahypar
 [msys2]: https://msys2.org
+[docker]: https://docker.com
+[podman]: https://podman.io
+[container]: https://github.com/SoftVarE-Group/d4v2/pkgs/container/d4v2
