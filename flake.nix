@@ -51,7 +51,14 @@
           container = pkgs.dockerTools.buildLayeredImage {
             name = "d4v2";
             contents = [ self.packages.${system}.d4 ];
-            config.Entrypoint = [ "/bin/d4" ];
+            config = {
+              Entrypoint = [ "/bin/d4" ];
+              Labels = {
+                "org.opencontainers.image.source" = "https://github.com/SoftVarE-Group/d4v2";
+                "org.opencontainers.image.description" = "A CNF to d-DNNF compiler";
+                "org.opencontainers.image.licenses" = "LGPL-2.1-or-later";
+              };
+            };
           };
 
           mt-kahypar = pkgs.stdenv.mkDerivation {
