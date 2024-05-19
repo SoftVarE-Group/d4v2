@@ -1,4 +1,4 @@
-name: CI
+name: Portable
 
 on:
   - push
@@ -11,10 +11,6 @@ jobs:
         target:
           - triple: x86_64-unknown-linux-gnu
             runner: ubuntu-latest
-          - triple: x86_64-apple-darwin
-            runner: macos-13
-          - triple: aarch64-apple-darwin
-            runner: macos-latest
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout
@@ -23,10 +19,10 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v10
       - name: Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-      - name: Build
-        run: nix build -L .#all
+      - name: Bundle
+        run: nix bundle --bundler github:DavHau/nix-portable -o bundle .#all
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: d4-${{ matrix.target.triple }}
-          path: result
+          name: d4-${{ matrix.target.triple }}-portable
+          path: bundle

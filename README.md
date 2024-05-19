@@ -2,6 +2,15 @@
 
 ## Installation
 
+### Prebuilt
+
+There are prebuilt binaries available for each commit and release.
+These binaries are bundled with their dependencies.
+For details, see the README inside the release folder.
+
+On (Linux) systems with an older glibc, the normal variant might not work.
+In this case, there is also the portable variant which is a self-extracting archive with everything bundled in one binary.
+
 ### Nix
 
 This project can be used and developed via a [Nix][nix] [flake][flake].

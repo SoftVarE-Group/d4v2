@@ -103,8 +103,8 @@
             };
           };
 
-          bundled-deps = pkgs.buildEnv {
-            name = "bundled-deps";
+          dependencies = pkgs.buildEnv {
+            name = "dependencies";
             paths = [
               self.packages.${system}.mt-kahypar
               pkgs.hwloc.lib
@@ -117,8 +117,8 @@
             ];
           };
 
-          bundled-doc = pkgs.stdenv.mkDerivation {
-            name = "bundled-doc";
+          documentation = pkgs.stdenv.mkDerivation {
+            name = "documentation";
             src = ./doc;
             installPhase = ''
               mkdir $out
@@ -126,12 +126,13 @@
             '';
           };
 
-          bundled = pkgs.buildEnv {
-            name = "bundled";
+          all = pkgs.buildEnv {
+            name = "d4";
+            meta.mainProgram = "d4";
             paths = [
               self.packages.${system}.d4
-              self.packages.${system}.bundled-deps
-              self.packages.${system}.bundled-doc
+              self.packages.${system}.dependencies
+              self.packages.${system}.documentation
             ];
           };
         };
