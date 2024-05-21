@@ -20,6 +20,15 @@
           pkgs.tbb
         else
           pkgs.tbb_2021_8;
+
+        meta = with lib; {
+          mainProgram = "d4";
+          description = "A CNF to d-DNNF compiler";
+          homepage = "https://github.com/SoftVarE-Group/d4v2";
+          license = licenses.lgpl21Plus;
+          platforms = systems;
+        };
+
       in {
         formatter = pkgs.nixfmt;
 
@@ -40,12 +49,7 @@
 
             nativeBuildInputs = [ pkgs.cmake pkgs.ninja ];
 
-            meta = with lib; {
-              description = "A CNF to d-DNNF compiler";
-              homepage = "https://github.com/SoftVarE-Group/d4v2";
-              license = licenses.lgpl21Plus;
-              platforms = systems;
-            };
+            inherit meta;
           };
 
           container = pkgs.dockerTools.buildLayeredImage {
@@ -54,8 +58,10 @@
             config = {
               Entrypoint = [ "/bin/d4" ];
               Labels = {
-                "org.opencontainers.image.source" = "https://github.com/SoftVarE-Group/d4v2";
-                "org.opencontainers.image.description" = "A CNF to d-DNNF compiler";
+                "org.opencontainers.image.source" =
+                  "https://github.com/SoftVarE-Group/d4v2";
+                "org.opencontainers.image.description" =
+                  "A CNF to d-DNNF compiler";
                 "org.opencontainers.image.licenses" = "LGPL-2.1-or-later";
               };
             };
@@ -128,7 +134,7 @@
 
           all = pkgs.buildEnv {
             name = "d4";
-            meta.mainProgram = "d4";
+            inherit meta;
             paths = [
               self.packages.${system}.d4
               self.packages.${system}.dependencies

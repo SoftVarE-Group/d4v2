@@ -2,7 +2,7 @@
 
 ## Installation
 
-### Prebuilt
+### Pre-built
 
 There are prebuilt binaries available for each commit and release.
 These binaries are bundled with their dependencies.
