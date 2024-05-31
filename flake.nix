@@ -2,24 +2,31 @@
   description = "Packages and development environments for d4";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils/v1.0.0";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      ...
+    }:
     let
       lib = nixpkgs.lib;
       systems = lib.systems.doubles.unix;
-    in flake-utils.lib.eachSystem systems (system:
+    in
+    flake-utils.lib.eachSystem systems (
+      system:
       let
         pkgs = import nixpkgs { inherit system; };
 
-        tbb = if pkgs.stdenv.isDarwin
-        && lib.versionOlder pkgs.stdenv.hostPlatform.darwinMinVersion
-        "10.13" then
-          pkgs.tbb
-        else
-          pkgs.tbb_2021_8;
+        tbb =
+          if pkgs.stdenv.isDarwin && lib.versionOlder pkgs.stdenv.hostPlatform.darwinMinVersion "10.13" then
+            pkgs.tbb
+          else
+            pkgs.tbb_2021_11;
 
         meta = with lib; {
           mainProgram = "d4";
@@ -28,9 +35,9 @@
           license = licenses.lgpl21Plus;
           platforms = systems;
         };
-
-      in {
-        formatter = pkgs.nixfmt;
+      in
+      {
+        formatter = pkgs.nixfmt-rfc-style;
 
         packages = {
           default = self.packages.${system}.d4;
@@ -38,6 +45,7 @@
           d4 = pkgs.stdenv.mkDerivation {
             pname = "d4";
             version = "2.0";
+            inherit meta;
 
             src = ./.;
 
@@ -47,9 +55,10 @@
               pkgs.gmp.dev
             ];
 
-            nativeBuildInputs = [ pkgs.cmake pkgs.ninja ];
-
-            inherit meta;
+            nativeBuildInputs = [
+              pkgs.cmake
+              pkgs.ninja
+            ];
           };
 
           container = pkgs.dockerTools.buildLayeredImage {
@@ -58,10 +67,8 @@
             config = {
               Entrypoint = [ "/bin/d4" ];
               Labels = {
-                "org.opencontainers.image.source" =
-                  "https://github.com/SoftVarE-Group/d4v2";
-                "org.opencontainers.image.description" =
-                  "A CNF to d-DNNF compiler";
+                "org.opencontainers.image.source" = "https://github.com/SoftVarE-Group/d4v2";
+                "org.opencontainers.image.description" = "A CNF to d-DNNF compiler";
                 "org.opencontainers.image.licenses" = "LGPL-2.1-or-later";
               };
             };
@@ -78,11 +85,22 @@
               fetchSubmodules = true;
             };
 
-            outputs = [ "out" "dev" ];
+            outputs = [
+              "out"
+              "dev"
+            ];
 
-            buildInputs = [ pkgs.boost.dev pkgs.git pkgs.hwloc.dev tbb.dev ];
+            buildInputs = [
+              pkgs.boost.dev
+              pkgs.git
+              pkgs.hwloc.dev
+              tbb.dev
+            ];
 
-            nativeBuildInputs = [ pkgs.cmake pkgs.ninja ];
+            nativeBuildInputs = [
+              pkgs.cmake
+              pkgs.ninja
+            ];
 
             patches = [ ./mt-kahypar-pc.patch ];
 
@@ -97,8 +115,7 @@
             installPhase = "cmake --install .";
 
             meta = with lib; {
-              description =
-                "A shared-memory multilevel graph and hypergraph partitioner";
+              description = "A shared-memory multilevel graph and hypergraph partitioner";
               longDescription = ''
                 Mt-KaHyPar (Multi-Threaded Karlsruhe Hypergraph Partitioner) is a shared-memory multilevel graph and hypergraph partitioner equipped with parallel implementations of techniques used in the best sequential partitioning algorithms.
                 Mt-KaHyPar can partition extremely large hypergraphs very fast and with high quality.
@@ -117,10 +134,7 @@
               pkgs.boost
               pkgs.gmp
               tbb
-            ] ++ lib.optionals pkgs.stdenv.cc.isClang [
-              pkgs.libcxx
-              pkgs.libcxxabi
-            ];
+            ] ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
           };
 
           documentation = pkgs.stdenv.mkDerivation {
@@ -142,5 +156,6 @@
             ];
           };
         };
-      });
+      }
+    );
 }
