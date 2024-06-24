@@ -10,11 +10,17 @@ jobs:
       matrix:
         target:
           - double: x86_64-linux
+            flake: bundled
             runner: ubuntu-latest
           - double: x86_64-darwin
             runner: macos-13
+            flake: bundled
           - double: aarch64-darwin
             runner: macos-latest
+            flake: bundled
+          - double: x86_64-windows
+            runner: ubuntu-latest
+            flake: bundled-windows
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout
@@ -24,7 +30,7 @@ jobs:
       - name: Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
       - name: Build
-        run: nix build -L .#all
+        run: nix build -L .#${{ matrix.target.flake}}
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
