@@ -27,7 +27,7 @@
           pkgs.tbb_2021_11;
 
       mt-kahypar = pkgs: pkgs.callPackage ./nix/mt-kahypar.nix { tbb = tbb pkgs; };
-      generatePackage = pkgs: pkgs.callPackage ./nix/d4.nix { mt-kahypar = mt-kahypar pkgs; };
+      d4 = pkgs: pkgs.callPackage ./nix/d4.nix { mt-kahypar = mt-kahypar pkgs; };
 
       # All required runtime dependencies.
       dependencies =
@@ -83,8 +83,11 @@
         {
           default = self.packages.${system}.d4;
 
-          d4 = generatePackage pkgs;
-          d4-windows = generatePackage pkgs-windows;
+          mt-kahypar = mt-kahypar pkgs;
+          mt-kahypar-windows = mt-kahypar pkgs-windows;
+
+          d4 = d4 pkgs;
+          d4-windows = d4 pkgs-windows;
 
           container = pkgs.dockerTools.buildLayeredImage {
             name = "d4";
