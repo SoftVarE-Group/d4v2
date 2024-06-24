@@ -31,6 +31,15 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@v4
       - name: Build
         run: nix build -L .#${{ matrix.target.flake}}
+      - name: Set interpreter
+        if: ${{ matrix.target.double == 'x86_64-linux'}}
+        run: |
+          cp -rL result output
+          rm -rf result
+          chmod +w output/bin/d4
+          nix run nixpkgs#patchelf -- --set-interpreter /lib64/ld-linux-x86-64.so.2 output/bin/d4
+          chmod -w output/bin/d4
+          mv output result
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
