@@ -9,11 +9,11 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - triple: x86_64-unknown-linux-gnu
+          - double: x86_64-linux
             runner: ubuntu-latest
-          - triple: x86_64-apple-darwin
+          - double: x86_64-darwin
             runner: macos-13
-          - triple: aarch64-apple-darwin
+          - double: aarch64-darwin
             runner: macos-latest
     runs-on: ${{ matrix.target.runner }}
     steps:
@@ -28,5 +28,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: d4-${{ matrix.target.triple }}
+          name: d4-${{ matrix.target.double }}
           path: result
