@@ -38,7 +38,6 @@
             (mt-kahypar pkgs)
             (tbb pkgs)
             pkgs.hwloc.lib
-            pkgs.boost
             pkgs.gmp
           ] ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
         };
@@ -58,17 +57,12 @@
       # The binary with all dependencies.
       bundled =
         pkgs:
-        let
-          system =
-            if pkgs.stdenv.hostPlatform.isWindows then pkgs.stdenv.buildPlatform.system else pkgs.stdenv.system;
-          withSuffix = name: if pkgs.stdenv.hostPlatform.isWindows then "${name}-windows" else name;
-        in
         pkgs.buildEnv {
           name = "d4";
           paths = [
-            self.packages.${system}.${withSuffix "d4"}
-            self.packages.${system}.${withSuffix "dependencies"}
-            self.packages.${system}.${withSuffix "documentation"}
+            (d4 pkgs)
+            (dependencies pkgs)
+            (documentation pkgs)
           ];
         };
     in
@@ -101,9 +95,6 @@
               };
             };
           };
-
-          documentation = documentation pkgs;
-          documentation-windows = documentation pkgs-windows;
 
           dependencies = dependencies pkgs;
           dependencies-windows = dependencies pkgs-windows;
