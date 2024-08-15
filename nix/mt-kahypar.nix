@@ -37,7 +37,15 @@ stdenv.mkDerivation rec {
     tbb.dev
   ] ++ lib.optionals stdenv.hostPlatform.isWindows [ windows.pthreads ];
 
-  patches = [ ./mt-kahypar-pc.patch ];
+  patches =
+    # Mt-KaHyPar's CMake build does not properly configure the pkg-config files leading to a build error.
+    [ ./mt-kahypar-pc.patch ]
+    ++ lib.optionals (stdenv.hostPlatform.system == "aarch64-linux") [
+      # SSE4 is not supported on aarch64.
+      ./mt-kahypar-disable-sse.patch
+      # growt seems to not be compatible with aarch64.
+      ./mt-kahypar-remove-growt.patch
+    ];
 
   cmakeFlags = [
     "-D KAHYPAR_PYTHON=false"
