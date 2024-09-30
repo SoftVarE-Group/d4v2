@@ -6,6 +6,7 @@
   boost,
   gmp,
   mt-kahypar,
+  arjun,
 }:
 stdenv.mkDerivation rec {
   pname = "d4";
@@ -17,6 +18,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     mt-kahypar.dev
+    arjun.dev
     boost.dev
     gmp.dev
   ];

@@ -77,11 +77,40 @@
         {
           default = self.packages.${system}.d4;
 
-          mt-kahypar = mt-kahypar pkgs;
-          mt-kahypar-windows = mt-kahypar pkgs-windows;
+          cadical = pkgs.pkgsStatic.callPackage ./nix/cadical.nix { };
+          cadiback = pkgs.pkgsStatic.callPackage ./nix/cadiback.nix {
+            cadical = self.packages.${system}.cadical;
+          };
 
-          d4 = d4 pkgs;
-          d4-windows = d4 pkgs-windows;
+          cryptominisat = pkgs.pkgsStatic.callPackage ./nix/cryptominisat.nix {
+            cadiback = self.packages.${system}.cadiback;
+          };
+
+          sbva = pkgs.pkgsStatic.callPackage ./nix/sbva.nix { };
+
+          arjun = pkgs.pkgsStatic.callPackage ./nix/arjun.nix {
+            cryptominisat = self.packages.${system}.cryptominisat;
+            sbva = self.packages.${system}.sbva;
+          };
+
+          tbb = tbb pkgs;
+          tbb-windows = tbb pkgs-windows;
+
+          mt-kahypar = pkgs.callPackage ./nix/mt-kahypar.nix { tbb = self.packages.${system}.tbb; };
+          mt-kahypar-windows = pkgs-windows.callPackage ./nix/mt-kahypar.nix {
+            tbb = self.packages.${system}.tbb-windows;
+          };
+
+          d4 = pkgs.callPackage ./nix/d4.nix {
+            mt-kahypar = self.packages.${system}.mt-kahypar;
+            arjun = self.packages.${system}.arjun;
+          };
+
+          # TODO: arjun on windows
+          #d4-windows = pkgs-windows.callPackage ./nix/d4.nix {
+          #  mt-kahypar = self.packages.${system}.mt-kahypar-windows;
+          #  arjun = self.packages.${system}.arjun-windows;
+          #};
 
           container = pkgs.dockerTools.buildLayeredImage {
             name = "d4";

@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(Solver)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -24,6 +24,7 @@ endif()
 find_package(GMP REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(MtKaHyPar REQUIRED)
+find_package(arjun REQUIRED)
 
 # glucose is only needed when requested, which it is not by default.
 if(USE_GLUCOSE)
@@ -32,10 +33,12 @@ if(USE_GLUCOSE)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/glucose-3.0)
 include_directories(${GMP_INCLUDE_DIRS})
 include_directories(${GMPXX_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${MtKaHyPar_INCLUDE_DIR})
+include_directories(${arjun_INCLUDE_DIR})
 
 add_library(caching OBJECT
     src/caching/BucketAllocator.cpp
@@ -62,6 +65,8 @@ add_library(heuristics OBJECT
     src/heuristics/cnf/PhaseSelectorManager.cpp
     src/heuristics/cnf/PhaseSelectorNone.cpp
     src/heuristics/cnf/PhaseSelectorStatic.cpp
+    src/heuristics/cnf/ProjBackupHeuristicComponents.cpp
+    src/heuristics/cnf/ProjBackupHeuristicHypergraph.cpp
     src/heuristics/cnf/ScoringMethodDlcs.cpp
     src/heuristics/cnf/ScoringMethodJwts.cpp
     src/heuristics/cnf/ScoringMethodMom.cpp
@@ -74,6 +79,7 @@ add_library(heuristics OBJECT
     src/heuristics/PhaseHeuristicOccurrence.cpp
     src/heuristics/PhaseHeuristicPolarity.cpp
     src/heuristics/PhaseHeuristicTrue.cpp
+    src/heuristics/ProjBackupHeuristic.cpp
     src/heuristics/ScoringMethod.cpp
 )
 
@@ -81,6 +87,7 @@ add_library(hyperGraph OBJECT
     src/hyperGraph/HyperEdge.cpp
     src/hyperGraph/HyperGraph.cpp
     src/hyperGraph/HyperGraphExtractorDual.cpp
+    src/hyperGraph/HyperGraphExtractorDualProj.cpp
     src/hyperGraph/HyperGraphExtractorPrimal.cpp
 )
 
@@ -95,8 +102,11 @@ add_library(partitioner OBJECT
 )
 
 add_library(preprocs OBJECT
+    src/preprocs/cnf/util/PreprocGPMC.cpp
     src/preprocs/cnf/PreprocBackboneCnf.cpp
     src/preprocs/cnf/PreprocBasicCnf.cpp
+    src/preprocs/cnf/PreprocGPMC.cpp
+    src/preprocs/cnf/PreprocProj.cpp
     src/preprocs/PreprocManager.cpp
 )
 
@@ -144,7 +154,7 @@ add_library(core STATIC
     $<TARGET_OBJECTS:utils>
 )
 
-target_link_libraries(core GMP::GMPXX GMP::GMP MtKaHyPar::MtKaHyPar)
+target_link_libraries(core GMP::GMPXX GMP::GMP MtKaHyPar::MtKaHyPar arjun)
 
 if(USE_GLUCOSE)
     target_link_libraries(core glucose::glucose)
