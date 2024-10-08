@@ -93,6 +93,10 @@
             sbva = self.packages.${system}.sbva;
           };
 
+          gpmc = pkgs.pkgsStatic.callPackage ./nix/gpmc.nix {
+            arjun = self.packages.${system}.arjun;
+          };
+
           tbb = tbb pkgs;
           tbb-windows = tbb pkgs-windows;
 
