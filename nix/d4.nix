@@ -5,8 +5,15 @@
   cmake,
   boost,
   gmp,
+  mpfr,
   mt-kahypar,
   arjun,
+  gpmc,
+  glucose,
+  cryptominisat,
+  sbva,
+  cadical,
+  cadiback,
 }:
 stdenv.mkDerivation rec {
   pname = "d4";
@@ -21,6 +28,13 @@ stdenv.mkDerivation rec {
     arjun.dev
     boost.dev
     gmp.dev
+    mpfr.dev
+    gpmc.dev
+    glucose.dev
+    cryptominisat.dev
+    sbva.dev
+    cadical.dev
+    cadiback.dev
   ];
 
   meta = with lib; {

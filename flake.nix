@@ -16,6 +16,9 @@
         "x86_64-linux"
       ];
 
+      # If building for Windows, appends -windows, otherwise nothing.
+      windowsSuffix = pkgs: name: if pkgs.stdenv.hostPlatform.isWindows then "${name}-windows" else name;
+
       # Different platforms require different TBB versions and the Windows one is not in upstream Nixpkgs yet.
       tbb =
         pkgs:
@@ -26,23 +29,23 @@
         else
           pkgs.tbb_2021_11;
 
-      mt-kahypar = pkgs: pkgs.callPackage ./nix/mt-kahypar.nix { tbb = tbb pkgs; };
-      d4 = pkgs: pkgs.callPackage ./nix/d4.nix { mt-kahypar = mt-kahypar pkgs; };
-
       # All required runtime dependencies.
       dependencies =
         pkgs:
+        let
+          system = pkgs.buildPlatform.system;
+          windowsSuffix' = windowsSuffix pkgs;
+        in
         pkgs.buildEnv {
           name = "d4-dependencies";
           paths = [
-            (mt-kahypar pkgs)
-            (tbb pkgs)
+            self.packages.${system}.${windowsSuffix' "mt-kahypar"}
+            self.packages.${system}.${windowsSuffix' "tbb"}
             pkgs.hwloc.lib
             pkgs.gmp
           ] ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
         };
 
-      # A simple README explaining how to setup the built directories to run the binary.
       documentation =
         pkgs:
         pkgs.stdenv.mkDerivation {
@@ -57,12 +60,16 @@
       # The binary with all dependencies.
       bundled =
         pkgs:
+        let
+          system = pkgs.buildPlatform.system;
+          windowsSuffix' = windowsSuffix pkgs;
+        in
         pkgs.buildEnv {
           name = "d4";
           paths = [
-            (d4 pkgs)
-            (dependencies pkgs)
-            (documentation pkgs)
+            self.packages.${system}.${windowsSuffix' "d4"}
+            self.packages.${system}.${windowsSuffix' "dependencies"}
+            self.packages.${system}.${windowsSuffix' "documentation"}
           ];
         };
     in
@@ -72,29 +79,57 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          pkgs-static = if pkgs.stdenv.isDarwin then pkgs else pkgs.pkgsStatic;
           pkgs-windows = pkgs.pkgsCross.mingwW64;
         in
         {
           default = self.packages.${system}.d4;
 
-          cadical = pkgs.pkgsStatic.callPackage ./nix/cadical.nix { };
-          cadiback = pkgs.pkgsStatic.callPackage ./nix/cadiback.nix {
+          glucose = pkgs-static.callPackage ./nix/glucose.nix { };
+          glucose-windows = pkgs-windows.callPackage ./nix/glucose.nix { };
+
+          cadical = pkgs-static.callPackage ./nix/cadical.nix { };
+          cadical-windows = pkgs-windows.callPackage ./nix/cadical.nix { };
+
+          cadiback = pkgs-static.callPackage ./nix/cadiback.nix {
             cadical = self.packages.${system}.cadical;
           };
 
-          cryptominisat = pkgs.pkgsStatic.callPackage ./nix/cryptominisat.nix {
+          cadiback-windows = pkgs-windows.callPackage ./nix/cadiback.nix {
+            cadical = self.packages.${system}.cadical-windows;
+          };
+
+          cryptominisat = pkgs-static.callPackage ./nix/cryptominisat.nix {
+            cadical = self.packages.${system}.cadical;
             cadiback = self.packages.${system}.cadiback;
           };
 
-          sbva = pkgs.pkgsStatic.callPackage ./nix/sbva.nix { };
+          cryptominisat-windows = pkgs-windows.callPackage ./nix/cryptominisat.nix {
+            cadical = self.packages.${system}.cadical-windows;
+            cadiback = self.packages.${system}.cadiback-windows;
+          };
 
-          arjun = pkgs.pkgsStatic.callPackage ./nix/arjun.nix {
+          sbva = pkgs-static.callPackage ./nix/sbva.nix { };
+          sbva-windows = pkgs-windows.callPackage ./nix/sbva.nix { };
+
+          arjun = pkgs-static.callPackage ./nix/arjun.nix {
             cryptominisat = self.packages.${system}.cryptominisat;
             sbva = self.packages.${system}.sbva;
           };
 
-          gpmc = pkgs.pkgsStatic.callPackage ./nix/gpmc.nix {
+          arjun-windows = pkgs-windows.callPackage ./nix/arjun.nix {
+            cryptominisat = self.packages.${system}.cryptominisat-windows;
+            sbva = self.packages.${system}.sbva-windows;
+          };
+
+          gpmc = pkgs-static.callPackage ./nix/gpmc.nix {
             arjun = self.packages.${system}.arjun;
+            cryptominisat = self.packages.${system}.cryptominisat;
+          };
+
+          gpmc-windows = pkgs-windows.callPackage ./nix/gpmc.nix {
+            arjun = self.packages.${system}.arjun-windows;
+            cryptominisat = self.packages.${system}.cryptominisat-windows;
           };
 
           tbb = tbb pkgs;
@@ -108,13 +143,24 @@
           d4 = pkgs.callPackage ./nix/d4.nix {
             mt-kahypar = self.packages.${system}.mt-kahypar;
             arjun = self.packages.${system}.arjun;
+            gpmc = self.packages.${system}.gpmc;
+            glucose = self.packages.${system}.glucose;
+            cryptominisat = self.packages.${system}.cryptominisat;
+            sbva = self.packages.${system}.sbva;
+            cadical = self.packages.${system}.cadical;
+            cadiback = self.packages.${system}.cadiback;
           };
 
-          # TODO: arjun on windows
-          #d4-windows = pkgs-windows.callPackage ./nix/d4.nix {
-          #  mt-kahypar = self.packages.${system}.mt-kahypar-windows;
-          #  arjun = self.packages.${system}.arjun-windows;
-          #};
+          d4-windows = pkgs-windows.callPackage ./nix/d4.nix {
+            mt-kahypar = self.packages.${system}.mt-kahypar-windows;
+            arjun = self.packages.${system}.arjun-windows;
+            gpmc = self.packages.${system}.gpmc-windows;
+            glucose = self.packages.${system}.glucose-windows;
+            cryptominisat = self.packages.${system}.cryptominisat-windows;
+            sbva = self.packages.${system}.sbva-windows;
+            cadical = self.packages.${system}.cadical-windows;
+            cadiback = self.packages.${system}.cadiback-windows;
+          };
 
           container = pkgs.dockerTools.buildLayeredImage {
             name = "d4";
@@ -131,6 +177,9 @@
 
           dependencies = dependencies pkgs;
           dependencies-windows = dependencies pkgs-windows;
+
+          documentation = documentation pkgs;
+          documentation-windows = documentation pkgs-windows;
 
           bundled = bundled pkgs;
           bundled-windows = bundled pkgs-windows;

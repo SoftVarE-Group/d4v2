@@ -25,7 +25,7 @@
 
 namespace d4 {
 class SpecManagerCnfDyn : public SpecManagerCnf {
- private:
+ protected:
   std::vector<int> m_reviewWatcher;
   void initClauses(std::vector<std::vector<Lit>> &clauses);
 
@@ -33,6 +33,7 @@ class SpecManagerCnfDyn : public SpecManagerCnf {
   SpecManagerCnfDyn(ProblemManager &p);
 
   void preUpdate(std::vector<Lit> &lits);
+  void preUpdate(std::vector<Lit> &lits,std::vector<Lit>& pure ) override;
   void postUpdate(std::vector<Lit> &lits);
 
   // we cannot use this function here

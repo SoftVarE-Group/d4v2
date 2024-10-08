@@ -21,11 +21,12 @@ add_subdirectory(flow-cutter-pace17)
 add_library(gpmc
 	core/ComponentCache.cc
 	core/ComponentManager.cc
-	core/Counter.cc
 	core/Config.cc
+	core/Counter.cc
+	core/gpmc.cpp
 	core/Instance.cc
+	core/Solver.cc
 	ddnnf/DecisionTree.cc
-	core/Solver.cc 
 	utils/Options.cc
 	utils/System.cc
 	preprocessor/Preprocessor.cc
@@ -33,8 +34,6 @@ add_library(gpmc
 	preprocessor/lib_sharpsat_td/subsumer.cpp
 	preprocessor/TreeDecomposition.cc
 	preprocessor/IFlowCutter.cc
-    core/gpmc.cpp
-    core/Solver.h
 )
 
 set_target_properties(gpmc PROPERTIES PUBLIC_HEADER include/gpmc.hpp)

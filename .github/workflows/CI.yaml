@@ -18,7 +18,7 @@ jobs:
           - double: x86_64-linux
             system: x86_64-linux
             runner: ubuntu-24.04
-            flake: bundled
+            flake: d4
             interpreter: /lib64/ld-linux-x86-64.so.2
           - double: aarch64-darwin
             system: aarch64-darwin

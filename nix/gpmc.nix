@@ -3,10 +3,13 @@
   stdenv,
   cmake,
   gmp,
-  arjun
+  zlib,
+  mpfr,
+  arjun,
+  cryptominisat,
 }:
 stdenv.mkDerivation {
-  pname = "gmpc";
+  pname = "gpmc";
   version = "1.0.1";
 
   outputs = [
@@ -22,7 +25,10 @@ stdenv.mkDerivation {
 
   buildInputs = [
     gmp.dev
+    mpfr.dev
+    zlib.dev
     arjun.dev
+    cryptominisat.dev
   ];
 
   meta = {

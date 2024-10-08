@@ -56,6 +56,6 @@ set_target_properties(binary PROPERTIES OUTPUT_NAME glucose)
 target_link_libraries(binary glucose)
 
 install(
-    TARGETS glucose
+    TARGETS glucose binary
     FILE_SET HEADERS DESTINATION include/glucose
 )

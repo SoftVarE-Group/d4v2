@@ -493,9 +493,9 @@ public:
 	inline void cleanAllDescendantsOf(CacheEntryID id);
 
 	void printStats() const {
-		printf("c o Cache lookup          = %"PRIu64"\n", num_cache_look_ups_);
-		printf("c o Cache hit             = %"PRIu64"\n", num_cache_hits_);
-		printf("c o Cache reduce          = %"PRIu64"\n", num_cache_reduce_);
+		printf("c o Cache lookup          = %" PRIu64"\n", num_cache_look_ups_);
+		printf("c o Cache hit             = %" PRIu64"\n", num_cache_hits_);
+		printf("c o Cache reduce          = %" PRIu64"\n", num_cache_reduce_);
 	}
 	// --- Added by k-hasimt --- END
 
@@ -666,8 +666,8 @@ public:
 	void printDimacs(const vec<CRef>& clauses, const ClauseAllocator& ca, const vec<lbool>& assign);
 
 	void printStats() const {
-		printf("c o Components            = %"PRIu64"\n", components);
-		printf("c o Split                 = %"PRIu64"\n", num_try_split);
+		printf("c o Components            = %" PRIu64"\n", components);
+		printf("c o Split                 = %" PRIu64"\n", num_try_split);
 		cache_.printStats();
 	}
 

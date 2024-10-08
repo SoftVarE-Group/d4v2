@@ -856,19 +856,19 @@ void Counter<T_data>::printStats() const
 	if(verbosity_c) {
 		if(progress == COMPLETED || progress == FAILED) {
 			printf("c o [Statistics]\n");
-			printf("c o conflicts             = %-11"PRIu64" (count %"PRIu64", sat %"PRIu64")\n", conflicts, conflicts-conflicts_sg, conflicts_sg);
-			printf("c o decisions             = %-11"PRIu64" (count %"PRIu64", sat %"PRIu64")\n", decisions, decisions-decisions_sg, decisions_sg);
-			printf("c o propagations          = %-11"PRIu64" (count %"PRIu64", sat %"PRIu64")\n", propagations, propagations-propagations_sg, propagations_sg);
-			printf("c o simp dbs              = %-11"PRIu64" (%.3f s)\n", simp_dbs, simplify_time);
-			printf("c o reduce dbs            = %-11"PRIu64"\n", nbReduceDB);
-			printf("c o learnts (uni/bin/lbd2)= %"PRIu64"/%"PRIu64"/%"PRIu64"\n", nbUn, nbBin, nbDL2);
-			printf("c o last learnts          = %-11d (%"PRIu64" learnts removed, %4.2f%%)\n", learnts.size(), nbRemovedClauses, nbRemovedClauses * 100 / (double)conflicts);
+			printf("c o conflicts             = %-11" PRIu64" (count %" PRIu64", sat %" PRIu64")\n", conflicts, conflicts-conflicts_sg, conflicts_sg);
+			printf("c o decisions             = %-11" PRIu64" (count %" PRIu64", sat %" PRIu64")\n", decisions, decisions-decisions_sg, decisions_sg);
+			printf("c o propagations          = %-11" PRIu64" (count %" PRIu64", sat %" PRIu64")\n", propagations, propagations-propagations_sg, propagations_sg);
+			printf("c o simp dbs              = %-11" PRIu64" (%.3f s)\n", simp_dbs, simplify_time);
+			printf("c o reduce dbs            = %-11" PRIu64"\n", nbReduceDB);
+			printf("c o learnts (uni/bin/lbd2)= %" PRIu64"/%" PRIu64"/%" PRIu64"\n", nbUn, nbBin, nbDL2);
+			printf("c o last learnts          = %-11d (%" PRIu64" learnts removed, %4.2f%%)\n", learnts.size(), nbRemovedClauses, nbRemovedClauses * 100 / (double)conflicts);
 
 			printStatsOfCM();
-			printf("c o isolated_pvars        = %"PRIu64"\n", nIsoPVars());
-			printf("c o SAT calls             = %-11"PRIu64" (SAT %"PRIu64", UNSAT %"PRIu64")\n", solves, sats, solves-sats);
-			printf("c o SAT starts            = %"PRIu64"\n", starts);
-			printf("c o backjumps             = %-11"PRIu64" (sp %"PRIu64") [init %s / final %s]\n", nbackjumps+nbackjumps_sp, nbackjumps_sp, config.backjump ? "on" : "off", on_bj ? "on" : "off");
+			printf("c o isolated_pvars        = %" PRIu64"\n", nIsoPVars());
+			printf("c o SAT calls             = %-11" PRIu64" (SAT %" PRIu64", UNSAT %" PRIu64")\n", solves, sats, solves-sats);
+			printf("c o SAT starts            = %" PRIu64"\n", starts);
+			printf("c o backjumps             = %-11" PRIu64" (sp %" PRIu64") [init %s / final %s]\n", nbackjumps+nbackjumps_sp, nbackjumps_sp, config.backjump ? "on" : "off", on_bj ? "on" : "off");
 			printf("c o\n");
 		}
 		if(config.ddnnf) {

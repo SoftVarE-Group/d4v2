@@ -5,6 +5,7 @@
   cmake,
   gmp,
   zlib,
+  cadical,
   cadiback,
 }:
 stdenv.mkDerivation rec {
@@ -30,6 +31,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     zlib.dev
+    cadical.dev
     cadiback.dev
     gmp.dev
   ];

@@ -18,6 +18,7 @@ if(NOT BUILD_SHARED_LIBS)
     set(GMP_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_LIBS ON)
     set(MtKaHyPar_USE_STATIC_LIBS ON)
+    set(GPMC_USE_STATIC_LIBS ON)
     set(glucose_USE_STATIC_LIBS ON)
 endif()
 
@@ -25,12 +26,8 @@ find_package(GMP REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(MtKaHyPar REQUIRED)
 find_package(arjun REQUIRED)
-
-# glucose is only needed when requested, which it is not by default.
-if(USE_GLUCOSE)
-    find_package(glucose REQUIRED)
-    include_directories(${glucose_INCLUDE_DIRS})
-endif()
+find_package(GPMC REQUIRED)
+find_package(glucose REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/glucose-3.0)
@@ -39,6 +36,8 @@ include_directories(${GMPXX_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${MtKaHyPar_INCLUDE_DIR})
 include_directories(${arjun_INCLUDE_DIR})
+include_directories(${GMPC_INCLUDE_DIR})
+include_directories(${glucose_INCLUDE_DIRS})
 
 add_library(caching OBJECT
     src/caching/BucketAllocator.cpp
@@ -102,7 +101,9 @@ add_library(partitioner OBJECT
 )
 
 add_library(preprocs OBJECT
+    src/preprocs/cnf/util/lib_sharpsat_td/subsumer.cpp
     src/preprocs/cnf/util/PreprocGPMC.cpp
+    src/preprocs/cnf/util/TestSolver.cpp
     src/preprocs/cnf/PreprocBackboneCnf.cpp
     src/preprocs/cnf/PreprocBasicCnf.cpp
     src/preprocs/cnf/PreprocGPMC.cpp
@@ -154,7 +155,7 @@ add_library(core STATIC
     $<TARGET_OBJECTS:utils>
 )
 
-target_link_libraries(core GMP::GMPXX GMP::GMP MtKaHyPar::MtKaHyPar arjun)
+target_link_libraries(core MtKaHyPar::MtKaHyPar GPMC::GPMC arjun glucose::glucose GMP::GMPXX GMP::GMP cadiback cadical)
 
 if(USE_GLUCOSE)
     target_link_libraries(core glucose::glucose)

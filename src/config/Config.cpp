@@ -12,8 +12,9 @@ namespace d4 {
     config.maxsharpsat_heuristic_phase_random = 5;
     config.maxsharpsat_option_and_dig = true;
     config.maxsharpsat_option_greedy_init = false;
-    config.preproc = "basic";
+    config.projddnnf_pure_lit_elim = true;
     config.scoring_method = "vsads";
+    config.scoring_method_decay_freq = 300000;
     config.occurrence_manager = "dynamic";
     config.phase_heuristic = "polarity";
     config.partitioning_heuristic = "decomposition-static-dual";
@@ -23,6 +24,12 @@ namespace d4 {
     config.partitioning_heuristic_simplification_equivalence = true;
     config.partitioning_heuristic_simplification_hyperedge = true;
     config.partitioning_threads = 1;
+    config.preproc = "basic";
+    config.preproc_equiv = true;
+    config.preproc_ve_check = false;
+    config.preproc_ve_only_simpical = true;
+    config.preproc_ve_prefer_simpical = false;
+    config.preproc_ve_limit = 4;
     config.cache_reduction_strategy = "expectation";
     config.cache_reduction_strategy_cachet_limit = 10UL * (1<<21);
     config.cache_reduction_strategy_expectation_limit = 100000;
@@ -44,6 +51,7 @@ namespace d4 {
     config.query = "";
     config.projMC_refinement = false;
     config.keyword_output_format_solution = "s";
+    config.output = "";
     config.output_format = "classic";
 
     return config;

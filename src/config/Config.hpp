@@ -15,8 +15,9 @@ namespace d4 {
     unsigned maxsharpsat_heuristic_phase_random;
     bool maxsharpsat_option_and_dig;
     bool maxsharpsat_option_greedy_init;
-    string preproc;
+    bool projddnnf_pure_lit_elim;
     string scoring_method;
+    unsigned scoring_method_decay_freq;
     string occurrence_manager;
     string phase_heuristic;
     string partitioning_heuristic;
@@ -26,6 +27,12 @@ namespace d4 {
     bool partitioning_heuristic_simplification_equivalence;
     bool partitioning_heuristic_simplification_hyperedge;
     unsigned partitioning_threads;
+    string preproc;
+    bool preproc_equiv;
+    bool preproc_ve_check;
+    bool preproc_ve_only_simpical;
+    bool preproc_ve_prefer_simpical;
+    int preproc_ve_limit;
     string cache_reduction_strategy;
     unsigned long cache_reduction_strategy_cachet_limit;
     unsigned long cache_reduction_strategy_expectation_limit;
@@ -47,6 +54,7 @@ namespace d4 {
     string query;
     bool projMC_refinement;
     string keyword_output_format_solution;
+    string output;
     string output_format;
 
     static Config default_values();
