@@ -51,11 +51,15 @@ target_sources(glucose PUBLIC FILE_SET HEADERS FILES
 target_link_libraries(glucose ZLIB::ZLIB)
 set_target_properties(glucose PROPERTIES VERSION ${PROJECT_VERSION})
 
-add_executable(binary simp/Main.cc)
-set_target_properties(binary PROPERTIES OUTPUT_NAME glucose)
-target_link_libraries(binary glucose)
-
 install(
-    TARGETS glucose binary
-    FILE_SET HEADERS DESTINATION include/glucose
+    TARGETS glucose
+    FILE_SET HEADERS
+    DESTINATION include/glucose
 )
+
+if(NOT WIN32)
+    add_executable(binary simp/Main.cc)
+    set_target_properties(binary PROPERTIES OUTPUT_NAME glucose)
+    target_link_libraries(binary glucose)
+    install(TARGETS binary)
+endif()
