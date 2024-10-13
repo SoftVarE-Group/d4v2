@@ -6,6 +6,7 @@
   boost,
   gmp,
   mpfr,
+  zlib,
   mt-kahypar,
   arjun,
   gpmc,
@@ -29,6 +30,7 @@ stdenv.mkDerivation rec {
     boost.dev
     gmp.dev
     mpfr.dev
+    zlib.dev
     gpmc.dev
     glucose.dev
     cryptominisat.dev
