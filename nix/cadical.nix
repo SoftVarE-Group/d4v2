@@ -15,11 +15,13 @@ stdenv.mkDerivation {
   ];
 
   src = fetchFromGitHub {
-    owner = "uulm-janbaudisch";
+    owner = "arminbiere";
     repo = "cadical";
-    rev = "31c08cf1feca40146b17a0db4d2e669914713183";
-    hash = "sha256-8Grth+su2/oeLxshFxU2oT2VUHdFYdZa7XDaeyiUEJc=";
+    rev = "rel-2.1.0";
+    hash = "sha256-sSvJgHxsRaJ/xHEK32fox0MFI7u+pj5ERLfNn2s8kC8=";
   };
+
+  patches = [ ./cadical-cmake.patch ];
 
   nativeBuildInputs = [ cmake ];
 

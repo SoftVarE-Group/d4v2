@@ -15,11 +15,16 @@ stdenv.mkDerivation {
   ];
 
   src = fetchFromGitHub {
-    owner = "uulm-janbaudisch";
+    owner = "meelgroup";
     repo = "cadiback";
-    rev = "f538594d0497a2db127ab9fcfec655aaad5acf04";
-    hash = "sha256-T+bMuQV9CPIidwjnwgVB0RYsKDD6hEVwZrCDrEhlVxk=";
+    rev = "ea65a9442fc2604ee5f4ffd0f0fdd0bf481d5b42";
+    hash = "sha256-r9SoZMS1vA+Ggfca6lOmAo9zsAqBu0v0YTXcTyTN9v8=";
   };
+
+  patches = [
+    ./cadiback-cmake.patch
+    ./cadiback-remove-cadical-internals.patch
+  ];
 
   nativeBuildInputs = [ cmake ];
 
