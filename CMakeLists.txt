@@ -18,9 +18,10 @@ if(NOT BUILD_SHARED_LIBS)
     set(GMP_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_LIBS ON)
     set(MtKaHyPar_USE_STATIC_LIBS ON)
-    set(GPMC_USE_STATIC_LIBS ON)
     set(glucose_USE_STATIC_LIBS ON)
 endif()
+
+set(GPMC_USE_STATIC_LIBS ON)
 
 find_package(GMP REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)

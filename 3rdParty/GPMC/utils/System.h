@@ -61,7 +61,11 @@ inline double Glucose1::cpuTime(void) {
 //static inline double GlueMiniSat::realTime(void) {
 inline double Glucose1::realTime(void) {
     struct timeval time;
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    mingw_gettimeofday(&time, NULL);
+#else
     gettimeofday(&time, NULL);
+#endif
     return time.tv_sec + time.tv_usec / 1000000.0; }
 
 #endif
