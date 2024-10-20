@@ -42,7 +42,6 @@
             self.packages.${system}.${windowsSuffix' "mt-kahypar"}
             self.packages.${system}.${windowsSuffix' "tbb"}
             pkgs.hwloc.lib
-            pkgs.gmp
           ] ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
         };
 
