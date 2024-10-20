@@ -19,7 +19,6 @@
 
 #include "ActivityManager.hpp"
 #include "PolarityManager.hpp"
-#include "src/config/Config.hpp"
 #include "src/problem/ProblemManager.hpp"
 #include "src/problem/ProblemTypes.hpp"
 
@@ -37,8 +36,13 @@ class WrapperSolver : public ActivityManager, public PolarityManager {
 
   virtual ~WrapperSolver() {}
   virtual void initSolver(ProblemManager &p) = 0;
+  virtual void initSolver(ProblemManager &p,std::vector<std::vector<Lit>>& learnt) = 0;
   virtual bool solve(std::vector<Var> &setOfVar) = 0;
   virtual bool solve() = 0;
+  virtual void  exportLearnt(std::vector<std::vector<Lit>>& clause) {
+      throw std::runtime_error("No solver support");
+
+  }
   virtual void uncheckedEnqueue(Lit l) = 0;
   virtual void restart() = 0;
   virtual void setAssumption(std::vector<Lit> &assums) = 0;
@@ -58,6 +62,9 @@ class WrapperSolver : public ActivityManager, public PolarityManager {
 
   // this function returns false if the propagation gives a conflict.
   virtual bool decideAndComputeUnit(Lit l, std::vector<Lit> &units) = 0;
+  virtual bool decideAndComputeUnit(std::vector<Lit>, std::vector<Lit> &units){
+      throw std::runtime_error("Unimplemented");
+  }
 
   virtual void whichAreUnits(std::vector<Var> &component,
                              std::vector<Lit> &units) = 0;

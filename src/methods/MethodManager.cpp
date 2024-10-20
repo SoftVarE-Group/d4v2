@@ -25,6 +25,7 @@
 #include "MaxSharpSAT.hpp"
 #include "MinSharpSAT.hpp"
 #include "OperationManager.hpp"
+#include "ProjDpllStyleMethod.hpp"
 #include "ProjMCMethod.hpp"
 #include "src/exceptions/BadBehaviourException.hpp"
 #include "src/exceptions/FactoryException.hpp"
@@ -96,6 +97,19 @@ MethodManager *MethodManager::makeMethodManager(Config &config,
               config, meth, isFloat, runProblem, out, lastBreath);
     else
       return new DpllStyleMethod<mpz::mpf_float, Node<mpz::mpf_float> *>(
+              config, meth, isFloat, runProblem, out, lastBreath);
+  }
+
+  if (meth == "proj-ddnnf-compiler") {
+    if (!isFloat)
+      return new ProjDpllStyleMethod<
+              mpz::mpz_int, Node<mpz::mpz_int> *,
+              DecisionDNNFOperation<mpz::mpz_int, Node<mpz::mpz_int> *>>(
+              config, meth, isFloat, runProblem, out, lastBreath);
+    else
+      return new ProjDpllStyleMethod<
+              mpz::mpf_float, Node<mpz::mpf_float> *,
+              DecisionDNNFOperation<mpz::mpf_float, Node<mpz::mpf_float> *>>(
               config, meth, isFloat, runProblem, out, lastBreath);
   }
 

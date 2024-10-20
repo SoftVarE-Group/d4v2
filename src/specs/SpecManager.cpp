@@ -25,7 +25,7 @@ namespace d4 {
 /**
    Generate an occurrence manager regarding the options given as parameter.
 
-   @param[in] config, the configuration.
+   @param[in] vm, the arguments on the command line.
    @param[in] p, a problem manager.
 
    \return the occurrence manager that fits the command line.
@@ -33,14 +33,18 @@ namespace d4 {
 SpecManager *SpecManager::makeSpecManager(Config &config,
                                           ProblemManager &p,
                                           std::ostream &out) {
-  out << "c [CONSTRUCTOR SPEC] Spec manager: " << config.occurrence_manager << " " << config.input_type << "\n";
+  std::string inType = config.input_type;
+  std::string meth = config.occurrence_manager;
 
-  if (config.input_type == "cnf" || config.input_type == "dimacs") {
-    if (config.occurrence_manager == "dynamic") return new SpecManagerCnfDyn(p);
+  out << "c [CONSTRUCTOR SPEC] Spec manager: " << meth << " " << inType << "\n";
+
+  if (inType == "cnf" || inType == "dimacs") {
+    if (meth == "dynamic")
+      return new SpecManagerCnfDyn(p);
     return NULL;
   }
 
   throw(FactoryException("Cannot create a SpecManager", __FILE__, __LINE__));
-}  // makeSpecManager
+} // makeSpecManager
 
-}  // namespace d4
+} // namespace d4

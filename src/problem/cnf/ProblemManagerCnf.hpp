@@ -20,22 +20,26 @@
 #include "../ProblemManager.hpp"
 #include "../ProblemTypes.hpp"
 #include "src/solvers/WrapperSolver.hpp"
+#include "src/utils/IDIDFunc.hpp"
 
 namespace d4 {
 class ProblemManagerCnf : public ProblemManager {
- private:
+protected:
   std::vector<std::vector<Lit>> m_clauses;
-
- public:
+  std::vector<std::vector<Lit>> m_learnt;
+public:
   ProblemManagerCnf();
   ProblemManagerCnf(int nbVar, std::vector<double> &weightLit,
-                    std::vector<double> &weightVar, std::vector<Var> &selected);
+                    std::vector<double> &weightVar, std::vector<Var> &selected,int freevars=0);
   ProblemManagerCnf(ProblemManager *problem);
-
   ProblemManagerCnf(std::string &nameFile);
   ~ProblemManagerCnf();
+  void normalize() override;
+  void normalizeInner() override;
+
   void display(std::ostream &out) override;
   std::vector<std::vector<Lit>> &getClauses() { return m_clauses; }
+  std::vector<std::vector<Lit>> &getLearnt() { return m_learnt; }
   void setClauses(std::vector<std::vector<Lit>> &clauses) {
     m_clauses = clauses;
   }
@@ -43,4 +47,4 @@ class ProblemManagerCnf : public ProblemManager {
   ProblemManager *getUnsatProblem() override;
   ProblemManager *getConditionedFormula(std::vector<Lit> &units) override;
 };
-}  // namespace d4
+} // namespace d4

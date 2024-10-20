@@ -1,4 +1,4 @@
-/*
+/*Mini
  * d4
  * Copyright (C) 2020  Univ. Artois & CNRS
  *
@@ -38,12 +38,17 @@ class WrapperMinisat : public WrapperSolver {
 
  public:
   void initSolver(ProblemManager &p) override;
+  void initSolver(ProblemManager &p,std::vector<std::vector<Lit>>& learnt) override;
+  virtual ~WrapperMinisat(){}
+
+void addClause(std::vector<Lit>& cl,bool learnt);
   bool solve(std::vector<Var> &setOfVar) override;
   bool solve() override;
   void uncheckedEnqueue(Lit l) override;
   bool varIsAssigned(Var v) override;
   bool getPolarity(Var v) override;
   bool decideAndComputeUnit(Lit l, std::vector<Lit> &units) override;
+  bool decideAndComputeUnit(std::vector<Lit>, std::vector<Lit> &units) override;
   void whichAreUnits(std::vector<Var> &component,
                      std::vector<Lit> &units) override;
   void restart() override;
@@ -64,5 +69,6 @@ class WrapperMinisat : public WrapperSolver {
   void setCountConflict(Var v, double count) override;
   unsigned getNbConflict() override;
   void setReversePolarity(bool value) override;
+  virtual void decay();
 };
 }  // namespace d4

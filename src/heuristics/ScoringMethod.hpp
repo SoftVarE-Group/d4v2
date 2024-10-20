@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-
-#include <vector>
-
-#include <src/config/Config.hpp>
+#include <boost/program_options.hpp>
+#include <functional>
 #include <src/problem/ProblemTypes.hpp>
 #include <src/solvers/ActivityManager.hpp>
 #include <src/solvers/WrapperSolver.hpp>
 #include <src/specs/SpecManager.hpp>
+#include <vector>
 
 namespace d4 {
+namespace po = boost::program_options;
 class ScoringMethod {
- public:
+public:
   static ScoringMethod *makeScoringMethod(Config &config, SpecManager &p,
                                           ActivityManager &am,
                                           std::ostream &out);
@@ -37,5 +37,10 @@ class ScoringMethod {
 
   Var selectVariable(std::vector<Var> &vars, SpecManager &s,
                      std::vector<bool> &isDecisionVariable);
+
+  Var selectVariable(std::vector<Var> &vars, SpecManager &s);
+  virtual Var selectVariable(std::vector<Var> &vars,
+                             std::function<bool(Var)> can_select);
+  virtual void decay(){}
 };
-}  // namespace d4
+} // namespace d4

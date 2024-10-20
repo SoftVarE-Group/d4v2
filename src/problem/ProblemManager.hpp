@@ -27,11 +27,13 @@ namespace d4 {
 class ProblemManager {
  protected:
   unsigned m_nbVar;
+  unsigned m_nbFreeVars;
   std::vector<double> m_weightLit;
   std::vector<double> m_weightVar;
   std::vector<Var> m_selected;
   std::vector<Var> m_maxVar;
   std::vector<Var> m_indVar;
+  std::vector<Lit> m_gmap;
   bool m_isUnsat = false;
 
  public:
@@ -41,6 +43,17 @@ class ProblemManager {
   virtual ~ProblemManager() { ; }
   unsigned getNbVar() { return m_nbVar; }
   void setNbVar(int n) { m_nbVar = n; }
+
+  unsigned& freeVars(){
+    return m_nbFreeVars;
+  }
+
+  std::vector<Lit>& gmap() {
+    return m_gmap;
+  }
+
+  virtual void normalize() = 0;
+  virtual void normalizeInner() = 0;
 
   virtual void display(std::ostream &out) = 0;
   virtual void displayStat(std::ostream &out, std::string startLine) = 0;

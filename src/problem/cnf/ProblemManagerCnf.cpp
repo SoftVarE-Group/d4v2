@@ -20,6 +20,7 @@
 
 #include "ParserDimacs.hpp"
 #include "src/problem/ProblemManager.hpp"
+#include <charconv>
 
 namespace d4 {
 /**
@@ -34,13 +35,15 @@ ProblemManagerCnf::ProblemManagerCnf(std::string &nameFile) {
   m_weightVar.resize(m_nbVar + 1, 0);
   for (unsigned i = 0; i <= m_nbVar; i++)
     m_weightVar[i] = m_weightLit[i << 1] + m_weightLit[(i << 1) + 1];
-}  // constructor
+
+  normalize();
+} // constructor
 
 /**
    Constructor.
    Construct an empty formula.
  */
-ProblemManagerCnf::ProblemManagerCnf() { m_nbVar = 0; }  // constructor
+ProblemManagerCnf::ProblemManagerCnf() { m_nbVar = 0; } // constructor
 
 /**
  * @brief Construct a new Problem Manager Cnf:: Problem Manager Cnf object
@@ -55,7 +58,11 @@ ProblemManagerCnf::ProblemManagerCnf(ProblemManager *problem) {
   m_maxVar = problem->getMaxVar();
   m_indVar = problem->getIndVar();
   m_isUnsat = false;
-}  // constructor
+  m_nbFreeVars = problem->freeVars();
+  m_gmap = problem->gmap();
+
+
+} // constructor
 
 /**
  * @brief Construct a new Problem Manager Cnf:: Problem Manager Cnf object
@@ -68,13 +75,14 @@ ProblemManagerCnf::ProblemManagerCnf(ProblemManager *problem) {
  */
 ProblemManagerCnf::ProblemManagerCnf(int nbVar, std::vector<double> &weightLit,
                                      std::vector<double> &weightVar,
-                                     std::vector<Var> &selected) {
+                                     std::vector<Var> &selected, int freevars) {
   m_nbVar = nbVar;
   m_weightLit = weightLit;
   m_weightVar = weightVar;
   m_selected = selected;
   m_isUnsat = false;
-}  // constructor
+  m_nbFreeVars = freevars;
+} // constructor
 
 /**
    Destructor.
@@ -82,8 +90,47 @@ ProblemManagerCnf::ProblemManagerCnf(int nbVar, std::vector<double> &weightLit,
 ProblemManagerCnf::~ProblemManagerCnf() {
   m_clauses.clear();
   m_nbVar = 0;
-}  // destructor
+} // destructor
 
+void ProblemManagerCnf::normalize() {
+  if (m_selected.size() != m_nbVar) {
+    std::vector<bool> marked(m_nbVar+1);
+    std::vector<Var> remap(m_nbVar+1);
+    int i = 1;
+    for (Var v : m_selected) {
+      marked[v] = true;
+    }
+    for (Var v = 1; v <= m_nbVar; v++) {
+      if (marked[v]) {
+        remap[v] = i;
+        i++;
+      }
+    }
+    for (Var v = 1; v <= m_nbVar; v++) {
+      if (!marked[v]) {
+        remap[v] = i;
+        i++;
+      }
+    }
+    for (auto &c : m_clauses) {
+      for (auto &l : c) {
+        l = Lit::makeLit(remap[l.var()], l.sign());
+      }
+    }
+    int sel = m_selected.size();
+    m_selected.clear();
+    for (int i = 1; i <= sel; i++) {
+      m_selected.push_back(i);
+    }
+  }
+}
+
+void ProblemManagerCnf::normalizeInner() {
+  for (auto &cl : m_clauses) {
+    std::sort(cl.begin(), cl.end(),
+              [](Lit a, Lit b) { return a.var() < b.var(); });
+  }
+}
 /**
  * @brief Get the Unsat ProblemManager object.
  *
@@ -103,7 +150,7 @@ ProblemManager *ProblemManagerCnf::getUnsatProblem() {
   ret->getClauses().push_back(cl);
 
   return ret;
-}  // getUnsatProblem
+} // getUnsatProblem
 
 /**
  * @brief Simplify the formula by unit propagation and return the resulting CNF
@@ -112,8 +159,8 @@ ProblemManager *ProblemManagerCnf::getUnsatProblem() {
  * @param units is the set of unit literals we want to condition with.
  * @return the simplified formula.
  */
-ProblemManager *ProblemManagerCnf::getConditionedFormula(
-    std::vector<Lit> &units) {
+ProblemManager *
+ProblemManagerCnf::getConditionedFormula(std::vector<Lit> &units) {
   ProblemManagerCnf *ret = new ProblemManagerCnf(this);
 
   std::vector<char> value(m_nbVar + 1, 0);
@@ -127,24 +174,28 @@ ProblemManager *ProblemManagerCnf::getConditionedFormula(
     std::vector<Lit> scl;
     bool isSAT = false;
     for (auto l : cl) {
-      if (!value[l.var()]) scl.push_back(l);
+      if (!value[l.var()])
+        scl.push_back(l);
 
       isSAT = l.sign() + 1 == value[l.var()];
-      if (isSAT) break;
+      if (isSAT)
+        break;
     }
 
     // add the simplified clause if needed.
-    if (!isSAT) ret->getClauses().push_back(cl);
+    if (!isSAT)
+      ret->getClauses().push_back(cl);
   }
 
   return ret;
-}  // getConditionedFormula
+} // getConditionedFormula
 
 /**
    Display the problem.
 
    @param[out] out, the stream where the messages are redirected.
  */
+
 void ProblemManagerCnf::display(std::ostream &out) {
   out << "weight list: ";
   for (unsigned i = 1; i <= m_nbVar; i++) {
@@ -157,10 +208,11 @@ void ProblemManagerCnf::display(std::ostream &out) {
 
   out << "p cnf " << m_nbVar << " " << m_clauses.size() << "\n";
   for (auto cl : m_clauses) {
-    for (auto &l : cl) out << l << " ";
+    for (auto &l : cl)
+      out << l << " ";
     out << "0\n";
   }
-}  // diplay
+} // diplay
 
 /**
    Print out some statistic about the problem. Each line will start with the
@@ -177,11 +229,14 @@ void ProblemManagerCnf::displayStat(std::ostream &out, std::string startLine) {
 
   for (auto &c : m_clauses) {
     nbLits += c.size();
-    if (c.size() == 2) nbBin++;
-    if (c.size() == 3) nbTer++;
-    if (c.size() > 3) nbMoreThree++;
+    if (c.size() == 2)
+      nbBin++;
+    if (c.size() == 3)
+      nbTer++;
+    if (c.size() > 3)
+      nbMoreThree++;
   }
-
+  out << startLine << "Number of selected: " << m_selected.size() << "\n";
   out << startLine << "Number of variables: " << m_nbVar << "\n";
   out << startLine << "Number of clauses: " << m_clauses.size() << "\n";
   out << startLine << "Number of binary clauses: " << nbBin << "\n";
@@ -189,6 +244,6 @@ void ProblemManagerCnf::displayStat(std::ostream &out, std::string startLine) {
   out << startLine << "Number of clauses larger than 3: " << nbMoreThree
       << "\n";
   out << startLine << "Number of literals: " << nbLits << "\n";
-}  // displaystat
+} // displaystat
 
-}  // namespace d4
+} // namespace d4

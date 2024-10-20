@@ -18,8 +18,9 @@ namespace d4 {
     config.maxsharpsat_heuristic_phase_random = vm["maxsharpsat-heuristic-phase-random"].as<unsigned>();
     config.maxsharpsat_option_and_dig = vm["maxsharpsat-option-and-dig"].as<bool>();
     config.maxsharpsat_option_greedy_init = vm["maxsharpsat-option-greedy-init"].as<bool>();
-    config.preproc = vm["preproc"].as<string>();
+    config.projddnnf_pure_lit_elim = vm["projddnnf-pure-lit-elim"].as<bool>();
     config.scoring_method = vm["scoring-method"].as<string>();
+    config.scoring_method_decay_freq = vm["scoring-method-decay-freq"].as<unsigned>();
     config.occurrence_manager = vm["occurrence-manager"].as<string>();
     config.phase_heuristic = vm["phase-heuristic"].as<string>();
     config.partitioning_heuristic = vm["partitioning-heuristic"].as<string>();
@@ -29,6 +30,12 @@ namespace d4 {
     config.partitioning_heuristic_simplification_equivalence = vm["partitioning-heuristic-simplification-equivalence"].as<bool>();
     config.partitioning_heuristic_simplification_hyperedge = vm["partitioning-heuristic-simplification-hyperedge"].as<bool>();
     config.partitioning_threads = vm["partitioning-threads"].as<unsigned>();
+    config.preproc = vm["preproc"].as<string>();
+    config.preproc_equiv = vm["preproc-equiv"].as<bool>();
+    config.preproc_ve_check = vm["preproc-ve-check"].as<bool>();
+    config.preproc_ve_only_simpical = vm["preproc-ve-only-simpical"].as<bool>();
+    config.preproc_ve_prefer_simpical = vm["preproc-ve-prefer-simpical"].as<bool>();
+    config.preproc_ve_limit = vm["preproc-ve-limit"].as<int>();
     config.cache_reduction_strategy = vm["cache-reduction-strategy"].as<string>();
     config.cache_reduction_strategy_cachet_limit = vm["cache-reduction-strategy-cachet-limit"].as<unsigned long>();
     config.cache_reduction_strategy_expectation_limit = vm["cache-reduction-strategy-expectation-limit"].as<unsigned long>();
@@ -61,6 +68,7 @@ namespace d4 {
 
     config.projMC_refinement = vm["projMC-refinement"].as<bool>();
     config.keyword_output_format_solution = vm["keyword-output-format-solution"].as<string>();
+    config.output = vm["output"].as<string>();
     config.output_format = vm["output-format"].as<string>();
 
     return config;

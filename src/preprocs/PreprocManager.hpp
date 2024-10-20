@@ -16,16 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-
 #include <vector>
 
-#include "src/config/Config.hpp"
 #include "src/problem/ProblemManager.hpp"
 #include "src/problem/ProblemTypes.hpp"
 
 namespace d4 {
 struct LastBreathPreproc {
   std::vector<double> countConflict;
+  std::vector<std::vector<Lit>> learnt;
   bool panic;
 
   inline void fitSizeCountConflict(unsigned size) {
