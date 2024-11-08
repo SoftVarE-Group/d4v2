@@ -141,6 +141,8 @@
 
           d4 = pkgs.callPackage ./nix/d4.nix {
             mt-kahypar = self.packages.${system}.mt-kahypar;
+            cryptominisat = self.packages.${system}.cryptominisat;
+            sbva = self.packages.${system}.sbva;
             arjun = self.packages.${system}.arjun;
             gpmc = self.packages.${system}.gpmc;
             glucose = self.packages.${system}.glucose;
@@ -150,6 +152,8 @@
 
           d4-windows = pkgs-windows.callPackage ./nix/d4.nix {
             mt-kahypar = self.packages.${system}.mt-kahypar-windows;
+            cryptominisat = self.packages.${system}.cryptominisat-windows;
+            sbva = self.packages.${system}.sbva-windows;
             arjun = self.packages.${system}.arjun-windows;
             gpmc = self.packages.${system}.gpmc-windows;
             glucose = self.packages.${system}.glucose-windows;

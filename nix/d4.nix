@@ -8,10 +8,11 @@
   mpfr,
   zlib,
   mt-kahypar,
+  cryptominisat,
+  sbva,
   arjun,
   gpmc,
   glucose,
-  sbva,
   cadical,
   cadiback,
 }:
@@ -25,6 +26,8 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     mt-kahypar.dev
+    cryptominisat.dev
+    sbva.dev
     arjun.dev
     boost.dev
     gmp.dev
