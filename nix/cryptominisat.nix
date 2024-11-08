@@ -25,7 +25,10 @@ stdenv.mkDerivation rec {
     hash = "sha256-9Uk2exQWCkL/eqF7d1++BkXyl/gxVi4ThB4kv7F7BbE=";
   };
 
-  patches = [ ./cryptominisat-cadiback-include.patch ];
+  patches = [
+    ./cryptominisat-cadiback-include.patch
+    ./cryptominisat-windows-libname.patch
+  ];
 
   nativeBuildInputs = [ cmake ];
 

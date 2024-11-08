@@ -144,8 +144,6 @@
             arjun = self.packages.${system}.arjun;
             gpmc = self.packages.${system}.gpmc;
             glucose = self.packages.${system}.glucose;
-            cryptominisat = self.packages.${system}.cryptominisat;
-            sbva = self.packages.${system}.sbva;
             cadical = self.packages.${system}.cadical;
             cadiback = self.packages.${system}.cadiback;
           };
@@ -155,8 +153,6 @@
             arjun = self.packages.${system}.arjun-windows;
             gpmc = self.packages.${system}.gpmc-windows;
             glucose = self.packages.${system}.glucose-windows;
-            cryptominisat = self.packages.${system}.cryptominisat-windows;
-            sbva = self.packages.${system}.sbva-windows;
             cadical = self.packages.${system}.cadical-windows;
             cadiback = self.packages.${system}.cadiback-windows;
           };

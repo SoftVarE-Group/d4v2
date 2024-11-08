@@ -11,7 +11,6 @@
   arjun,
   gpmc,
   glucose,
-  cryptominisat,
   sbva,
   cadical,
   cadiback,
@@ -33,8 +32,6 @@ stdenv.mkDerivation rec {
     zlib.dev
     gpmc.dev
     glucose.dev
-    cryptominisat.dev
-    sbva.dev
     cadical.dev
     cadiback.dev
   ];
