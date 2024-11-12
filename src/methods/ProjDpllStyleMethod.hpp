@@ -20,7 +20,6 @@
 
 #include "src/heuristics/cnf/PartitioningHeuristicBipartiteDual.hpp"
 #include <algorithm>
-#include <boost/program_options.hpp>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
@@ -62,7 +61,6 @@ auto since(std::chrono::time_point<clock_t, duration_t> const &start) {
 }
 
 namespace d4 {
-namespace po = boost::program_options;
 template <class T> class Counter;
 
 template <class T, class U, class O>

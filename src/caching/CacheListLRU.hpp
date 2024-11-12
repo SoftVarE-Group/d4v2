@@ -19,7 +19,6 @@
 
 #include "src/hashing/hasher.hpp"
 #include <array>
-#include <boost/program_options.hpp>
 #include <optional>
 #include <vector>
 
@@ -39,7 +38,6 @@ namespace d4 {
 // depends on depth-first free/alloc behavior from DPLL. 
 // Should be rewritten...
 
-namespace po = boost::program_options;
 template <class T> class CacheListLRU : public CacheManager<T> {
 private:
   const unsigned SIZE_HASH = 1024 * 1024;

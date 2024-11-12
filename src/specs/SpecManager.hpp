@@ -17,14 +17,12 @@
  */
 #pragma once
 #include "src/utils/Proj.hpp"
-#include <boost/program_options.hpp>
 #include <ranges>
 #include <src/problem/ProblemManager.hpp>
 #include <src/problem/ProblemTypes.hpp>
 #include <vector>
 
 namespace d4 {
-namespace po = boost::program_options;
 class SpecManager {
 protected:
   unsigned m_nbVar;
