@@ -184,5 +184,39 @@
           bundled-windows = bundled pkgs-windows;
         }
       );
+      devShells = lib.genAttrs systems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          selfPkgs = self.packages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            MTKAHYPAR_LIB_DIR = "${selfPkgs.mt-kahypar}/lib";
+            ARJUN_LIB_DIR = "${selfPkgs.arjun.lib}/lib";
+            CADIBACK_LIB_DIR = "${selfPkgs.cadiback}/lib";
+            CADICAL_LIB_DIR = "${selfPkgs.cadical.lib}/lib";
+            CRYPTOMINISAT5_LIB_DIR = "${selfPkgs.cryptominisat.lib}/lib";
+            GLUCOSE_LIB_DIR = "${selfPkgs.glucose.lib}/lib";
+            GMP_LIB_DIR = "${pkgs.gmp}/lib";
+            GPMC_LIB_DIR = "${selfPkgs.gpmc}/lib";
+            SBVA_LIB_DIR = "${selfPkgs.sbva.lib}/lib";
+            buildInputs = [
+              pkgs.boost.dev
+              pkgs.gmp.dev
+              pkgs.mpfr.dev
+              pkgs.zlib.dev
+              selfPkgs.mt-kahypar.dev
+              selfPkgs.arjun.dev
+              selfPkgs.cadiback.dev
+              selfPkgs.cadical.dev
+              selfPkgs.cryptominisat.dev
+              selfPkgs.glucose.dev
+              selfPkgs.gpmc.dev
+              selfPkgs.sbva.dev
+            ];
+          };
+        }
+      );
     };
 }
