@@ -22,7 +22,7 @@ jobs:
             interpreter: /lib64/ld-linux-x86-64.so.2
           - double: aarch64-darwin
             system: aarch64-darwin
-            runner: macos-latest
+            runner: macos-15
             flake: bundled
           - double: x86_64-darwin
             system: x86_64-darwin
