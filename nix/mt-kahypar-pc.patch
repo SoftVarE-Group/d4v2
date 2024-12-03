@@ -1,0 +1,19 @@
+diff '--color=auto' -Naur a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+--- a/lib/CMakeLists.txt	2024-04-30 16:31:54.639650905 +0200
++++ b/lib/CMakeLists.txt	2024-04-30 16:32:12.586535317 +0200
+@@ -22,15 +22,10 @@
+ 
+ target_include_directories(mtkahypar SYSTEM PUBLIC ../include)
+ 
+-configure_file(libmtkahypar.pc.in libmtkahypar.pc @ONLY)
+-
+ install(TARGETS mtkahypar
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+-install(FILES ${CMAKE_BINARY_DIR}/lib/libmtkahypar.pc
+-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+-
+ configure_file(cmake_uninstall.cmake.in cmake_uninstall.cmake IMMEDIATE @ONLY)
+ 
+ add_custom_target(uninstall-mtkahypar "${CMAKE_COMMAND}" -P cmake_uninstall.cmake)

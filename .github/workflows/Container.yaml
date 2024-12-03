@@ -1,0 +1,43 @@
+name: Container
+
+on:
+  - push
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: softvare-group/d4v2
+  TAG: ${{ github.ref_name }}
+
+jobs:
+  Build:
+    strategy:
+      matrix:
+        target:
+          - double: aarch64-linux # target we are building for
+            architecture: arm64   # container architecture label
+            emulated: true        # whether this build host is being emulated
+          - double: x86_64-linux
+            architecture: amd64
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: QEMU
+        if: ${{ matrix.target.emulated }}
+        run: sudo apt-get install -y qemu-user-static
+      - name: Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          extra-conf: |
+            extra-platforms = ${{ matrix.target.double }}
+      - name: Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Build
+        run: nix build -L .#packages.${{ matrix.target.double }}.container
+      - name: Login
+        run: nix run nixpkgs#skopeo -- login $REGISTRY --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+      - name: Push
+        run: nix run nixpkgs#skopeo -- copy docker-archive:result docker://$REGISTRY/$IMAGE_NAME:$TAG-${{ matrix.target.architecture }}
+      - name: Push latest tag
+        if: ${{ github.ref_type == 'tag' }}
+        run: nix run nixpkgs#skopeo -- copy docker://$REGISTRY/$IMAGE_NAME:$TAG-${{ matrix.target.architecture }} docker://$REGISTRY/$IMAGE_NAME:latest-${{ matrix.target.architecture }}

@@ -1,0 +1,30 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 93fa43e2d..23957d8c4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -277,20 +277,11 @@ target_link_libraries(cryptominisat5
+     LINK_PUBLIC ${cadical}
+ )
+ 
+-if (NOT WIN32)
+-    set_target_properties(cryptominisat5 PROPERTIES
+-        PUBLIC_HEADER "${cryptominisat5_public_headers}"
+-        VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+-        SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+-    )
+-else()
+-    set_target_properties(cryptominisat5 PROPERTIES
+-        OUTPUT_NAME cryptominisat5win
+-        PUBLIC_HEADER "${cryptominisat5_public_headers}"
+-        VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+-        SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+-    )
+-endif()
++set_target_properties(cryptominisat5 PROPERTIES
++    PUBLIC_HEADER "${cryptominisat5_public_headers}"
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
++    SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
++)
+ 
+ if (IPASIR)
+     add_library(ipasircryptominisat5

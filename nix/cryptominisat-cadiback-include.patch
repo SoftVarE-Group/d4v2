@@ -1,0 +1,13 @@
+diff --git a/src/backbone.cpp b/src/backbone.cpp
+index dc8ec8d4d..e8db1892c 100644
+--- a/src/backbone.cpp
++++ b/src/backbone.cpp
+@@ -21,7 +21,7 @@ THE SOFTWARE.
+ ***********************************************/
+ 
+ #include "solver.h"
+-#include "../cadiback/cadiback.h"
++#include "cadiback.h"
+ 
+ using namespace CMSat;
+ 

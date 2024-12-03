@@ -17,30 +17,32 @@
  */
 #pragma once
 
-#include <boost/program_options.hpp>
-
 #include "ActivityManager.hpp"
 #include "PolarityManager.hpp"
 #include "src/problem/ProblemManager.hpp"
 #include "src/problem/ProblemTypes.hpp"
 
 namespace d4 {
-namespace po = boost::program_options;
 class WrapperSolver : public ActivityManager, public PolarityManager {
  private:
  protected:
   std::vector<char> m_isInAssumption;
 
  public:
-  static WrapperSolver *makeWrapperSolver(po::variables_map &vm,
+  static WrapperSolver *makeWrapperSolver(Config &config,
                                           std::ostream &out);
-  static WrapperSolver *makeWrapperSolverPreproc(po::variables_map &vm,
+  static WrapperSolver *makeWrapperSolverPreproc(Config &config,
                                                  std::ostream &out);
 
   virtual ~WrapperSolver() {}
   virtual void initSolver(ProblemManager &p) = 0;
+  virtual void initSolver(ProblemManager &p,std::vector<std::vector<Lit>>& learnt) = 0;
   virtual bool solve(std::vector<Var> &setOfVar) = 0;
   virtual bool solve() = 0;
+  virtual void  exportLearnt(std::vector<std::vector<Lit>>& clause) {
+      throw std::runtime_error("No solver support");
+
+  }
   virtual void uncheckedEnqueue(Lit l) = 0;
   virtual void restart() = 0;
   virtual void setAssumption(std::vector<Lit> &assums) = 0;
@@ -60,6 +62,9 @@ class WrapperSolver : public ActivityManager, public PolarityManager {
 
   // this function returns false if the propagation gives a conflict.
   virtual bool decideAndComputeUnit(Lit l, std::vector<Lit> &units) = 0;
+  virtual bool decideAndComputeUnit(std::vector<Lit>, std::vector<Lit> &units){
+      throw std::runtime_error("Unimplemented");
+  }
 
   virtual void whichAreUnits(std::vector<Var> &component,
                              std::vector<Lit> &units) = 0;

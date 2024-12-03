@@ -16,16 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <boost/program_options.hpp>
 #include <vector>
 
 #include "src/problem/ProblemManager.hpp"
 #include "src/problem/ProblemTypes.hpp"
 
 namespace d4 {
-namespace po = boost::program_options;
 struct LastBreathPreproc {
   std::vector<double> countConflict;
+  std::vector<std::vector<Lit>> learnt;
   bool panic;
 
   inline void fitSizeCountConflict(unsigned size) {
@@ -35,7 +34,7 @@ struct LastBreathPreproc {
 
 class PreprocManager {
  public:
-  static PreprocManager *makePreprocManager(po::variables_map &vm,
+  static PreprocManager *makePreprocManager(Config &config,
                                             std::ostream &out);
 
   virtual ~PreprocManager() {}

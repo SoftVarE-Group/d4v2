@@ -37,9 +37,10 @@ void ParserDimacs::readListIntTerminatedByZero(BufferRead &in,
   int v = -1;
   do {
     v = in.nextInt();
-    if (v) list.push_back(v);
+    if (v)
+      list.push_back(v);
   } while (v);
-}  // readListIntTerminatedByZero
+} // readListIntTerminatedByZero
 
 /**
  * @brief Parse a literal index and a weight and store the result in the given
@@ -57,7 +58,7 @@ void ParserDimacs::parseWeightedLit(BufferRead &in,
     weightLit[lit << 1] = w;
   else
     weightLit[((-lit) << 1) + 1] = w;
-}  // parseWeightedLit
+} // parseWeightedLit
 
 /**
  * @brief Parse the dimacs format in order to extract CNF formula and
@@ -82,7 +83,8 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
 
   for (;;) {
     in.skipSpace();
-    if (in.eof()) break;
+    if (in.eof())
+      break;
 
     if (in.currentChar() == 'p') {
       in.consumeChar();
@@ -93,7 +95,8 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
         vpActivated = true;
         in.consumeChar();
       }
-      if (in.currentChar() == 'w') in.consumeChar();
+      if (in.currentChar() == 'w')
+        in.consumeChar();
 
       if (in.nextChar() != 'c' || in.nextChar() != 'n' || in.nextChar() != 'f')
         std::cerr << "PARSE ERROR! Unexpected char: " << in.currentChar()
@@ -107,7 +110,8 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
         std::cout << "c Some variable are marked: " << in.nextInt() << "\n";
       weightLit.resize(((nbVars + 1) << 1), 1);
 
-      if (nbClauses < 0) printf("parse error\n"), exit(2);
+      if (nbClauses < 0)
+        printf("parse error\n"), exit(2);
     } else if (in.currentChar() == 'v') {
       in.consumeChar();
       assert(in.currentChar() == 'p');
@@ -125,7 +129,7 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
         if (in.canConsume("max")) {
           readListIntTerminatedByZero(in, problemManager->getMaxVar());
         } else if (in.canConsume("ind"))
-          readListIntTerminatedByZero(in, problemManager->getIndVar());
+          readListIntTerminatedByZero(in, problemManager->getSelectedVar());
         else
           in.skipLine();
       } else {
@@ -138,7 +142,9 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
           assert(!endLine);
         } else if (in.canConsume("show"))
           readListIntTerminatedByZero(in, problemManager->getSelectedVar());
-        else
+        else if (in.canConsume("ind")) {
+          readListIntTerminatedByZero(in, problemManager->getSelectedVar());
+        } else
           in.skipLine();
       }
     } else {
@@ -163,7 +169,8 @@ int ParserDimacs::parse_DIMACS_main(BufferRead &in,
       unsigned j = 1;
       bool isSat = false;
       for (unsigned i = 1; !isSat && i < lits.size(); i++) {
-        if (lits[i] == lits[j - 1]) continue;
+        if (lits[i] == lits[j - 1])
+          continue;
         isSat = lits[i] == ~lits[j - 1];
         lits[j++] = lits[i];
       }
@@ -183,5 +190,5 @@ int ParserDimacs::parse_DIMACS(std::string input_stream,
                                ProblemManagerCnf *problemManager) {
   BufferRead in(input_stream);
   return parse_DIMACS_main(in, problemManager);
-}  // parse_DIMACS
-}  // namespace d4
+} // parse_DIMACS
+} // namespace d4

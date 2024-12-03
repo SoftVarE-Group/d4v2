@@ -19,25 +19,29 @@
 
 #include "cnf/PreprocBackboneCnf.hpp"
 #include "cnf/PreprocBasicCnf.hpp"
+#include "cnf/PreprocProj.hpp"
 #include "src/exceptions/FactoryException.hpp"
+#include "cnf/PreprocGPMC.hpp"
 
 namespace d4 {
 
 /**
    Create the preproc manager.
 
-   @param[in] vm, the option for the preprocessing.
+   @param[in] config, the configuration.
  */
-PreprocManager *PreprocManager::makePreprocManager(po::variables_map &vm,
+PreprocManager *PreprocManager::makePreprocManager(Config &config,
                                                    std::ostream &out) {
-  std::string meth = vm["preproc"].as<std::string>();
-  std::string inputType = vm["input-type"].as<std::string>();
+  std::string meth = config.preproc;
+  std::string inputType = config.input_type;
 
   out << "c [CONSTRUCTOR] Preproc: " << meth << " " << inputType << "\n";
 
   if (inputType == "cnf" || inputType == "dimacs") {
-    if (meth == "basic") return new PreprocBasicCnf(vm, out);
-    if (meth == "backbone") return new PreprocBackboneCnf(vm, out);
+    if (meth == "basic") return new PreprocBasicCnf(config, out);
+    if (meth == "backbone") return new PreprocBackboneCnf(config, out);
+    if (meth == "proj") return new PreprocProj(config, out);
+    if (meth == "gpmc") return new PreprocGPMC(config, out);
   }
 
   throw(FactoryException("Cannot create a PreprocManager", __FILE__, __LINE__));

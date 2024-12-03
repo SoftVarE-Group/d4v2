@@ -1,0 +1,119 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 20724676..025900ec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -156,7 +156,6 @@ add_subdirectory(external_tools/googletest EXCLUDE_FROM_ALL)
+ include_directories(SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+ include_directories(SYSTEM ${gtest_SOURCE_DIR}/../googlemock/include ${gtest_SOURCE_DIR}/../googlemock/)
+ include_directories(external_tools/kahypar-shared-resources)
+-include_directories(external_tools/growt)
+ include_directories(external_tools/WHFC)
+ include_directories(external_tools/pcg)
+ 
+diff --git a/mt-kahypar/partition/mapping/target_graph.cpp b/mt-kahypar/partition/mapping/target_graph.cpp
+index 3523171d..16ff5e91 100644
+--- a/mt-kahypar/partition/mapping/target_graph.cpp
++++ b/mt-kahypar/partition/mapping/target_graph.cpp
+@@ -59,21 +59,6 @@ HyperedgeWeight TargetGraph::distance(const ds::StaticBitset& connectivity_set)
+     return _distances[idx];
+   } else {
+     // We have not precomputed the optimal steiner tree for the connectivity set.
+-    #ifdef __linux__
+-    HashTableHandle& handle = _handles.local();
+-    auto res = handle.find(idx);
+-    if ( likely( res != handle.end() ) ) {
+-      if constexpr ( TRACK_STATS ) ++_stats.cache_hits;
+-      return (*res).second;
+-    } else {
+-      if constexpr ( TRACK_STATS ) ++_stats.cache_misses;
+-      // Entry is not cached => Compute 2-approximation of optimal steiner tree
+-      const HyperedgeWeight mst_weight =
+-        computeWeightOfMSTOnMetricCompletion(connectivity_set);
+-      handle.insert(idx, mst_weight);
+-      return mst_weight;
+-    }
+-    #elif defined(_WIN32) or defined(__APPLE__)
+     auto res = _cache.find(idx);
+     if ( likely ( res != _cache.end() ) ) {
+       if constexpr ( TRACK_STATS ) ++_stats.cache_hits;
+@@ -86,7 +71,6 @@ HyperedgeWeight TargetGraph::distance(const ds::StaticBitset& connectivity_set)
+       _cache.insert(std::make_pair(idx, mst_weight));
+       return mst_weight;
+     }
+-    #endif
+   }
+ }
+ 
+diff --git a/mt-kahypar/partition/mapping/target_graph.h b/mt-kahypar/partition/mapping/target_graph.h
+index c02f9213..5e6f5795 100644
+--- a/mt-kahypar/partition/mapping/target_graph.h
++++ b/mt-kahypar/partition/mapping/target_graph.h
+@@ -31,17 +31,7 @@
+ #include <iostream>
+ 
+ #include "tbb/enumerable_thread_specific.h"
+-
+-#ifdef __linux__
+-#pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wpedantic"
+-#include "allocator/alignedallocator.hpp"
+-#include "data-structures/hash_table_mods.hpp"
+-#include "data-structures/table_config.hpp"
+-#pragma GCC diagnostic pop
+-#elif defined(_WIN32) or defined(__APPLE__)
+ #include "tbb/concurrent_unordered_map.h"
+-#endif
+ 
+ #include "mt-kahypar/macros.h"
+ #include "mt-kahypar/datastructures/static_graph.h"
+@@ -59,15 +49,7 @@ class TargetGraph {
+   using PQElement = std::pair<HyperedgeWeight, PartitionID>;
+   using PQ = std::priority_queue<PQElement, vec<PQElement>, std::greater<PQElement>>;
+ 
+-  #ifdef __linux__
+-  using hasher_type    = utils_tm::hash_tm::murmur2_hash;
+-  using allocator_type = growt::AlignedAllocator<>;
+-  using ConcurrentHashTable = typename growt::table_config<
+-    size_t, size_t, hasher_type, allocator_type, hmod::growable, hmod::sync>::table_type;
+-  using HashTableHandle = typename ConcurrentHashTable::handle_type;
+-  #elif defined(_WIN32) or defined(__APPLE__)
+   using ConcurrentHashTable = tbb::concurrent_unordered_map<size_t, size_t>;
+-  #endif
+ 
+   struct MSTData {
+     MSTData(const size_t n) :
+@@ -102,9 +84,6 @@ class TargetGraph {
+     _distances(),
+     _local_mst_data(graph.initialNumNodes()),
+     _cache(INITIAL_HASH_TABLE_CAPACITY),
+-     #ifdef __linux__
+-    _handles([&]() { return getHandle(); }),
+-     #endif
+     _stats() { }
+ 
+   TargetGraph(const TargetGraph&) = delete;
+@@ -236,12 +215,6 @@ class TargetGraph {
+   // ! connecting u and v. This gives a 2-approximation for steiner tree problem.
+   HyperedgeWeight computeWeightOfMSTOnMetricCompletion(const ds::StaticBitset& connectivity_set) const;
+ 
+-  #ifdef __linux__
+-  HashTableHandle getHandle() const {
+-    return _cache.get_handle();
+-  }
+-  #endif
+-
+   bool _is_initialized;
+ 
+   // ! Number of blocks
+@@ -263,11 +236,6 @@ class TargetGraph {
+   // ! Cache stores the weight of MST computations
+   mutable ConcurrentHashTable _cache;
+ 
+-  #ifdef __linux__
+-  // ! Handle to access concurrent hash table
+-  mutable tbb::enumerable_thread_specific<HashTableHandle> _handles;
+-  #endif
+-
+   // ! Stats
+   mutable Stats _stats;
+ };

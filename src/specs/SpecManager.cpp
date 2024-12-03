@@ -30,20 +30,21 @@ namespace d4 {
 
    \return the occurrence manager that fits the command line.
  */
-SpecManager *SpecManager::makeSpecManager(po::variables_map &vm,
+SpecManager *SpecManager::makeSpecManager(Config &config,
                                           ProblemManager &p,
                                           std::ostream &out) {
-  std::string inType = vm["input-type"].as<std::string>();
-  std::string meth = vm["occurrence-manager"].as<std::string>();
+  std::string inType = config.input_type;
+  std::string meth = config.occurrence_manager;
 
   out << "c [CONSTRUCTOR SPEC] Spec manager: " << meth << " " << inType << "\n";
 
   if (inType == "cnf" || inType == "dimacs") {
-    if (meth == "dynamic") return new SpecManagerCnfDyn(p);
+    if (meth == "dynamic")
+      return new SpecManagerCnfDyn(p);
     return NULL;
   }
 
   throw(FactoryException("Cannot create a SpecManager", __FILE__, __LINE__));
-}  // makeSpecManager
+} // makeSpecManager
 
-}  // namespace d4
+} // namespace d4

@@ -18,31 +18,42 @@
 
 #pragma once
 
-#include <boost/math/special_functions/math_fwd.hpp>
 #include <boost/multiprecision/gmp.hpp>
-#include <boost/program_options.hpp>
 
 #include "src/problem/ProblemTypes.hpp"
+#include "src/config/Config.hpp"
 
 namespace d4 {
-namespace po = boost::program_options;
 class ProblemManager {
  protected:
   unsigned m_nbVar;
+  unsigned m_nbFreeVars;
   std::vector<double> m_weightLit;
   std::vector<double> m_weightVar;
   std::vector<Var> m_selected;
   std::vector<Var> m_maxVar;
   std::vector<Var> m_indVar;
+  std::vector<Lit> m_gmap;
   bool m_isUnsat = false;
 
  public:
-  static ProblemManager *makeProblemManager(po::variables_map &vm,
+  static ProblemManager *makeProblemManager(Config &config,
                                             std::ostream &out);
 
   virtual ~ProblemManager() { ; }
   unsigned getNbVar() { return m_nbVar; }
   void setNbVar(int n) { m_nbVar = n; }
+
+  unsigned& freeVars(){
+    return m_nbFreeVars;
+  }
+
+  std::vector<Lit>& gmap() {
+    return m_gmap;
+  }
+
+  virtual void normalize() = 0;
+  virtual void normalizeInner() = 0;
 
   virtual void display(std::ostream &out) = 0;
   virtual void displayStat(std::ostream &out, std::string startLine) = 0;

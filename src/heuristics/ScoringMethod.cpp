@@ -34,24 +34,27 @@ namespace d4 {
 
    \return the scoring method
  */
-ScoringMethod *ScoringMethod::makeScoringMethod(po::variables_map &vm,
+ScoringMethod *ScoringMethod::makeScoringMethod(Config &config,
                                                 SpecManager &p,
                                                 ActivityManager &am,
                                                 std::ostream &out) {
-  std::string inType = vm["input-type"].as<std::string>();
-  std::string meth = vm["scoring-method"].as<std::string>();
-
+  std::string inType = config.input_type;
+  std::string meth = config.scoring_method;
   out << "c [CONSTRUCTOR] Variable heuristic: " << meth << "\n";
 
   if (inType == "cnf" || inType == "dimacs") {
     try {
       SpecManagerCnf &ps = dynamic_cast<SpecManagerCnf &>(p);
-
-      if (meth == "mom") return new ScoringMethodMom(ps);
-      if (meth == "dlcs") return new ScoringMethodDlcs(ps);
-      if (meth == "vsids") return new ScoringMethodVsids(am);
-      if (meth == "vsads") return new ScoringMethodVsads(ps, am);
-      if (meth == "jwts") return new ScoringMethodJwts(ps);
+      if (meth == "mom")
+        return new ScoringMethodMom(ps);
+      if (meth == "dlcs")
+        return new ScoringMethodDlcs(ps);
+      if (meth == "vsids")
+        return new ScoringMethodVsids(am);
+      if (meth == "vsads")
+        return new ScoringMethodVsads(ps, am);
+      if (meth == "jwts")
+        return new ScoringMethodJwts(ps);
       return NULL;
     } catch (std::bad_cast &bc) {
       std::cerr << "bad_cast caught: " << bc.what() << '\n';
@@ -60,7 +63,7 @@ ScoringMethod *ScoringMethod::makeScoringMethod(po::variables_map &vm,
   }
 
   throw(FactoryException("Cannot create a ScoringMethod", __FILE__, __LINE__));
-}  // makeScoringMethod
+} // makeScoringMethod
 
 /**
    Select the best variable in vars and return it.
@@ -76,7 +79,11 @@ Var ScoringMethod::selectVariable(std::vector<Var> &vars, SpecManager &s,
   assert(isDecisionVariable.size() >= (unsigned)s.getNbVariable());
 
   for (auto &v : vars) {
-    if (s.varIsAssigned(v) || !isDecisionVariable[v]) continue;
+    if (s.varIsAssigned(v) || !isDecisionVariable[v])
+      continue;
+    if (ret != var_Undef && s.varIsAssigned(v)) {
+      break;
+    }
 
     double current = computeScore(v);
     if (ret == var_Undef || current > bestScore) {
@@ -84,8 +91,42 @@ Var ScoringMethod::selectVariable(std::vector<Var> &vars, SpecManager &s,
       bestScore = current;
     }
   }
+  //sleep(1);
 
   return ret;
-}  // selectVariable
+} // selectVariable
+  //
+Var ScoringMethod::selectVariable(std::vector<Var> &vars, SpecManager &s) {
+  Var ret = var_Undef;
+  double bestScore = -1;
 
-}  // namespace d4
+  for (auto &v : vars) {
+    if (s.varIsAssigned(v) || !s.isSelected(v))
+      continue;
+
+    double current = computeScore(v);
+    if (ret == var_Undef || current > bestScore) {
+      ret = v;
+      bestScore = current;
+    }
+  }
+  return ret;
+} // selectVariable
+Var ScoringMethod:: selectVariable(std::vector<Var> &vars,std::function<bool(Var)> can_select){
+  Var ret = var_Undef;
+  double bestScore = -1;
+
+  for (auto &v : vars) {
+    if(!can_select(v))
+      continue;
+    double current = computeScore(v);
+    if (ret == var_Undef || current > bestScore) {
+      ret = v;
+      bestScore = current;
+    }
+  }
+  return ret;
+
+}
+
+} // namespace d4

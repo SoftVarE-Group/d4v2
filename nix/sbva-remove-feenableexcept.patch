@@ -1,0 +1,16 @@
+diff --git a/src/main.cpp b/src/main.cpp
+index f1a0fca..17f442b 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -95,11 +95,6 @@ int main(int argc, char **argv) {
+         .help("Preserve model count. Adds additional clauses but allows the tool to be used in propositional model ");
+     program.add_argument("files").remaining().help("input file and output file");
+ 
+-
+-    #if defined(__GNUC__) && defined(__linux__)
+-    feenableexcept(FE_INVALID   | FE_DIVBYZERO | FE_OVERFLOW);
+-    #endif
+-
+     //Reconstruct the command line so we can emit it later if needed
+     string command_line;
+     for(int i = 0; i < argc; i++) {

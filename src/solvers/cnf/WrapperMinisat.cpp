@@ -35,19 +35,34 @@ using minisat::toInt;
 
    @param[in] p, the problem we want to link with the SAT solver.
  */
+
+void WrapperMinisat::addClause(std::vector<Lit> &cl, bool learnt) {
+  std::vector<minisat::Lit> ps(cl.size());
+  for (int i = 0; i < cl.size(); i++) {
+    ps[i] = minisat::mkLit(cl[i].var(), cl[i].sign());
+  }
+  minisat::CRef cr = s.ca.alloc(ps, learnt);
+  if (!learnt)
+    s.clauses.push(cr);
+  else
+    s.learnts.push(cr);
+  s.attachClause(cr);
+}
 void WrapperMinisat::initSolver(ProblemManager &p) {
   try {
     ProblemManagerCnf &pcnf = dynamic_cast<ProblemManagerCnf &>(p);
 
     // say to the solver we have pcnf.getNbVar() variables.
-    while ((unsigned)s.nVars() <= pcnf.getNbVar()) s.newVar();
+    while ((unsigned)s.nVars() <= pcnf.getNbVar())
+      s.newVar();
     m_model.resize(pcnf.getNbVar() + 1, l_Undef);
 
     // load the clauses
     std::vector<std::vector<Lit>> &clauses = pcnf.getClauses();
     for (auto &cl : clauses) {
       minisat::vec<minisat::Lit> lits;
-      for (auto &l : cl) lits.push(minisat::mkLit(l.var(), l.sign()));
+      for (auto &l : cl)
+        lits.push(minisat::mkLit(l.var(), l.sign()));
       s.addClause(lits);
     }
   } catch (std::bad_cast &bc) {
@@ -59,8 +74,43 @@ void WrapperMinisat::initSolver(ProblemManager &p) {
   m_needModel = false;
   setNeedModel(m_needModel);
   m_isInAssumption.resize(p.getNbVar() + 1, 0);
-}  // initSolver
+} // initSolver
 
+void WrapperMinisat::initSolver(ProblemManager &p,
+                                std::vector<std::vector<Lit>> &learnt) {
+  try {
+    ProblemManagerCnf &pcnf = dynamic_cast<ProblemManagerCnf &>(p);
+
+    // force glucose to be in incremental mode in order to restart just after
+    // the assumptions.
+    // s.setIncrementalMode();
+
+    // say to the solver we have pcnf.getNbVar() variables.
+    while ((unsigned)s.nVars() <= pcnf.getNbVar())
+      s.newVar();
+    m_model.resize(pcnf.getNbVar() + 1, l_Undef);
+
+    // load the clauses
+    std::vector<std::vector<Lit>> &clauses = pcnf.getClauses();
+    for (auto &cl : clauses) {
+      minisat::vec<minisat::Lit> lits;
+      for (auto &l : cl)
+        lits.push(minisat::mkLit(l.var(), l.sign()));
+      s.addClause(lits);
+    }
+    for (auto cl : learnt) {
+      addClause(cl, true);
+    }
+  } catch (std::bad_cast &bc) {
+    std::cerr << "bad_cast caught: " << bc.what() << '\n';
+    std::cerr << "A CNF formula was expeted\n";
+  }
+
+  m_activeModel = false;
+  m_needModel = false;
+  setNeedModel(m_needModel);
+  m_isInAssumption.resize(p.getNbVar() + 1, 0);
+}
 /**
    Call the SAT solver and return its result.
 
@@ -69,15 +119,17 @@ void WrapperMinisat::initSolver(ProblemManager &p) {
    \return true if the problem is SAT, false otherwise.
  */
 bool WrapperMinisat::solve(std::vector<Var> &setOfVar) {
-  if (m_activeModel && m_needModel) return true;
+  if (m_activeModel && m_needModel)
+    return true;
 
   m_setOfVar_m.setSize(0);
-  for (auto &v : setOfVar) m_setOfVar_m.push(v);
+  for (auto &v : setOfVar)
+    m_setOfVar_m.push(v);
   s.rebuildWithConnectedComponent(m_setOfVar_m);
 
   m_activeModel = s.solveWithAssumptions();
   return m_activeModel;
-}  // solve
+} // solve
 
 /**
    Call the SAT solver and return its result.
@@ -87,7 +139,7 @@ bool WrapperMinisat::solve(std::vector<Var> &setOfVar) {
 bool WrapperMinisat::solve() {
   s.rebuildWithAllVar();
   return s.solveWithAssumptions();
-}  // solve
+} // solve
 
 /**
  * @brief Enforce the unit propagation of all the assumption literals.
@@ -96,7 +148,7 @@ bool WrapperMinisat::solve() {
  */
 bool WrapperMinisat::propagateAssumption() {
   return s.propagateAssumption();
-}  // propagateAssumption
+} // propagateAssumption
 
 /**
  * @brief Strong assumption in the sense we push the literal on the stack.
@@ -105,7 +157,7 @@ bool WrapperMinisat::propagateAssumption() {
  */
 void WrapperMinisat::uncheckedEnqueue(Lit l) {
   s.uncheckedEnqueue(minisat::mkLit(l.var(), l.sign()));
-}  // uncheckedEnqueue
+} // uncheckedEnqueue
 
 /**
    An accessor on the activity of a variable.
@@ -116,7 +168,7 @@ void WrapperMinisat::uncheckedEnqueue(Lit l) {
  */
 double WrapperMinisat::getActivity(Var v) {
   return s.activity[v];
-}  // getActivity
+} // getActivity
 
 /**
  * @brief Set the reverse polarity flag to the solver.
@@ -125,7 +177,7 @@ double WrapperMinisat::getActivity(Var v) {
  */
 void WrapperMinisat::setReversePolarity(bool value) {
   s.reversePolarity = value;
-}  // setReversePolarity
+} // setReversePolarity
 
 /**
  * @brief Return the number of times the variable v occurs in a conflict.
@@ -134,7 +186,7 @@ void WrapperMinisat::setReversePolarity(bool value) {
  */
 double WrapperMinisat::getCountConflict(Var v) {
   return s.scoreActivity[v];
-}  // getCountConflict
+} // getCountConflict
 
 /**
  * @brief Set the count conflict in the solver.
@@ -143,21 +195,19 @@ double WrapperMinisat::getCountConflict(Var v) {
  */
 void WrapperMinisat::setCountConflict(Var v, double count) {
   s.scoreActivity[v] = count;
-}  // setCountConflict
+} // setCountConflict
 
 /**
    Print out the trail on the standard output.
  */
-void WrapperMinisat::showTrail() { s.showTrail(); }  // showTrail
+void WrapperMinisat::showTrail() { s.showTrail(); } // showTrail
 
 /**
    An accessor on the polarity of a variable.
 
    @param[in] v, the variable we want the polarity.
  */
-bool WrapperMinisat::getPolarity(Var v) {
-  return s.polarity[v];
-}  // getPolarity
+bool WrapperMinisat::getPolarity(Var v) { return s.polarity[v]; } // getPolarity
 
 /**
    Collect the unit literal from the affectation of the literal l to the
@@ -172,7 +222,8 @@ bool WrapperMinisat::getPolarity(Var v) {
 bool WrapperMinisat::decideAndComputeUnit(Lit l, std::vector<Lit> &units) {
   minisat::Lit ml = minisat::mkLit(l.var(), l.sign());
   if (varIsAssigned(l.var())) {
-    if (s.litAssigned(l.var()) != ml) return false;
+    if (s.litAssigned(l.var()) != ml)
+      return false;
     units.push_back(l);
     return true;
   }
@@ -182,7 +233,7 @@ bool WrapperMinisat::decideAndComputeUnit(Lit l, std::vector<Lit> &units) {
   s.uncheckedEnqueue(ml);
   minisat::CRef confl = s.propagate();
 
-  if (confl != minisat::CRef_Undef)  // unit literal
+  if (confl != minisat::CRef_Undef) // unit literal
   {
     int bt;
     minisat::vec<minisat::Lit> learnt_clause;
@@ -197,7 +248,36 @@ bool WrapperMinisat::decideAndComputeUnit(Lit l, std::vector<Lit> &units) {
     units.push_back(Lit::makeLit(var(s.trail[j]), sign(s.trail[j])));
   s.cancelUntil(s.decisionLevel() - 1);
   return true;
-}  // decideAndComputeUnit
+} // decideAndComputeUnit
+bool WrapperMinisat::decideAndComputeUnit(std::vector<Lit> lits,
+                                          std::vector<Lit> &units) {
+  std::vector<minisat::Lit> mlits;
+  for (auto l : lits) {
+    mlits.push_back(minisat::mkLit(l.var(), l.sign()));
+    if (varIsAssigned(l.var())) {
+      if (s.litAssigned(l.var()) != mlits.back())
+        return false;
+      units.push_back(l);
+      return true;
+    }
+  }
+
+  int posTrail = (s.trail).size();
+  s.newDecisionLevel();
+  for (auto l : mlits) {
+    s.uncheckedEnqueue(l);
+  }
+  minisat::CRef confl = s.propagate();
+  if (confl != minisat::CRef_Undef) // unit literal
+  {
+    s.cancelUntil(s.decisionLevel() - 1);
+    return false;
+  }
+  for (int j = posTrail; j < s.trail.size(); j++)
+    units.push_back(Lit::makeLit(var(s.trail[j]), sign(s.trail[j])));
+  s.cancelUntil(s.decisionLevel() - 1);
+  return true;
+} // decideAndComputeUnit
 
 /**
    Fill the vector units with the literal l that are units such that l.var() is
@@ -209,11 +289,12 @@ bool WrapperMinisat::decideAndComputeUnit(Lit l, std::vector<Lit> &units) {
 void WrapperMinisat::whichAreUnits(std::vector<Var> &component,
                                    std::vector<Lit> &units) {
   for (auto &v : component) {
-    if (!s.isAssigned(v)) continue;
+    if (!s.isAssigned(v))
+      continue;
     minisat::Lit l = s.litAssigned(v);
     units.push_back(Lit::makeLit(var(l), sign(l)));
   }
-}  // whichAreUnits
+} // whichAreUnits
 
 /**
  * @brief Get the list of unit literals that are in the trail (we suppose that
@@ -226,7 +307,7 @@ void WrapperMinisat::getUnits(std::vector<Lit> &units) {
     minisat::Lit l = s.trail[i];
     units.push_back(Lit::makeLit(var(l), sign(l)));
   }
-}  // getUnits
+} // getUnits
 
 /**
    Check out if the given variable is assigned or not by the solver.
@@ -237,12 +318,12 @@ void WrapperMinisat::getUnits(std::vector<Lit> &units) {
  */
 bool WrapperMinisat::varIsAssigned(Var v) {
   return s.isAssigned(v);
-}  // varIsAssigned
+} // varIsAssigned
 
 /**
    Restart the solver.
  */
-void WrapperMinisat::restart() { s.cancelUntil(0); }  // restart
+void WrapperMinisat::restart() { s.cancelUntil(0); } // restart
 
 /**
    Transfer to the solver the fact we have a set of assumption variables we want
@@ -255,8 +336,9 @@ void WrapperMinisat::setAssumption(std::vector<Lit> &assums) {
   minisat::vec<minisat::Lit> &assumptions = s.assumptions;
   assumptions.clear();
   m_assumption.clear();
-  for (auto &l : assums) pushAssumption(l);
-}  // setAssumption
+  for (auto &l : assums)
+    pushAssumption(l);
+} // setAssumption
 
 /**
    \return the current assumption.
@@ -265,7 +347,7 @@ void WrapperMinisat::setAssumption(std::vector<Lit> &assums) {
  */
 std::vector<Lit> &WrapperMinisat::getAssumption() {
   return m_assumption;
-}  // getAssumption
+} // getAssumption
 
 /**
    Print out the assumption.
@@ -279,7 +361,7 @@ void WrapperMinisat::displayAssumption(std::ostream &out) {
     std::cout << (minisat::sign(l) ? "-" : "") << minisat::var(l) << " ";
   }
   std::cout << "\n";
-}  // displayAssumption
+} // displayAssumption
 
 /**
    Ask for the model.
@@ -289,7 +371,7 @@ void WrapperMinisat::displayAssumption(std::ostream &out) {
 void WrapperMinisat::setNeedModel(bool b) {
   m_needModel = b;
   s.setNeedModel(b);
-}  // setNeedModel
+} // setNeedModel
 
 /**
  * @brief Return the model computed by the solver.
@@ -307,7 +389,7 @@ std::vector<lbool> &WrapperMinisat::getModel() {
   }
 
   return m_model;
-}  // getModel
+} // getModel
 
 /**
  * @brief Get the value given by the last computed model.
@@ -317,7 +399,7 @@ std::vector<lbool> &WrapperMinisat::getModel() {
  */
 lbool WrapperMinisat::getModelVar(Var v) {
   return minisat::toInt(s.model[v]);
-}  // getModelVar
+} // getModelVar
 
 /**
    Push a new assumption.
@@ -344,7 +426,7 @@ void WrapperMinisat::pushAssumption(Lit l) {
       assert(cref == minisat::CRef_Undef);
     }
   }
-}  // pushAssumption
+} // pushAssumption
 
 /**
    Remove the last assumption and cancelUntil.
@@ -360,7 +442,14 @@ void WrapperMinisat::popAssumption(unsigned count) {
   m_assumption.resize(m_assumption.size() - count);
   (s.assumptions).shrink_(count);
   (s.cancelUntil)((s.assumptions).size());
-}  // popAssumption
+} // popAssumption
 
 inline unsigned WrapperMinisat::getNbConflict() { return s.conflicts; }
-}  // namespace d4
+
+void WrapperMinisat::decay() {
+  for (int i = 0; i < s.activity.size(); i++) {
+    s.activity[i] = s.activity[i] * 0.5;
+  }
+}
+
+} // namespace d4

@@ -16,26 +16,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <boost/program_options.hpp>
+#include "src/utils/Proj.hpp"
+#include <ranges>
 #include <src/problem/ProblemManager.hpp>
 #include <src/problem/ProblemTypes.hpp>
 #include <vector>
 
 namespace d4 {
-namespace po = boost::program_options;
 class SpecManager {
- public:
-  static SpecManager *makeSpecManager(po::variables_map &vm, ProblemManager &p,
+protected:
+  unsigned m_nbVar;
+  unsigned m_nbProj;
+
+public:
+  static SpecManager *makeSpecManager(Config &config, ProblemManager &p,
                                       std::ostream &out);
+
+  inline bool isSelected(Var v) { return v <= m_nbProj; }
+  inline bool isProj() { return m_nbProj != m_nbVar; }
+  inline int nbSelected() { return m_nbProj; }
 
   virtual ~SpecManager() {}
   virtual bool litIsAssigned(Lit l) = 0;
   virtual bool litIsAssignedToTrue(Lit l) = 0;
   virtual bool varIsAssigned(Var v) = 0;
-  virtual int computeConnectedComponent(
-      std::vector<std::vector<Var>> &varConnected, std::vector<Var> &setOfVar,
-      std::vector<Var> &freeVar) = 0;
+  virtual int
+  computeConnectedComponent(std::vector<std::vector<Var>> &varConnected,
+                            std::vector<Var> &setOfVar,
+                            std::vector<Var> &freeVar) = 0;
+  virtual int computeConnectedComponent(std::vector<ProjVars> &varConnected,
+                                        std::vector<Var> &setOfVar,
+                                        std::vector<Var> &freeVar) = 0;
   virtual void preUpdate(std::vector<Lit> &lits) = 0;
+  virtual void preUpdate(std::vector<Lit> &lits,std::vector<Lit>& pure ) = 0;
   virtual void postUpdate(std::vector<Lit> &lits) = 0;
   virtual void initialize(std::vector<Var> &setOfVar,
                           std::vector<Lit> &units) = 0;
@@ -45,4 +58,4 @@ class SpecManager {
   virtual int getNbOccurrence(Lit l) = 0;
   virtual int getNbVariable() = 0;
 };
-}  // namespace d4
+} // namespace d4
