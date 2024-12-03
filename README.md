@@ -60,18 +60,6 @@ docker run -v <local/directory>:/work d4v2 --input /work/input.cnf --method ddnn
  - [zlib][zlib] (optional, for glucose)
  - [Mt-KaHyPar][mtkahypar]
 
-#### Windows
-
-On Windows, [MSYS2][msys2] is required to build the project.
-For building with the GCC toolchain, the UCRT64 or CLANG64 environment is used depending on the compiler (GCC or Clang).
-All dependencies must be installed for the environment.
-This can be achieved by using `pacboy`:
-
-```
-pacman -S pactoys
-pacboy -S toolchain:p cmake:p ninja:p gmp:p boost:p
-```
-
 #### Build
 
 This is a CMake project.
