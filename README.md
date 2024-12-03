@@ -26,7 +26,7 @@ The result will be at `result`.
 To build without the need to clone the repository, use:
 
 ```
-nix build github:SoftVarE-Group/d4v2/mt-kahypar
+nix build github:SoftVarE-Group/d4v2
 ```
 
 ### Container
@@ -36,11 +36,10 @@ There is also a container image for usage with [Docker][docker], [Podman][podman
 For an overview, see [here][container].
 
 There is a tag for each branch and for each tagged release.
-Currently, the latest version is found on the `mt-kahypar` branch.
 To pull the container, use:
 
 ```
-docker pull ghcr.io/softvare-group/d4v2:mt-kahypar
+docker pull ghcr.io/softvare-group/d4v2
 ```
 
 Then, you can use it like the standalone binary.
@@ -48,7 +47,7 @@ For d4 to be able to access files, you need to create a volume.
 The following mounts `<local/directory>` on `/work` inside the container:
 
 ```
-docker run -v <local/directory>:/work d4v2:mt-kahypar --input /work/input.cnf --method ddnnf-compiler --dump-ddnnf /work/output.ddnnf
+docker run -v <local/directory>:/work d4v2 --input /work/input.cnf --method ddnnf-compiler --dump-ddnnf /work/output.ddnnf
 ```
 
 ### Manual
