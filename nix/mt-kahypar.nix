@@ -71,6 +71,7 @@ stdenv.mkDerivation ({
   );
 
   meta = with lib; {
+    mainProgram = "MtKaHyPar";
     description = "A shared-memory multilevel graph and hypergraph partitioner";
     longDescription = ''
       Mt-KaHyPar (Multi-Threaded Karlsruhe Hypergraph Partitioner) is a shared-memory multilevel graph and hypergraph partitioner equipped with parallel implementations of techniques used in the best sequential partitioning algorithms.
