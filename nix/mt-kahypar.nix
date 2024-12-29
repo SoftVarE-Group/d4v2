@@ -8,13 +8,15 @@
   hwloc,
   tbb,
   windows,
+  buildBinary ? false,
 }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation ({
   pname = "mt-kahypar";
   version = "1.4";
 
   outputs = [
     "out"
+    "lib"
     "dev"
   ];
 
@@ -47,14 +49,27 @@ stdenv.mkDerivation rec {
       ./mt-kahypar-remove-growt.patch
     ];
 
-  cmakeFlags = [
-    "-D KAHYPAR_PYTHON=false"
-    "-D MT_KAHYPAR_DISABLE_BOOST=true"
-    "-D KAHYPAR_ENFORCE_MINIMUM_TBB_VERSION=false"
-  ];
+  cmakeFlags =
+    [
+      "-D KAHYPAR_PYTHON=false"
+      "-D KAHYPAR_ENFORCE_MINIMUM_TBB_VERSION=false"
+    ]
+    ++ lib.optionals (!buildBinary) [
+      "-D MT_KAHYPAR_DISABLE_BOOST=true"
+    ];
 
-  buildPhase = "cmake --build . --target mtkahypar --parallel $NIX_BUILD_CORES";
-  installPhase = "cmake --install .";
+  buildPhase =
+    let
+      targets = lib.concatStringsSep " " (
+        [ "--target mtkahypar" ] ++ lib.optionals buildBinary [ "--target MtKaHyPar" ]
+      );
+    in
+    "cmake --build . ${targets} --parallel $NIX_BUILD_CORES";
+
+  installPhase = lib.concatStringsSep "\n" (
+    [ "cmake --install ." ]
+    ++ lib.optionals buildBinary [ "install -D mt-kahypar/application/MtKaHyPar $out/bin/MtKaHyPar" ]
+  );
 
   meta = with lib; {
     description = "A shared-memory multilevel graph and hypergraph partitioner";
@@ -66,4 +81,4 @@ stdenv.mkDerivation rec {
     license = licenses.mit;
     platforms = platforms.unix ++ platforms.windows;
   };
-}
+})

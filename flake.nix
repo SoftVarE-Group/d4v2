@@ -138,6 +138,10 @@
           mt-kahypar-windows = pkgs-windows.callPackage ./nix/mt-kahypar.nix {
             tbb = self.packages.${system}.tbb-windows;
           };
+          mt-kahypar-bin = pkgs.callPackage ./nix/mt-kahypar.nix {
+            tbb = self.packages.${system}.tbb;
+            buildBinary = true;
+          };
 
           d4 = pkgs.callPackage ./nix/d4.nix {
             mt-kahypar = self.packages.${system}.mt-kahypar;
