@@ -16,7 +16,6 @@ stdenv.mkDerivation ({
 
   outputs = [
     "out"
-    "lib"
     "dev"
   ];
 
