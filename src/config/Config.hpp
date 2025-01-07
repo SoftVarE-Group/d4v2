@@ -51,6 +51,7 @@ namespace d4 {
     int float_precision;
     bool isFloat;
     string dump_ddnnf;
+    string dump_preproc;
     string query;
     bool projMC_refinement;
     string keyword_output_format_solution;

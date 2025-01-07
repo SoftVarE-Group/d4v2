@@ -82,6 +82,13 @@ MethodManager *MethodManager::makeMethodManager(Config &config,
   displayInfoVariables(runProblem, out);
   out << "c [MODE] Panic: " << lastBreath.panic << "\n";
 
+  if (!config.dump_preproc.empty()) {
+    std::ofstream outFile;
+    outFile.open(config.dump_preproc);
+    runProblem->display(outFile);
+    outFile.close();
+  }
+
   if (meth == "counting") {
     if (!isFloat)
       return new DpllStyleMethod<mpz::mpz_int, mpz::mpz_int>(

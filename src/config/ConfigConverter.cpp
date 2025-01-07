@@ -60,6 +60,12 @@ namespace d4 {
       config.dump_ddnnf = "";
     }
 
+    if (vm.count("dump-preproc")) {
+      config.dump_preproc = vm["dump-preproc"].as<string>();
+    } else {
+      config.dump_preproc = "";
+    }
+
     if (vm.count("query")) {
       config.query = vm["query"].as<string>();
     } else {

@@ -197,7 +197,7 @@ ProblemManagerCnf::getConditionedFormula(std::vector<Lit> &units) {
  */
 
 void ProblemManagerCnf::display(std::ostream &out) {
-  out << "weight list: ";
+  out << "c weight list: ";
   for (unsigned i = 1; i <= m_nbVar; i++) {
     Lit l = Lit::makeLit(i, false);
     out << i << "[" << m_weightVar[i] << "] ";
