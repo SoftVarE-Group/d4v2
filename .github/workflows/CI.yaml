@@ -11,8 +11,7 @@ jobs:
         target:
           - double: aarch64-linux                   # target we are building for
             system: aarch64-linux                   # system we are building on
-            emulated: true                          # whether this build is being emulated
-            runner: ubuntu-24.04                    # GitHub runner the build is running on
+            runner: ubuntu-24.04-arm                # GitHub runner the build is running on
             flake: bundled                          # flake package to build
             interpreter: /lib/ld-linux-aarch64.so.1 # path to libc interpreter
           - double: x86_64-linux
@@ -36,15 +35,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: QEMU
-        if: ${{ matrix.target.emulated }}
-        run: sudo apt-get install -y qemu-user-static
       - name: Nix
-        uses: DeterminateSystems/nix-installer-action@v16
-        with:
-          extra-conf: extra-platforms = ${{ matrix.target.system }}
+        uses: cachix/install-nix-action@v30
       - name: Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v8
+        uses: cachix/cachix-action@v15
+        with:
+          name: softvare-group
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build
         run: nix build -L .#packages.${{ matrix.target.system }}.${{ matrix.target.flake }}
       - name: Set interpreter
