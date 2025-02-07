@@ -49,6 +49,7 @@ namespace d4 {
     config.isFloat = false;
     config.dump_ddnnf = "";
     config.dump_preproc = "";
+    config.only_preproc = true;
     config.query = "";
     config.projMC_refinement = false;
     config.keyword_output_format_solution = "s";

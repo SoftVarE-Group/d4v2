@@ -66,6 +66,8 @@ namespace d4 {
       config.dump_preproc = "";
     }
 
+    config.only_preproc = vm["only-preproc"].as<bool>();
+
     if (vm.count("query")) {
       config.query = vm["query"].as<string>();
     } else {

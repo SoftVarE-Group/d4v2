@@ -44,6 +44,7 @@
 ("float,f", boost::program_options::value<bool>()->default_value(false), "If the count is computed as a float or not.")
 ("dump-ddnnf", boost::program_options::value<std::string>(), "Print out the decision DNNF formula in a given file.")
 ("dump-preproc", boost::program_options::value<std::string>(), "Print out the preprocessed CNF in a given file.")
+("only-preproc", boost::program_options::value<bool>()->default_value(false), "Stop after preprocessing.")
 ("query,q", boost::program_options::value<std::string>(), "Perform the queries given in a file (m l1 l2 ... ln 0 for a model counting query, and d l1 l2 ... ln 0 for a satisfiability query).")
 ("projMC-refinement", boost::program_options::value<bool>()->default_value(false), "Try to reduce the set of selector by computing a MSS.")
 ("keyword-output-format-solution", boost::program_options::value<std::string>()->default_value("s"), "The keyword prints in front of the solution when it is printed out.")

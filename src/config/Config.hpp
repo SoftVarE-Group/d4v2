@@ -52,6 +52,7 @@ namespace d4 {
     bool isFloat;
     string dump_ddnnf;
     string dump_preproc;
+    bool only_preproc;
     string query;
     bool projMC_refinement;
     string keyword_output_format_solution;

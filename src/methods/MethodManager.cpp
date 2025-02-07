@@ -79,8 +79,6 @@ MethodManager *MethodManager::makeMethodManager(Config &config,
 
   LastBreathPreproc lastBreath;
   ProblemManager *runProblem = runPreproc(config, problem, out, lastBreath);
-  displayInfoVariables(runProblem, out);
-  out << "c [MODE] Panic: " << lastBreath.panic << "\n";
 
   if (!config.dump_preproc.empty()) {
     std::ofstream outFile;
@@ -88,6 +86,13 @@ MethodManager *MethodManager::makeMethodManager(Config &config,
     runProblem->display(outFile);
     outFile.close();
   }
+
+  if (config.only_preproc) {
+    exit(0);
+  }
+
+  displayInfoVariables(runProblem, out);
+  out << "c [MODE] Panic: " << lastBreath.panic << "\n";
 
   if (meth == "counting") {
     if (!isFloat)
