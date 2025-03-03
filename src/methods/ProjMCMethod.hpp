@@ -672,5 +672,12 @@ class ProjMCMethod : public MethodManager {
     printFinalStats(m_out);
     std::cout << "s " << res << "\n";
   }  // run
+
+  /**
+     Run the DPLL style algorithm and return the result.
+   */
+  T run_and_return() {
+    return compute(m_out);
+  }  // run
 };
 }  // namespace d4
