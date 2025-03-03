@@ -23,6 +23,7 @@
 #include "DpllStyleMethod.hpp"
 #include "nnf/Node.hpp"
 #include "src/exceptions/BadBehaviourException.hpp"
+#include "src/preprocs/PreprocManager.hpp"
 #include "src/problem/ProblemTypes.hpp"
 
 namespace d4 {
