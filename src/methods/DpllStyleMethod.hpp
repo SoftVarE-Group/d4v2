@@ -522,8 +522,6 @@ class DpllStyleMethod : public MethodManager, public Counter<T> {
 
   /**
      Run the DPLL style algorithm with the operation manager.
-
-     @param[in] config, the configuration.
    */
   void run(Config &config) {
     std::vector<Var> setOfVar;
@@ -532,6 +530,16 @@ class DpllStyleMethod : public MethodManager, public Counter<T> {
     U result = compute(setOfVar, m_out);
     printFinalStats(m_out);
     m_operation->manageResult(result, config, m_out);
+  }  // run
+
+  /**
+     Run the DPLL style algorithm and return the result.
+   */
+  U run_and_return() {
+    std::vector<Var> setOfVar;
+    for (int i = 1; i <= m_specs->getNbVariable(); i++) setOfVar.push_back(i);
+
+    return compute(setOfVar, m_out);
   }  // run
 };
 }  // namespace d4
