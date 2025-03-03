@@ -38,11 +38,14 @@
         in
         pkgs.buildEnv {
           name = "d4-dependencies";
-          paths = [
-            self.packages.${system}.${windowsSuffix' "mt-kahypar"}
-            self.packages.${system}.${windowsSuffix' "tbb"}
-            pkgs.hwloc.lib
-          ] ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
+          paths =
+            [
+              self.packages.${system}.${windowsSuffix' "mt-kahypar"}
+              self.packages.${system}.${windowsSuffix' "tbb"}
+              pkgs.hwloc.lib
+            ]
+            ++ lib.optionals pkgs.stdenv.cc.isGNU [ pkgs.libgcc ]
+            ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
         };
 
       documentation =
