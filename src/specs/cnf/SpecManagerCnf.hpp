@@ -210,28 +210,30 @@ public:
     }
   }
 
+  int hg_scale_heuristic(int value, int max) {
+    int ret = max / 100 - value;
+
+    if (ret < 1) {
+      ret = 1;
+    }
+
+    return ret;
+  }
+
   /*
    * Calculates the MAXO heuristic for the given variable.
    * This heuristic assigns a variable its occurrence.
    */
-  int hg_heuristic_maxo(Var v, int max) {
-    int value = max - getNbClause(v);
-
-    if (value < 1) {
-      value = 1;
-    }
-
-    return value;
+  int hg_heuristic_maxo(Var v) {
+    return getNbClause(v);
   }
 
-    int hg_heuristic_moms(Var v, int max) {
-      int value = max - (getNbBinaryClause(v) * 0.25);
+  int hg_heuristic_moms(Var v) {
+    return getNbBinaryClause(v);
+  }
 
-      if (value < 1) {
-        value = 1;
-      }
-
-      return value;
-    }
+  int hg_heuristic_mams(Var v) {
+    return hg_heuristic_maxo(v) + hg_heuristic_moms(v);
+  }
 };
 } // namespace d4

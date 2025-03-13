@@ -208,14 +208,14 @@ void HyperGraphExtractorDual::constructHyperGraph(
   m_idxClauses.resize(0);
   hypergraph.setSize(0);
 
-  int heuristic_max = 100;
+  int heuristic_max = 1;
 
-  /*for (int &variable : component) {
-    int heuristic_value = om.getNbBinaryClause(variable) * 0.25;
+  for (int &variable : component) {
+    int heuristic_value = om.hg_heuristic_mams(variable);
     if (heuristic_value > heuristic_max) {
       heuristic_max = heuristic_value;
     }
-  }*/
+  }
 
   //heuristic_max = heuristic_max / 10000;
 
@@ -233,7 +233,7 @@ void HyperGraphExtractorDual::constructHyperGraph(
         continue;
 
       // Set the weight for this variable.
-      weight = om.hg_heuristic_maxo(v, heuristic_max);
+      weight = om.hg_scale_heuristic(om.hg_heuristic_mams(v), heuristic_max);
 
       // The current variable should not be marked.
       assert(!m_markedVar[v]);
@@ -324,7 +324,7 @@ void HyperGraphExtractorDual::constructHyperGraph(
     if (!size)
       pos--;
     else {
-      int weight = om.hg_heuristic_maxo(v, heuristic_max);
+      int weight = om.hg_scale_heuristic(om.hg_heuristic_mams(v), heuristic_max);
       hypergraph.getCost()[hypergraph.getSize()] = weight;
       hypergraph.incSize();
       considered.push_back(v);
