@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "HyperGraphExtractorDual.hpp"
 
 #include "src/specs/cnf/SpecManagerCnf.hpp"
@@ -209,17 +208,40 @@ void HyperGraphExtractorDual::constructHyperGraph(
   m_idxClauses.resize(0);
   hypergraph.setSize(0);
 
+  int heuristic_max = 100;
+
+  /*for (int &variable : component) {
+    int heuristic_value = om.getNbBinaryClause(variable) * 0.25;
+    if (heuristic_value > heuristic_max) {
+      heuristic_max = heuristic_value;
+    }
+  }*/
+
+  //heuristic_max = heuristic_max / 10000;
+
   // first considere the equivalence.
   for (auto &vec : equivVar) {
     unsigned &size = hypergraph[pos++];
     size = 0;
 
+    int weight = 1;
+
+    // Consider each variable.
     for (auto &v : vec) {
+      // Skip already assigned variables.
       if (om.varIsAssigned(v))
         continue;
+
+      // Set the weight for this variable.
+      weight = om.hg_heuristic_maxo(v, heuristic_max);
+
+      // The current variable should not be marked.
       assert(!m_markedVar[v]);
 
+      // Consider both the false and true literal of the variable.
       for (auto l : {Lit::makeLitFalse(v), Lit::makeLitTrue(v)}) {
+        // (Probably?) Get the indices of clauses this variable is in.
+        // Once for non-binary clauses ...
         IteratorIdxClause listIdx = om.getVecIdxClauseNotBin(l);
         for (int *ptr = listIdx.start; ptr != listIdx.end; ptr++) {
           int idx = *ptr;
@@ -231,6 +253,7 @@ void HyperGraphExtractorDual::constructHyperGraph(
           }
         }
 
+        // ... and once for binary clauses.
         listIdx = om.getVecIdxClauseBin(l);
         for (int *ptr = listIdx.start; ptr != listIdx.end; ptr++) {
           int idx = *ptr;
@@ -259,6 +282,7 @@ void HyperGraphExtractorDual::constructHyperGraph(
     if (!size)
       pos--;
     else {
+      hypergraph.getCost()[hypergraph.getSize()] = weight;
       hypergraph.incSize();
       considered.push_back(vec.back());
     }
@@ -300,6 +324,8 @@ void HyperGraphExtractorDual::constructHyperGraph(
     if (!size)
       pos--;
     else {
+      int weight = om.hg_heuristic_maxo(v, heuristic_max);
+      hypergraph.getCost()[hypergraph.getSize()] = weight;
       hypergraph.incSize();
       considered.push_back(v);
     }
