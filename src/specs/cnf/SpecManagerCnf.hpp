@@ -209,5 +209,29 @@ public:
       out << " ]\n";
     }
   }
+
+  /*
+   * Calculates the MAXO heuristic for the given variable.
+   * This heuristic assigns a variable its occurrence.
+   */
+  int hg_heuristic_maxo(Var v, int max) {
+    int value = max - getNbClause(v);
+
+    if (value < 1) {
+      value = 1;
+    }
+
+    return value;
+  }
+
+    int hg_heuristic_moms(Var v, int max) {
+      int value = max - (getNbBinaryClause(v) * 0.25);
+
+      if (value < 1) {
+        value = 1;
+      }
+
+      return value;
+    }
 };
 } // namespace d4
