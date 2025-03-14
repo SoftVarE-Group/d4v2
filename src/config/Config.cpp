@@ -18,6 +18,7 @@ namespace d4 {
     config.occurrence_manager = "dynamic";
     config.phase_heuristic = "polarity";
     config.partitioning_heuristic = "decomposition-static-dual";
+    config.partitioning_heuristic_weight = "none";
     config.partitioning_heuristic_bipartite_phase = "none";
     config.partitioning_heuristic_bipartite_phase_dynamic = 0;
     config.partitioning_heuristic_bipartite_phase_static = 0;

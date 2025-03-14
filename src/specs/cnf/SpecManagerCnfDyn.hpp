@@ -30,7 +30,7 @@ class SpecManagerCnfDyn : public SpecManagerCnf {
   void initClauses(std::vector<std::vector<Lit>> &clauses);
 
  public:
-  SpecManagerCnfDyn(ProblemManager &p);
+  SpecManagerCnfDyn(Config &config, ProblemManager &p);
 
   void preUpdate(std::vector<Lit> &lits);
   void preUpdate(std::vector<Lit> &lits,std::vector<Lit>& pure ) override;

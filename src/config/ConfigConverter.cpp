@@ -24,6 +24,7 @@ namespace d4 {
     config.occurrence_manager = vm["occurrence-manager"].as<string>();
     config.phase_heuristic = vm["phase-heuristic"].as<string>();
     config.partitioning_heuristic = vm["partitioning-heuristic"].as<string>();
+    config.partitioning_heuristic_weight = vm["partitioning-heuristic-weight"].as<string>();
     config.partitioning_heuristic_bipartite_phase = vm["partitioning-heuristic-bipartite-phase"].as<string>();
     config.partitioning_heuristic_bipartite_phase_dynamic = vm["partitioning-heuristic-bipartite-phase-dynamic"].as<double>();
     config.partitioning_heuristic_bipartite_phase_static = vm["partitioning-heuristic-bipartite-phase-static"].as<int>();

@@ -42,6 +42,8 @@ struct InfoCluster {
 
 class SpecManagerCnf : public SpecManager {
 protected:
+  std::string partitioning_weight_heuristic;
+
   std::vector<std::vector<Lit>> m_clauses;
   std::vector<int> m_clausesNotBin;
   unsigned m_maxSizeClause;
@@ -68,7 +70,7 @@ protected:
   } // resetUnMark
 
 public:
-  SpecManagerCnf(ProblemManager &p);
+  SpecManagerCnf(Config &config, ProblemManager &p);
   ~SpecManagerCnf();
 
   int computeConnectedComponent(std::vector<std::vector<Var>> &varConnected,
@@ -210,7 +212,8 @@ public:
     }
   }
 
-  int hg_scale_heuristic(int value, int max) {
+  inline int hg_heuristic_scaled(Var v, int max) {
+    int value = hg_heuristic(v);
     int ret = max / 100 - value;
 
     if (ret < 1) {
@@ -220,19 +223,31 @@ public:
     return ret;
   }
 
-  /*
-   * Calculates the MAXO heuristic for the given variable.
-   * This heuristic assigns a variable its occurrence.
-   */
-  int hg_heuristic_maxo(Var v) {
+  inline int hg_heuristic(Var v) {
+    if (partitioning_weight_heuristic == "maxo") {
+      return hg_heuristic_maxo(v);
+    }
+
+    if (partitioning_weight_heuristic == "moms") {
+      return hg_heuristic_moms(v);
+    }
+
+    if (partitioning_weight_heuristic == "mams") {
+      return hg_heuristic_mams(v);
+    }
+
+    throw "Unknown hypergraph weight heuristic!";
+  }
+
+  inline int hg_heuristic_maxo(Var v) {
     return getNbClause(v);
   }
 
-  int hg_heuristic_moms(Var v) {
+  inline int hg_heuristic_moms(Var v) {
     return getNbBinaryClause(v);
   }
 
-  int hg_heuristic_mams(Var v) {
+  inline int hg_heuristic_mams(Var v) {
     return hg_heuristic_maxo(v) + hg_heuristic_moms(v);
   }
 };
