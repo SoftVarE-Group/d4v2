@@ -29,8 +29,8 @@ namespace d4 {
    @param[in] _clauses, the set of clauses
    @param[in] _nbVar, the number of variables in the problem
  */
-SpecManagerCnfDyn::SpecManagerCnfDyn(ProblemManager &p)
-    : SpecManagerCnf(p) {} // SpecManagerCnfDyn
+SpecManagerCnfDyn::SpecManagerCnfDyn(Config &config, ProblemManager &p)
+    : SpecManagerCnf(config, p) {} // SpecManagerCnfDyn
 
 /**
    Update the occurrence list w.r.t. a new set of assigned variables.

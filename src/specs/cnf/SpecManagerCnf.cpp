@@ -35,7 +35,9 @@ namespace d4 {
 /**
    Constructor.
 */
-SpecManagerCnf::SpecManagerCnf(ProblemManager &p) {
+SpecManagerCnf::SpecManagerCnf(Config &config, ProblemManager &p) {
+  partitioning_weight_heuristic = config.partitioning_heuristic_weight;
+
   // get the clauses.
   m_nbVar = (p.getNbVar());
   try {

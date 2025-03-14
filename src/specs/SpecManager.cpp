@@ -40,7 +40,7 @@ SpecManager *SpecManager::makeSpecManager(Config &config,
 
   if (inType == "cnf" || inType == "dimacs") {
     if (meth == "dynamic")
-      return new SpecManagerCnfDyn(p);
+      return new SpecManagerCnfDyn(config, p);
     return NULL;
   }
 

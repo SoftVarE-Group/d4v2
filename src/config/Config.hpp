@@ -21,6 +21,7 @@ namespace d4 {
     string occurrence_manager;
     string phase_heuristic;
     string partitioning_heuristic;
+    string partitioning_heuristic_weight;
     string partitioning_heuristic_bipartite_phase;
     double partitioning_heuristic_bipartite_phase_dynamic;
     int partitioning_heuristic_bipartite_phase_static;
