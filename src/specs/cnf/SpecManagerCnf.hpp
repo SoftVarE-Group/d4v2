@@ -213,9 +213,8 @@ public:
   }
 
   inline int hg_heuristic_scaled(Var v, int max) {
-    auto value = static_cast<double>(hg_heuristic(v));
-    auto max_double = static_cast<double>(max);
-    auto ret = 100 - static_cast<int>((value / max_double) * 100);
+    auto value = hg_heuristic(v);
+    auto ret = max - value;
 
     if (ret < 1) {
       ret = 1;
