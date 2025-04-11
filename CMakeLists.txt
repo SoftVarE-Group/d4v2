@@ -68,6 +68,7 @@ add_library(heuristics OBJECT
     src/heuristics/cnf/ProjBackupHeuristicComponents.cpp
     src/heuristics/cnf/ProjBackupHeuristicHypergraph.cpp
     src/heuristics/cnf/ScoringMethodDlcs.cpp
+    src/heuristics/cnf/ScoringMethodHG.cpp
     src/heuristics/cnf/ScoringMethodJwts.cpp
     src/heuristics/cnf/ScoringMethodMom.cpp
     src/heuristics/cnf/ScoringMethodVsads.cpp

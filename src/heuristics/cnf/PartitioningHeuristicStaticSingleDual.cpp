@@ -58,7 +58,7 @@ PartitioningHeuristicStaticSingleDual::PartitioningHeuristicStaticSingleDual(
   out << "c [CONSTRUCTOR] Static partitioner: dual\n";
 
   m_pm = PartitionerManager::makePartitioner(m_nbClause, m_nbVar, sumSize,out);
-  m_hypergraph.init(m_nbVar + m_nbClause + sumSize + 1);
+  m_hypergraph.init(m_nbVar + m_nbClause + sumSize + 1, m_nbClause + 1);
   m_hypergraphExtractor = new HyperGraphExtractorDual(m_nbVar, m_nbClause);
   m_maxNbNodes = m_nbClause + 1;
   m_maxNbEdges = m_nbVar + 1;

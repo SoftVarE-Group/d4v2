@@ -49,7 +49,9 @@ struct DistribSize {
 };
 
 class PartitioningHeuristicStaticSingle : public PartitioningHeuristicStatic {
- protected:
+public:
+  std::vector<unsigned > m_scores;
+protected:
   struct Strata {
     unsigned fatherId;
     std::vector<unsigned> part;
