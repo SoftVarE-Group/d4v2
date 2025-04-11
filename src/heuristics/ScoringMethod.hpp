@@ -27,7 +27,7 @@ namespace d4 {
 class ScoringMethod {
 public:
   static ScoringMethod *makeScoringMethod(Config &config, SpecManager &p,
-                                          ActivityManager &am,
+                                          WrapperSolver &am,
                                           std::ostream &out);
   virtual ~ScoringMethod() { ; }
   virtual double computeScore(Var v) = 0;

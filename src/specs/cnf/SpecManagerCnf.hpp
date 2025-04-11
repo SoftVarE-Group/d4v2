@@ -41,8 +41,9 @@ struct InfoCluster {
 };
 
 class SpecManagerCnf : public SpecManager {
-protected:
+public:
   std::vector<std::vector<Lit>> m_clauses;
+protected:
   std::vector<int> m_clausesNotBin;
   unsigned m_maxSizeClause;
   std::vector<lbool> m_currentValue;
@@ -209,5 +210,32 @@ public:
       out << " ]\n";
     }
   }
+
+    inline int hg_weight_scaled(Var v, int max) {
+      auto value = hg_weight(v);
+      auto ret = max - value;
+
+      if (ret < 1) {
+        ret = 1;
+      }
+
+      return ret;
+    }
+
+    inline int hg_weight(Var v) {
+      return hg_heuristic_mams(v);
+    }
+
+    inline int hg_heuristic_maxo(Var v) {
+      return getNbClause(v);
+    }
+
+    inline int hg_heuristic_moms(Var v) {
+      return getNbBinaryClause(v);
+    }
+
+    inline int hg_heuristic_mams(Var v) {
+      return hg_heuristic_maxo(v) + hg_heuristic_moms(v);
+    }
 };
 } // namespace d4

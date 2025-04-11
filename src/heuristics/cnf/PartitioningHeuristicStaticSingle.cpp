@@ -54,6 +54,7 @@ PartitioningHeuristicStaticSingle::PartitioningHeuristicStaticSingle(
     int nbVar, int sumSize, std::ostream &out)
     : PartitioningHeuristicStatic(config, s, om, nbClause, nbVar, sumSize, out) {
   m_bucketNumber.resize(m_nbVar + 2, 0);
+  m_scores.resize(nbVar, 0);
   m_hypergraphExtractor = NULL;
   m_phaseSelector =
       PhaseSelectorManager::makePhaseSelectorManager(config, this, out);
@@ -208,6 +209,10 @@ void PartitioningHeuristicStaticSingle::distributePartition(
                                   level);
     assert(fatherId < m_levelInfo.size());
     m_levelInfo[fatherId].separatorLevel = level;
+
+    for (auto variable : cutSet) {
+      m_scores[variable] = level;
+    }
 
     level++;
     m_levelInfo.push_back({level, (unsigned)cutSet.size()});

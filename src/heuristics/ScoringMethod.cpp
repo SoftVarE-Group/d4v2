@@ -23,6 +23,7 @@
 #include "cnf/ScoringMethodVsads.hpp"
 #include "cnf/ScoringMethodVsids.hpp"
 #include "src/exceptions/FactoryException.hpp"
+#include "src/heuristics/cnf/ScoringMethodHG.hpp"
 
 namespace d4 {
 
@@ -36,7 +37,7 @@ namespace d4 {
  */
 ScoringMethod *ScoringMethod::makeScoringMethod(Config &config,
                                                 SpecManager &p,
-                                                ActivityManager &am,
+                                                WrapperSolver &am,
                                                 std::ostream &out) {
   std::string inType = config.input_type;
   std::string meth = config.scoring_method;
@@ -53,6 +54,8 @@ ScoringMethod *ScoringMethod::makeScoringMethod(Config &config,
         return new ScoringMethodVsids(am);
       if (meth == "vsads")
         return new ScoringMethodVsads(ps, am);
+      if (meth == "hg")
+        return new ScoringMethodHG(config, ps, am, out);
       if (meth == "jwts")
         return new ScoringMethodJwts(ps);
       return NULL;
