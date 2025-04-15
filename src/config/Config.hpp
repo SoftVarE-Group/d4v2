@@ -18,6 +18,8 @@ namespace d4 {
     bool projddnnf_pure_lit_elim;
     string scoring_method;
     unsigned scoring_method_decay_freq;
+    double scoring_hg_factor;
+    bool scoring_hg_scaled;
     string occurrence_manager;
     string phase_heuristic;
     string partitioning_heuristic;

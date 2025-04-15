@@ -211,31 +211,45 @@ public:
     }
   }
 
-    inline int hg_weight_scaled(Var v, int max) {
-      auto value = hg_weight(v);
-      auto ret = max - value;
+  int maxDLCS() {
+    auto max = 0;
 
-      if (ret < 1) {
-        ret = 1;
+    for (auto i = 0; i < m_occurrence.size(); i++) {
+      auto score = getNbClause(i) << 7;
+
+      if (score > max) {
+        max = score;
       }
-
-      return ret;
     }
 
-    inline int hg_weight(Var v) {
-      return hg_heuristic_mams(v);
+    return max;
+  }
+
+  inline int hg_weight_scaled(Var v, int max) {
+    auto value = hg_weight(v);
+    auto ret = max - value;
+
+    if (ret < 1) {
+      ret = 1;
     }
 
-    inline int hg_heuristic_maxo(Var v) {
-      return getNbClause(v);
-    }
+    return ret;
+  }
 
-    inline int hg_heuristic_moms(Var v) {
-      return getNbBinaryClause(v);
-    }
+  inline int hg_weight(Var v) {
+    return hg_heuristic_mams(v);
+  }
 
-    inline int hg_heuristic_mams(Var v) {
-      return hg_heuristic_maxo(v) + hg_heuristic_moms(v);
-    }
+  inline int hg_heuristic_maxo(Var v) {
+    return getNbClause(v);
+  }
+
+  inline int hg_heuristic_moms(Var v) {
+    return getNbBinaryClause(v);
+  }
+
+  inline int hg_heuristic_mams(Var v) {
+    return hg_heuristic_maxo(v) + hg_heuristic_moms(v);
+  }
 };
 } // namespace d4

@@ -17,12 +17,9 @@
  */
 
 #include <algorithm>
-#include <set>
-#include <iterator>
 
 #include "ScoringMethodHG.hpp"
 #include "PartitioningHeuristicStaticSingleDual.hpp"
-#include "src/specs/cnf/SpecManagerCnfDyn.hpp"
 
 namespace d4 {
 
@@ -37,6 +34,14 @@ ScoringMethodHG::ScoringMethodHG(Config &config, SpecManagerCnf &o, WrapperSolve
       // Instantiate the partitioner.
       partitioner = new PartitioningHeuristicStaticSingleDual(config, a, o, out);
       partitioner->init(out);
+
+      if (config.scoring_hg_scaled) {
+        auto max_dlcs = o.maxDLCS();
+        auto max_hg = *std::max_element(partitioner->m_scores.begin(), partitioner->m_scores.end());
+        factor = (static_cast<double>(max_dlcs) / static_cast<double>(max_hg)) * config.scoring_hg_factor;
+      } else {
+        factor = config.scoring_hg_factor;
+      }
     }  // constructor
 
 /**
@@ -44,7 +49,7 @@ ScoringMethodHG::ScoringMethodHG(Config &config, SpecManagerCnf &o, WrapperSolve
  */
 double ScoringMethodHG::computeScore(Var v) {
   auto vsads_score = vsads.computeScore(v);
-  auto hg_score = partitioner->m_scores[v];
+  auto hg_score = partitioner->m_scores[v] * factor;
   return vsads_score - hg_score;
 }
 

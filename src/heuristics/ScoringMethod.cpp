@@ -45,7 +45,7 @@ ScoringMethod *ScoringMethod::makeScoringMethod(Config &config,
 
   if (inType == "cnf" || inType == "dimacs") {
     try {
-      SpecManagerCnf &ps = dynamic_cast<SpecManagerCnf &>(p);
+      auto &ps = dynamic_cast<SpecManagerCnf &>(p);
       if (meth == "mom")
         return new ScoringMethodMom(ps);
       if (meth == "dlcs")
@@ -58,7 +58,7 @@ ScoringMethod *ScoringMethod::makeScoringMethod(Config &config,
         return new ScoringMethodHG(config, ps, am, out);
       if (meth == "jwts")
         return new ScoringMethodJwts(ps);
-      return NULL;
+      return nullptr;
     } catch (std::bad_cast &bc) {
       std::cerr << "bad_cast caught: " << bc.what() << '\n';
       std::cerr << "A CNF formula was expeted\n";

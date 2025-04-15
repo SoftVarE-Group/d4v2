@@ -15,6 +15,8 @@ namespace d4 {
     config.projddnnf_pure_lit_elim = true;
     config.scoring_method = "vsads";
     config.scoring_method_decay_freq = 300000;
+    config.scoring_hg_factor = 1;
+    config.scoring_hg_scaled = true;
     config.occurrence_manager = "dynamic";
     config.phase_heuristic = "polarity";
     config.partitioning_heuristic = "decomposition-static-dual";
