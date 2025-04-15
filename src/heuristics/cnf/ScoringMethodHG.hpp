@@ -28,6 +28,7 @@ class ScoringMethodHG : public ScoringMethod {
  private:
   ScoringMethodVsads vsads;
   PartitioningHeuristicStaticSingleDual *partitioner;
+  double factor;
 
 public:
   ScoringMethodHG(Config &config, SpecManagerCnf &o, WrapperSolver &a, std::ostream &out);

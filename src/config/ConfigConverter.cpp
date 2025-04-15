@@ -21,6 +21,8 @@ namespace d4 {
     config.projddnnf_pure_lit_elim = vm["projddnnf-pure-lit-elim"].as<bool>();
     config.scoring_method = vm["scoring-method"].as<string>();
     config.scoring_method_decay_freq = vm["scoring-method-decay-freq"].as<unsigned>();
+    config.scoring_hg_factor = vm["scoring-hg-factor"].as<double>();
+    config.scoring_hg_scaled = vm["scoring-hg-scaled"].as<bool>();
     config.occurrence_manager = vm["occurrence-manager"].as<string>();
     config.phase_heuristic = vm["phase-heuristic"].as<string>();
     config.partitioning_heuristic = vm["partitioning-heuristic"].as<string>();
