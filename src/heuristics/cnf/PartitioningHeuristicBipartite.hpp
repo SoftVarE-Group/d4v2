@@ -60,7 +60,7 @@ class PartitioningHeuristicBipartite : public PartitioningHeuristic {
                                  WrapperSolver &s, int _nbClause, int _nbVar,
                                  int _sumSize, std::ostream &out);
 
-  virtual ~PartitioningHeuristicBipartite();
+  ~PartitioningHeuristicBipartite() override;
 
   void computeEquivClass(std::vector<Var> &component,
                          std::vector<Lit> &unitEquiv,
@@ -68,13 +68,8 @@ class PartitioningHeuristicBipartite : public PartitioningHeuristic {
                          std::vector<std::vector<Var>> &equivVar);
 
  public:
-  void computeCutSet(std::vector<Var> &component, std::vector<Var> &cutSet);
+  void computeCutSet(std::vector<Var> &component, std::vector<Var> &cutSet) override;
 
-  void displayStat(std::ostream &out);
-
-  inline bool isReady(std::vector<Var> &component) {
-    return m_staticPartitioner->isInitialized() ||
-           (component.size() > 10 && component.size() < 5000);
-  }
+  void displayStat(std::ostream &out) override;
 };
 }  // namespace d4
