@@ -11,6 +11,7 @@ env:
 jobs:
   Build:
     strategy:
+      fail-fast: false
       matrix:
         target:
           - double: aarch64-linux    # target we are building for

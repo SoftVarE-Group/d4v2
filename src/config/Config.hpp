@@ -20,6 +20,7 @@ namespace d4 {
     unsigned scoring_method_decay_freq;
     string occurrence_manager;
     string phase_heuristic;
+    string partitioner;
     string partitioning_heuristic;
     string partitioning_heuristic_bipartite_phase;
     double partitioning_heuristic_bipartite_phase_dynamic;
@@ -27,6 +28,7 @@ namespace d4 {
     bool partitioning_heuristic_simplification_equivalence;
     bool partitioning_heuristic_simplification_hyperedge;
     unsigned partitioning_threads;
+    string clustering_method;
     string preproc;
     bool preproc_equiv;
     bool preproc_ve_check;

@@ -32,6 +32,7 @@ find_package(glucose REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/glucose-3.0)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/hypergraph)
 include_directories(${GMP_INCLUDE_DIRS})
 include_directories(${GMPXX_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
@@ -97,6 +98,7 @@ add_library(methods OBJECT
 )
 
 add_library(partitioner OBJECT
+    src/partitioner/PartitionerClustering.cpp
     src/partitioner/PartitionerKahyparMT.cpp
     src/partitioner/PartitionerManager.cpp
 )
@@ -156,7 +158,7 @@ add_library(core STATIC
     $<TARGET_OBJECTS:utils>
 )
 
-target_link_libraries(core MtKaHyPar::MtKaHyPar GPMC::GPMC arjun glucose::glucose GMP::GMPXX GMP::GMP cadiback cadical)
+target_link_libraries(core MtKaHyPar::MtKaHyPar GPMC::GPMC arjun glucose::glucose GMP::GMPXX GMP::GMP cadiback cadical ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/hypergraph/libhypergraph.a)
 
 if(USE_GLUCOSE)
     target_link_libraries(core glucose::glucose)

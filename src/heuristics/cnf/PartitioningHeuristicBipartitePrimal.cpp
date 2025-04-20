@@ -51,7 +51,7 @@ PartitioningHeuristicBipartitePrimal::PartitioningHeuristicBipartitePrimal(
   m_partition.resize(m_nbVar + 1, 0);
 
   // init the hyper graph managers.
-  m_pm = PartitionerManager::makePartitioner(nbVar, nbClause, sumSize, out);
+  m_pm = PartitionerManager::makePartitioner(config, nbVar, nbClause, sumSize, out);
   m_hypergraph.init(m_nbClause + sumSize + 1);
   m_hypergraphExtractor = new HyperGraphExtractorPrimal(m_nbVar, m_nbClause);
 

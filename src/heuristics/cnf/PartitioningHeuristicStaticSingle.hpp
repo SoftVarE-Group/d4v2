@@ -60,7 +60,7 @@ class PartitioningHeuristicStaticSingle : public PartitioningHeuristicStatic {
     unsigned cutSize;
   };
 
-  const unsigned LIMIT = 10;
+  const unsigned LIMIT = 100;
 
   // to store the hypergraph, and then avoid reallocated memory.
   HyperGraph m_hypergraph;
@@ -79,11 +79,10 @@ class PartitioningHeuristicStaticSingle : public PartitioningHeuristicStatic {
                            std::vector<Var> &mappingVar,
                            std::vector<Strata> &stack, unsigned &level);
 
-  void splitWrtPartition(HyperGraph &hypergraph, std::vector<int> &partition,
+  static void splitWrtPartition(HyperGraph &hypergraph, std::vector<int> &partition,
                          std::vector<unsigned> &mappingEdge,
                          std::vector<unsigned> &cutSet,
-                         std::vector<unsigned> &indicesFirst,
-                         std::vector<unsigned> &indicesSecond);
+                         std::vector<std::vector<unsigned>> &indicesPartitions);
 
   void assignLevel(std::vector<std::vector<unsigned>> &hypergraph,
                    unsigned idFather, std::vector<unsigned> &indices,

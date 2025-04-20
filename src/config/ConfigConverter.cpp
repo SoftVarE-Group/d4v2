@@ -23,6 +23,7 @@ namespace d4 {
     config.scoring_method_decay_freq = vm["scoring-method-decay-freq"].as<unsigned>();
     config.occurrence_manager = vm["occurrence-manager"].as<string>();
     config.phase_heuristic = vm["phase-heuristic"].as<string>();
+    config.partitioner = vm["partitioner"].as<string>();
     config.partitioning_heuristic = vm["partitioning-heuristic"].as<string>();
     config.partitioning_heuristic_bipartite_phase = vm["partitioning-heuristic-bipartite-phase"].as<string>();
     config.partitioning_heuristic_bipartite_phase_dynamic = vm["partitioning-heuristic-bipartite-phase-dynamic"].as<double>();
@@ -30,6 +31,7 @@ namespace d4 {
     config.partitioning_heuristic_simplification_equivalence = vm["partitioning-heuristic-simplification-equivalence"].as<bool>();
     config.partitioning_heuristic_simplification_hyperedge = vm["partitioning-heuristic-simplification-hyperedge"].as<bool>();
     config.partitioning_threads = vm["partitioning-threads"].as<unsigned>();
+    config.clustering_method = vm["clustering-method"].as<string>();
     config.preproc = vm["preproc"].as<string>();
     config.preproc_equiv = vm["preproc-equiv"].as<bool>();
     config.preproc_ve_check = vm["preproc-ve-check"].as<bool>();

@@ -17,6 +17,7 @@
  */
 #include "PartitionerManager.hpp"
 
+#include "PartitionerClustering.hpp"
 #include "PartitionerKahyparMT.hpp"
 
 namespace d4 {
@@ -25,10 +26,17 @@ namespace d4 {
    Create a partitioner.
    \return a partitioner if the options are correct, NULL otherwise.
  */
-PartitionerManager *PartitionerManager::makePartitioner(unsigned maxNodes,
+PartitionerManager *PartitionerManager::makePartitioner(Config& config,
+                                                        unsigned maxNodes,
                                                         unsigned maxEdges,
                                                         unsigned maxSumEdgeSize,
                                                         std::ostream &out) {
+  if (config.partitioner == "mt-kahypar") {
   return new PartitionerKahyparMT(maxNodes, maxEdges, maxSumEdgeSize, out);
+  }
+
+  if (config.partitioner == "clustering") {
+    return new PartitionerClustering(config);
+  }
 }  // makePartitioner
 }  // namespace d4

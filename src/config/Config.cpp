@@ -17,6 +17,7 @@ namespace d4 {
     config.scoring_method_decay_freq = 300000;
     config.occurrence_manager = "dynamic";
     config.phase_heuristic = "polarity";
+    config.partitioner = "mt-kahypar";
     config.partitioning_heuristic = "decomposition-static-dual";
     config.partitioning_heuristic_bipartite_phase = "none";
     config.partitioning_heuristic_bipartite_phase_dynamic = 0;
@@ -24,6 +25,7 @@ namespace d4 {
     config.partitioning_heuristic_simplification_equivalence = true;
     config.partitioning_heuristic_simplification_hyperedge = true;
     config.partitioning_threads = 1;
+    config.clustering_method = "default";
     config.preproc = "basic";
     config.preproc_equiv = true;
     config.preproc_ve_check = false;

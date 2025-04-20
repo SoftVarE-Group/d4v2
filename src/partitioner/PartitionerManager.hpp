@@ -20,6 +20,7 @@
 #include <functional>
 #include <vector>
 
+#include "src/config/Config.hpp"
 #include "src/hyperGraph/HyperGraph.hpp"
 
 namespace d4 {
@@ -28,12 +29,13 @@ class PartitionerManager {
  public:
   enum Level { NORMAL, SPEED, QUALITY };
 
-  static PartitionerManager *makePartitioner(unsigned maxNodes,
+  static PartitionerManager *makePartitioner(Config& config,
+                                             unsigned maxNodes,
                                              unsigned maxEdges,
                                              unsigned maxSumEdgeSize,
                                              std::ostream &out);
 
-  virtual ~PartitionerManager() {}
+  virtual ~PartitionerManager() = default;
 
   virtual void computePartition(HyperGraph &hypergraph, Level level,
                                 std::vector<int> &partition) = 0;

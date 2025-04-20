@@ -18,6 +18,8 @@
 ("scoring-method-decay-freq",boost::program_options::value<unsigned>()->default_value(300000),"decay ferquency")
 ("occurrence-manager,om",boost::program_options::value<std::string>()->default_value("dynamic"),"The occurrence manager used. [add a description]")
 ("phase-heuristic,ph",boost::program_options::value<std::string>()->default_value("polarity"),"The way the phase of the next decision is selected (false, true, polarity or occurrence).")
+("partitioner",boost::program_options::value<std::string>()->default_value("mt-kahypar"),"The partitioner to use. [mt-kahypar or clustering]")
+("clustering-method",boost::program_options::value<std::string>()->default_value("default"),"The clustering method to use. [default, bipartite, min3]")
 ("partitioning-heuristic,pvh",boost::program_options::value<std::string>()->default_value("decomposition-static-dual"),"The method used to compute a cut. [none, decomposition-static, bipartition-primal or bipartition-dual]")
 ("partitioning-heuristic-bipartite-phase",boost::program_options::value<std::string>()->default_value("none"),"Use a two phases heuristic, where the tree decomposition construction is given in parameter [none, natural, primal or dual].")
 ("partitioning-heuristic-bipartite-phase-dynamic",boost::program_options::value<double>()->default_value(0),"Use a static decomposition when it seems that the initial decomposition is no more good enough (the given value gives the balanced limit ratio).")
