@@ -24,6 +24,8 @@ namespace d4 {
     config.partitioning_heuristic_simplification_equivalence = true;
     config.partitioning_heuristic_simplification_hyperedge = true;
     config.partitioning_threads = 1;
+    config.partitioning_blocks = 2;
+    config.partitioning_imbalance = 0.05;
     config.preproc = "basic";
     config.preproc_equiv = true;
     config.preproc_ve_check = false;

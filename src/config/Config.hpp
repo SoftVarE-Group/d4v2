@@ -27,6 +27,8 @@ namespace d4 {
     bool partitioning_heuristic_simplification_equivalence;
     bool partitioning_heuristic_simplification_hyperedge;
     unsigned partitioning_threads;
+    unsigned partitioning_blocks;
+    double partitioning_imbalance;
     string preproc;
     bool preproc_equiv;
     bool preproc_ve_check;

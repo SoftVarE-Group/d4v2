@@ -7,6 +7,6 @@
 namespace d4 {
   class ConfigConverter {
   public:
-    static Config fromVariablesMap(boost::program_options::variables_map &vm);
+    static Config fromVariablesMap(const boost::program_options::variables_map &vm);
   };
 }

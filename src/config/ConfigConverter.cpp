@@ -1,13 +1,12 @@
-#include <iostream>
 #include "ConfigConverter.hpp"
 
 namespace d4 {
-  Config ConfigConverter::fromVariablesMap(boost::program_options::variables_map &vm) {
+  Config ConfigConverter::fromVariablesMap(const boost::program_options::variables_map &vm) {
     Config config;
     config.input = vm["input"].as<string>();
     config.input_type = vm["input-type"].as<string>();
 
-    if (vm.count("method")) {
+    if (vm.contains("method")) {
       config.method = vm["method"].as<string>();
     } else {
       config.method = "";
@@ -30,6 +29,8 @@ namespace d4 {
     config.partitioning_heuristic_simplification_equivalence = vm["partitioning-heuristic-simplification-equivalence"].as<bool>();
     config.partitioning_heuristic_simplification_hyperedge = vm["partitioning-heuristic-simplification-hyperedge"].as<bool>();
     config.partitioning_threads = vm["partitioning-threads"].as<unsigned>();
+    config.partitioning_blocks = vm["partitioning-blocks"].as<unsigned>();
+    config.partitioning_imbalance = vm["partitioning-imbalance"].as<double>();
     config.preproc = vm["preproc"].as<string>();
     config.preproc_equiv = vm["preproc-equiv"].as<bool>();
     config.preproc_ve_check = vm["preproc-ve-check"].as<bool>();
@@ -54,13 +55,13 @@ namespace d4 {
     config.float_precision = vm["float-precision"].as<int>();
     config.isFloat = vm["float"].as<bool>();
 
-    if (vm.count("dump-ddnnf")) {
+    if (vm.contains("dump-ddnnf")) {
       config.dump_ddnnf = vm["dump-ddnnf"].as<string>();
     } else {
       config.dump_ddnnf = "";
     }
 
-    if (vm.count("query")) {
+    if (vm.contains("query")) {
       config.query = vm["query"].as<string>();
     } else {
       config.query = "";

@@ -61,7 +61,7 @@ PartitioningHeuristicStaticSinglePrimal::
                                         out) {
   out << "c [CONSTRUCTOR] Static partitioner: primal\n";
 
-  m_pm = PartitionerManager::makePartitioner(m_nbVar, m_nbClause, sumSize,out);
+  m_pm = PartitionerManager::makePartitioner(config, m_nbVar, m_nbClause, sumSize, out);
   m_hypergraph.init(m_nbClause + sumSize + 1);
   m_hypergraphExtractor = new HyperGraphExtractorPrimal(m_nbVar, m_nbClause);
   m_maxNbNodes = m_nbVar + 1;
