@@ -17,25 +17,25 @@
  */
 #pragma once
 
-#include <functional>
 #include <vector>
 
+#include "src/config/Config.hpp"
 #include "src/hyperGraph/HyperGraph.hpp"
 
 namespace d4 {
+  class PartitionerManager {
+  public:
+    enum Level { NORMAL, SPEED, QUALITY };
 
-class PartitionerManager {
- public:
-  enum Level { NORMAL, SPEED, QUALITY };
+    static PartitionerManager *makePartitioner(Config &config,
+                                               unsigned maxNodes,
+                                               unsigned maxEdges,
+                                               unsigned maxSumEdgeSize,
+                                               std::ostream &out);
 
-  static PartitionerManager *makePartitioner(unsigned maxNodes,
-                                             unsigned maxEdges,
-                                             unsigned maxSumEdgeSize,
-                                             std::ostream &out);
+    virtual ~PartitionerManager() = default;
 
-  virtual ~PartitionerManager() {}
-
-  virtual void computePartition(HyperGraph &hypergraph, Level level,
-                                std::vector<int> &partition) = 0;
-};
-}  // namespace d4
+    virtual void computePartition(HyperGraph &hypergraph, Level level,
+                                  std::vector<int> &partition) = 0;
+  };
+} // namespace d4

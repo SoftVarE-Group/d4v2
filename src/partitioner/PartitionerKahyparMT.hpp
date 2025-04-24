@@ -38,7 +38,8 @@ class PartitionerKahyparMT : public PartitionerManager {
 
  public:
   PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
-                     unsigned maxSumEdgeSize, std::ostream &out);
+                     unsigned maxSumEdgeSize, unsigned blocks, double imbalance,
+                     std::ostream &out);
 
   ~PartitionerKahyparMT();
   void computePartition(HyperGraph &hypergraph, Level level,

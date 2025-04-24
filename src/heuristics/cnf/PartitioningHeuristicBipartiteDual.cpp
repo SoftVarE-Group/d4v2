@@ -50,7 +50,7 @@ PartitioningHeuristicBipartiteDual::PartitioningHeuristicBipartiteDual(
   // initialize the vector.
   m_partition.resize(m_nbClause + 1, 0);
 
-  m_pm = PartitionerManager::makePartitioner(m_nbClause, m_nbVar, sumSize,
+  m_pm = PartitionerManager::makePartitioner(config, m_nbClause, m_nbVar, sumSize,
                                              out);
   m_hypergraph.init(m_nbVar + m_nbClause + sumSize + 1);
   m_hypergraphExtractor = new HyperGraphExtractorDual(m_nbVar, m_nbClause);

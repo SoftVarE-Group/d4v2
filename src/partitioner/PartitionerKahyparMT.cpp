@@ -33,6 +33,7 @@ namespace d4 {
  */
 PartitionerKahyparMT::PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
                                            unsigned maxSumEdgeSize,
+                                           unsigned blocks, double imbalance,
                                            std::ostream &out) {
   m_pins = std::make_unique<mt_kahypar_hyperedge_id_t[]>(maxSumEdgeSize);
   m_xpins = std::make_unique<size_t[]>(maxEdges + 3);
@@ -47,8 +48,8 @@ PartitionerKahyparMT::PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
   m_markedNodes.resize(maxNodes + 3, false);
 
   context = mt_kahypar_context_new();
-  mt_kahypar_set_partitioning_parameters(context, 2 /* number of blocks */,
-                                         0.05 /* imbalance parameter */,
+  mt_kahypar_set_partitioning_parameters(context, blocks /* number of blocks */,
+                                         imbalance /* imbalance parameter */,
                                          CUT /* objective function */);
 
   mt_kahypar_set_context_parameter(context, VERBOSE, "0");

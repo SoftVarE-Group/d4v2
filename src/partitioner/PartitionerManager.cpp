@@ -25,10 +25,11 @@ namespace d4 {
    Create a partitioner.
    \return a partitioner if the options are correct, NULL otherwise.
  */
-PartitionerManager *PartitionerManager::makePartitioner(unsigned maxNodes,
+PartitionerManager *PartitionerManager::makePartitioner(Config &config,
+                                                        unsigned maxNodes,
                                                         unsigned maxEdges,
                                                         unsigned maxSumEdgeSize,
                                                         std::ostream &out) {
-  return new PartitionerKahyparMT(maxNodes, maxEdges, maxSumEdgeSize, out);
+  return new PartitionerKahyparMT(maxNodes, maxEdges, maxSumEdgeSize, config.partitioning_blocks, config.partitioning_imbalance, out);
 }  // makePartitioner
 }  // namespace d4

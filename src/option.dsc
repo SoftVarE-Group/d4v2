@@ -25,6 +25,8 @@
 ("partitioning-heuristic-simplification-equivalence,phse",boost::program_options::value<bool>()->default_value(true),"The graph with be simplified by considering literal equivalence.")
 ("partitioning-heuristic-simplification-hyperedge,phsh",boost::program_options::value<bool>()->default_value(true),"The graph with be simplified by reducing the hyper edges.")
 ("partitioning-threads",boost::program_options::value<unsigned>()->default_value(1),"The number of threads to use for partitioning.")
+("partitioning-blocks",boost::program_options::value<unsigned>()->default_value(2),"The number of blocks to use for partitioning.")
+("partitioning-imbalance",boost::program_options::value<double>()->default_value(0.05),"The imbalance parameter to use for partitioning.")
 ("cache-reduction-strategy,crs", boost::program_options::value<std::string>()->default_value("expectation"), "The strategy used to reduce the cache structure [none, expectation, cache or sharpSAT].")
 ("cache-reduction-strategy-cachet-limit,crscl", boost::program_options::value<unsigned long>()->default_value(10UL * (1<<21)), "The limit in term of number of entries, the cachet reduction strategy allows.")
 ("cache-reduction-strategy-expectation-limit,crsel", boost::program_options::value<unsigned long>()->default_value(100000), "The frequency in term of number of negative hits used for the expectation reduction strategy allows.")
