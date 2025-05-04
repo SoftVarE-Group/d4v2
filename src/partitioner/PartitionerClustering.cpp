@@ -24,11 +24,13 @@ void PartitionerClustering::computePartition(HyperGraph &hypergraph_in,
   rust::Vec<size_t> partition;
 
   if (method == "bipartite") {
-    partition = hypergraph->two_section_community_bipartite();
+    partition = hypergraph->incidence_graph_louvain_bipartite();
   } else if (method == "min3") {
-    partition = hypergraph->two_section_community_min_size(3);
+    partition = hypergraph->incidence_graph_louvain_min10();
+  } else if (method == "louvain") {
+    partition = hypergraph->incidence_graph_louvain();
   } else {
-    partition = hypergraph->two_section_community();
+    partition = hypergraph->incidence_graph_louvain();
   }
 
   partition_out.resize(partition.size());
