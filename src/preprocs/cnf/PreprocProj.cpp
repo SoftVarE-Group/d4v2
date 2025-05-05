@@ -17,7 +17,7 @@ PreprocProj::PreprocProj(Config &d4Config, std::ostream &out) {
   config.ve_only_simpical = d4Config.preproc_ve_only_simpical;
   config.ve_prefer_simpical = d4Config.preproc_ve_prefer_simpical;
   config.ve_limit = d4Config.preproc_ve_limit;
-  keep_map = false;
+  keep_map = !d4Config.dump_gmap.empty();
 } // constructor
 
 /**
