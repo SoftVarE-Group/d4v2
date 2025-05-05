@@ -48,6 +48,7 @@ namespace d4 {
     config.float_precision = 128;
     config.isFloat = false;
     config.dump_ddnnf = "";
+    config.dump_gmap = "";
     config.query = "";
     config.projMC_refinement = false;
     config.keyword_output_format_solution = "s";

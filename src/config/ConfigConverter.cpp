@@ -60,6 +60,12 @@ namespace d4 {
       config.dump_ddnnf = "";
     }
 
+    if (vm.count("dump-gmap")) {
+      config.dump_gmap = vm["dump-gmap"].as<string>();
+    } else {
+      config.dump_gmap = "";
+    }
+
     if (vm.count("query")) {
       config.query = vm["query"].as<string>();
     } else {
