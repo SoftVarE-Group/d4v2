@@ -34,22 +34,22 @@ ScoringMethodHG::ScoringMethodHG(Config &config, SpecManagerCnf &o, WrapperSolve
       // Instantiate the partitioner.
       partitioner = new PartitioningHeuristicStaticSingleDual(config, a, o, out);
       partitioner->init(out);
+      max_score = *std::max_element(partitioner->m_scores.begin(), partitioner->m_scores.end());
 
       if (config.scoring_hg_scaled) {
         auto max_dlcs = o.maxDLCS();
-        auto max_hg = *std::max_element(partitioner->m_scores.begin(), partitioner->m_scores.end());
-        factor = (static_cast<double>(max_dlcs) / static_cast<double>(max_hg)) * config.scoring_hg_factor;
+        factor = static_cast<double>(max_dlcs) * config.scoring_hg_factor;
       } else {
         factor = config.scoring_hg_factor;
       }
-    }  // constructor
+}  // constructor
 
 /**
    @param[in] v, the variable we want the score.
  */
 double ScoringMethodHG::computeScore(Var v) {
   auto vsads_score = vsads.computeScore(v);
-  auto hg_score = partitioner->m_scores[v] * factor;
+  auto hg_score = static_cast<double>(partitioner->m_scores[v]) / max_score * factor;
   return vsads_score - hg_score;
 }
 
