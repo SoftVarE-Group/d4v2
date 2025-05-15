@@ -25,10 +25,8 @@ void PartitionerClustering::computePartition(HyperGraph &hypergraph_in,
 
   if (method == "bipartite") {
     partition = hypergraph->incidence_graph_louvain_bipartite();
-  } else if (method == "min3") {
+  } else if (method == "min") {
     partition = hypergraph->incidence_graph_louvain_min10();
-  } else if (method == "louvain") {
-    partition = hypergraph->incidence_graph_louvain();
   } else {
     partition = hypergraph->incidence_graph_louvain();
   }

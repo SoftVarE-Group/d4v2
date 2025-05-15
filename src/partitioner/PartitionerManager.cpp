@@ -19,6 +19,7 @@
 
 #include "PartitionerClustering.hpp"
 #include "PartitionerKahyparMT.hpp"
+#include "PartitionerKahyparMTDyn.hpp"
 
 namespace d4 {
 
@@ -33,6 +34,10 @@ PartitionerManager *PartitionerManager::makePartitioner(Config& config,
                                                         std::ostream &out) {
   if (config.partitioner == "mt-kahypar") {
   return new PartitionerKahyparMT(maxNodes, maxEdges, maxSumEdgeSize, out);
+  }
+
+  if (config.partitioner == "mt-kahypar-dyn") {
+    return new PartitionerKahyparMTDyn(config, maxNodes, maxEdges, maxSumEdgeSize, out);
   }
 
   if (config.partitioner == "clustering") {

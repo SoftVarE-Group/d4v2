@@ -100,6 +100,7 @@ add_library(methods OBJECT
 add_library(partitioner OBJECT
     src/partitioner/PartitionerClustering.cpp
     src/partitioner/PartitionerKahyparMT.cpp
+    src/partitioner/PartitionerKahyparMTDyn.cpp
     src/partitioner/PartitionerManager.cpp
 )
 
