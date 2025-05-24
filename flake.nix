@@ -1,7 +1,7 @@
 {
   description = "Packages and development environments for d4";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
   outputs =
     { self, nixpkgs, ... }:
@@ -170,7 +170,10 @@
 
           container = pkgs.dockerTools.buildLayeredImage {
             name = "d4";
-            contents = [ self.packages.${system}.d4 ];
+            contents = [
+              self.packages.${system}.d4
+              nixpkgs.legacyPackages.${system}.time
+            ];
             config = {
               Entrypoint = [ "/bin/d4" ];
               Labels = {
