@@ -170,7 +170,10 @@
 
           container = pkgs.dockerTools.buildLayeredImage {
             name = "d4";
-            contents = [ self.packages.${system}.d4 ];
+            contents = [
+              self.packages.${system}.d4
+              nixpkgs.legacyPackages.${system}.time
+            ];
             config = {
               Entrypoint = [ "/bin/d4" ];
               Labels = {
