@@ -51,6 +51,7 @@ struct DistribSize {
 class PartitioningHeuristicStaticSingle : public PartitioningHeuristicStatic {
 public:
   std::vector<unsigned > m_scores;
+  std::vector<unsigned> m_bucketNumber;
 protected:
   struct Strata {
     unsigned fatherId;
@@ -69,7 +70,6 @@ protected:
   HyperGraphExtractor *m_hypergraphExtractor;
   PhaseSelectorManager *m_phaseSelector;
 
-  std::vector<unsigned> m_bucketNumber;
   std::vector<bool> m_markedVar;
   std::vector<LevelInfo> m_levelInfo;
   std::vector<Var> m_equivClass;

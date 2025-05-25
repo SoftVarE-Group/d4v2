@@ -34,7 +34,7 @@ ScoringMethodHG::ScoringMethodHG(Config &config, SpecManagerCnf &o, WrapperSolve
       // Instantiate the partitioner.
       partitioner = new PartitioningHeuristicStaticSingleDual(config, a, o, out);
       partitioner->init(out);
-      max_score = *std::max_element(partitioner->m_scores.begin(), partitioner->m_scores.end());
+      max_score = *std::max_element(partitioner->m_bucketNumber.begin(), partitioner->m_bucketNumber.end());
 
       if (config.scoring_hg_scaled) {
         auto max_dlcs = o.maxDLCS();
@@ -49,7 +49,7 @@ ScoringMethodHG::ScoringMethodHG(Config &config, SpecManagerCnf &o, WrapperSolve
  */
 double ScoringMethodHG::computeScore(Var v) {
   auto vsads_score = vsads.computeScore(v);
-  auto hg_score = static_cast<double>(partitioner->m_scores[v]) / max_score * factor;
+  auto hg_score = static_cast<double>(partitioner->m_bucketNumber[v]) / max_score * factor;
   return vsads_score - hg_score;
 }
 

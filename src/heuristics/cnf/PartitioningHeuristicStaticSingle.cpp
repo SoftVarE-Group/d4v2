@@ -210,9 +210,9 @@ void PartitioningHeuristicStaticSingle::distributePartition(
     assert(fatherId < m_levelInfo.size());
     m_levelInfo[fatherId].separatorLevel = level;
 
-    for (auto variable : cutSet) {
+/*    for (auto variable : cutSet) {
       m_scores[variable] = level;
-    }
+    }*/
 
     level++;
     m_levelInfo.push_back({level, (unsigned)cutSet.size()});

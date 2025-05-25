@@ -215,7 +215,8 @@ public:
     auto max = 0;
 
     for (auto i = 0; i < m_occurrence.size(); i++) {
-      auto score = getNbClause(i) << 7;
+      //auto score = getNbClause(i) << 7;
+      auto score = getNbClause(i);
 
       if (score > max) {
         max = score;
