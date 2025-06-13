@@ -6,13 +6,27 @@
   git,
   boost,
   hwloc,
-  tbb,
+  tbb_2022_0,
   windows,
-  buildBinary ? false,
 }:
-stdenv.mkDerivation ({
+let
+  shared-resources = fetchFromGitHub {
+    owner = "kahypar";
+    repo = "kahypar-shared-resources";
+    rev = "6d5c8e2444e4310667ec1925e995f26179d7ee88";
+    hash = "sha256-K3tQ9nSJrANdJPf7v/ko2etQLDq2f7Z0V/kvDuWKExM=";
+  };
+
+  WHFC = fetchFromGitHub {
+    owner = "larsgottesbueren";
+    repo = "WHFC";
+    rev = "30b0eeb0e49577d06c3deb09a44b035d81c529d2";
+    hash = "sha256-2+l3PGOT3dqtL39OZHNQGNwrvEH75xXJOK5SaXmDk8A=";
+  };
+in
+stdenv.mkDerivation rec {
   pname = "mt-kahypar";
-  version = "1.4";
+  version = "1.5.1";
 
   outputs = [
     "out"
@@ -22,9 +36,8 @@ stdenv.mkDerivation ({
   src = fetchFromGitHub {
     owner = "kahypar";
     repo = "mt-kahypar";
-    rev = "c51ffeaa3b1040530bf821b7f323e3790b147b33";
-    hash = "sha256-MlF6ZGsqtGQxzDJHbvo5uFj+6w8ehr9V4Ul5oBIGzws=";
-    fetchSubmodules = true;
+    rev = "v${version}";
+    hash = "sha256-2USu34LV60boup+hDftMPpAWdrFyimZA6q5Rx40xW7s=";
   };
 
   nativeBuildInputs = [
@@ -35,50 +48,30 @@ stdenv.mkDerivation ({
   buildInputs = [
     boost.dev
     hwloc.dev
-    tbb.dev
+    tbb_2022_0.dev
   ] ++ lib.optionals stdenv.hostPlatform.isWindows [ windows.pthreads ];
 
-  patches =
-    # Mt-KaHyPar's CMake build does not properly configure the pkg-config files leading to a build error.
-    [ ./mt-kahypar-pc.patch ]
-    ++ lib.optionals (stdenv.hostPlatform.system == "aarch64-linux") [
-      # SSE4 is not supported on aarch64.
-      ./mt-kahypar-disable-sse.patch
-      # growt seems to not be compatible with aarch64.
-      ./mt-kahypar-remove-growt.patch
-    ];
+  patches = [
+    ./mt-kahypar-cmake.patch
+    ./mt-kahypar-pc.patch
+  ];
 
-  cmakeFlags =
-    [
-      "-D KAHYPAR_PYTHON=false"
-      "-D KAHYPAR_ENFORCE_MINIMUM_TBB_VERSION=false"
-    ]
-    ++ lib.optionals (!buildBinary) [
-      "-D MT_KAHYPAR_DISABLE_BOOST=true"
-    ];
+  cmakeFlags = [
+    "-D FETCHCONTENT_SOURCE_DIR_KAHYPAR-SHARED-RESOURCES=${shared-resources}"
+    "-D FETCHCONTENT_SOURCE_DIR_WHFC=${WHFC}"
+  ];
 
-  buildPhase =
-    let
-      targets = lib.concatStringsSep " " (
-        [ "--target mtkahypar" ] ++ lib.optionals buildBinary [ "--target MtKaHyPar" ]
-      );
-    in
-    "cmake --build . ${targets} --parallel $NIX_BUILD_CORES";
+  buildPhase = "cmake --build . --target mtkahypar --parallel $NIX_BUILD_CORES";
+  installPhase = "cmake --install .";
 
-  installPhase = lib.concatStringsSep "\n" (
-    [ "cmake --install ." ]
-    ++ lib.optionals buildBinary [ "install -D mt-kahypar/application/MtKaHyPar $out/bin/MtKaHyPar" ]
-  );
-
-  meta = with lib; {
-    mainProgram = "MtKaHyPar";
+  meta = {
     description = "A shared-memory multilevel graph and hypergraph partitioner";
     longDescription = ''
       Mt-KaHyPar (Multi-Threaded Karlsruhe Hypergraph Partitioner) is a shared-memory multilevel graph and hypergraph partitioner equipped with parallel implementations of techniques used in the best sequential partitioning algorithms.
       Mt-KaHyPar can partition extremely large hypergraphs very fast and with high quality.
     '';
     homepage = "https://github.com/kahypar/mt-kahypar";
-    license = licenses.mit;
-    platforms = platforms.unix ++ platforms.windows;
+    license = lib.licenses.mit;
+    platforms = lib.platforms.unix ++ lib.platforms.windows;
   };
-})
+}
