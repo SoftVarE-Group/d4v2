@@ -137,14 +137,8 @@
           tbb = tbb pkgs;
           tbb-windows = tbb pkgs-windows;
 
-          mt-kahypar = pkgs.callPackage ./nix/mt-kahypar.nix { tbb = self.packages.${system}.tbb; };
-          mt-kahypar-windows = pkgs-windows.callPackage ./nix/mt-kahypar.nix {
-            tbb = self.packages.${system}.tbb-windows;
-          };
-          mt-kahypar-bin = pkgs.callPackage ./nix/mt-kahypar.nix {
-            tbb = self.packages.${system}.tbb;
-            buildBinary = true;
-          };
+          mt-kahypar = pkgs.callPackage ./nix/mt-kahypar.nix { };
+          mt-kahypar-windows = pkgs-windows.callPackage ./nix/mt-kahypar.nix { };
 
           d4 = pkgs.callPackage ./nix/d4.nix {
             mt-kahypar = self.packages.${system}.mt-kahypar;

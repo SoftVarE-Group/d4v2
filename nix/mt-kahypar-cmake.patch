@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62b55d3a..22d067f9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -262,30 +262,32 @@ set(KAHYPAR_PYBIND11_VERSION     v2.13.6)
+ message(STATUS "Fetching dependencies...")
+ 
+ # Include header-only dependencies
+-FetchContent_Populate(
++FetchContent_Declare(
+   kahypar-shared-resources QUIET EXLUDE_FROM_ALL
+   GIT_REPOSITORY https://github.com/kahypar/kahypar-shared-resources.git
+   GIT_TAG        ${KAHYPAR_SHARED_RESOURCES_TAG}
+   SOURCE_DIR     external_tools/kahypar-shared-resources
++  OVERRIDE_FIND_PACKAGE
+ )
+-FetchContent_Populate(
++
++FetchContent_Declare(
+   WHFC QUIET EXLUDE_FROM_ALL
+   GIT_REPOSITORY https://github.com/larsgottesbueren/WHFC.git
+   GIT_TAG        ${KAHYPAR_WHFC_TAG}
+   SOURCE_DIR     external_tools/WHFC
++  OVERRIDE_FIND_PACKAGE
+ )
+-FetchContent_Populate(
+-  growt QUIET EXLUDE_FROM_ALL
+-  GIT_REPOSITORY https://github.com/TooBiased/growt.git
+-  GIT_TAG        ${KAHYPAR_GROWT_TAG}
+-  SOURCE_DIR     external_tools/growt
+-)
++
++find_package(kahypar-shared-resources)
++find_package(WHFC)
++
++include(CMakePrintHelpers)
+ 
+ target_include_directories(MtKaHyPar-Include INTERFACE
+-                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/kahypar-shared-resources
+-                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/growt
+-                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/WHFC)
++                           ${kahypar-shared-resources_SOURCE_DIR}
++                           ${WHFC_SOURCE_DIR})
+ 
++cmake_print_properties(TARGETS ${PROJECT_NAME} PROPERTIES LOCATION INCLUDE_DIRECTORIES)
+ 
+ if (KAHYPAR_ENABLE_TESTING)
+   FetchContent_Declare(
+@@ -437,11 +439,6 @@ if (KAHYPAR_X86 AND KAHYPAR_ENABLE_EXTENDED_INSTRUCTIONS)
+   if(BUILTIN_POPCNT)
+     target_compile_options(MtKaHyPar-BuildFlags INTERFACE -msse4.2)
+   endif()
+-  if(BUILTIN_POPCNT AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+-    # growt requires SSE instructions
+-    # TODO: it is not clear whether/why Linux is required for growt
+-    target_compile_definitions(MtKaHyPar-BuildFlags INTERFACE KAHYPAR_USE_GROWT)
+-  endif()
+ endif()
+ 
+ if(KAHYPAR_ENABLE_ARCH_COMPILE_OPTIMIZATIONS)

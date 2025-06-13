@@ -1,19 +1,19 @@
-diff '--color=auto' -Naur a/lib/CMakeLists.txt b/lib/CMakeLists.txt
---- a/lib/CMakeLists.txt	2024-04-30 16:31:54.639650905 +0200
-+++ b/lib/CMakeLists.txt	2024-04-30 16:32:12.586535317 +0200
-@@ -22,15 +22,10 @@
+diff --git a/cmake/modules/SetupInstallation.cmake b/cmake/modules/SetupInstallation.cmake
+index 2b1af0b8..6ead7f5b 100644
+--- a/cmake/modules/SetupInstallation.cmake
++++ b/cmake/modules/SetupInstallation.cmake
+@@ -7,14 +7,9 @@ set_target_properties(mtkahypar PROPERTIES
+ set_target_properties(mtkahypar PROPERTIES
+     PUBLIC_HEADER "${MTKAHYPAR_INCLUDE_DIR}/mtkahypar.h;${MTKAHYPAR_INCLUDE_DIR}/mtkahypartypes.h")
  
- target_include_directories(mtkahypar SYSTEM PUBLIC ../include)
+-configure_file(cmake/mtkahypar.pc.in mtkahypar.pc @ONLY)
+ configure_file(cmake/MtKaHyParConfig.cmake.in MtKaHyParConfig.cmake @ONLY)
+ configure_file(cmake/MtKaHyParConfigVersion.cmake.in MtKaHyParConfigVersion.cmake @ONLY)
  
--configure_file(libmtkahypar.pc.in libmtkahypar.pc @ONLY)
+-install(FILES ${CMAKE_BINARY_DIR}/mtkahypar.pc
+-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+-  COMPONENT MtKaHyPar_Lib)
 -
- install(TARGETS mtkahypar
-   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
- 
--install(FILES ${CMAKE_BINARY_DIR}/lib/libmtkahypar.pc
--        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
--
- configure_file(cmake_uninstall.cmake.in cmake_uninstall.cmake IMMEDIATE @ONLY)
- 
- add_custom_target(uninstall-mtkahypar "${CMAKE_COMMAND}" -P cmake_uninstall.cmake)
+ install(FILES ${CMAKE_BINARY_DIR}/MtKaHyParConfig.cmake
+               ${CMAKE_BINARY_DIR}/MtKaHyParConfigVersion.cmake
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MtKaHyPar
