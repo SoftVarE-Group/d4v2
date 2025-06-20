@@ -18,9 +18,9 @@
 #include "PartitionerKahyparMT.hpp"
 
 #include <iostream>
-#include <libmtkahypar.h>
 #include <vector>
 
+#include "mtkahypar.h"
 #include "src/exceptions/OptionException.hpp"
 
 namespace d4 {
@@ -34,6 +34,8 @@ namespace d4 {
 PartitionerKahyparMT::PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
                                            unsigned maxSumEdgeSize,
                                            std::ostream &out) {
+  mt_kahypar_error_t error{};
+
   m_pins = std::make_unique<mt_kahypar_hyperedge_id_t[]>(maxSumEdgeSize);
   m_xpins = std::make_unique<size_t[]>(maxEdges + 3);
   m_cwghts = std::make_unique<mt_kahypar_hyperedge_weight_t[]>(maxNodes + 3);
@@ -46,13 +48,13 @@ PartitionerKahyparMT::PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
   m_mapNodes.resize(maxNodes + 3, false);
   m_markedNodes.resize(maxNodes + 3, false);
 
-  context = mt_kahypar_context_new();
+  mt_kahypar_context_t* context = mt_kahypar_context_from_preset(DEFAULT);
   mt_kahypar_set_partitioning_parameters(context, 2 /* number of blocks */,
                                          0.05 /* imbalance parameter */,
                                          CUT /* objective function */);
 
-  mt_kahypar_set_context_parameter(context, VERBOSE, "0");
-  mt_kahypar_load_preset(context, mt_kahypar_preset_type_t::QUALITY);
+  mt_kahypar_status_t status = mt_kahypar_set_context_parameter(context, VERBOSE, "0", &error);
+  assert(status == SUCCESS);
 } // constructor
 
 /**
@@ -63,7 +65,7 @@ PartitionerKahyparMT::~PartitionerKahyparMT() {
 } // destructor
 
 void PartitionerKahyparMT::initPartitioner(Config &config) {
-  mt_kahypar_initialize_thread_pool(config.partitioning_threads, true);
+  mt_kahypar_initialize(config.partitioning_threads, true);
 }
 
 /**
@@ -74,6 +76,7 @@ void PartitionerKahyparMT::initPartitioner(Config &config) {
  */
 void PartitionerKahyparMT::computePartition(HyperGraph &hypergraph, Level level,
                                             std::vector<int> &partition) {
+  mt_kahypar_error_t error{};
   std::vector<unsigned> elts;
 
   // graph initialization and shift the hypergraph
@@ -109,15 +112,16 @@ void PartitionerKahyparMT::computePartition(HyperGraph &hypergraph, Level level,
   const mt_kahypar_hyperedge_id_t num_hyperedges = sizeXpins;
 
   auto hgraph =
-      mt_kahypar_create_hypergraph(DEFAULT, num_vertices, num_hyperedges,
-                                   m_xpins.get(), m_pins.get(), cost, nullptr);
+      mt_kahypar_create_hypergraph(context, num_vertices, num_hyperedges,
+                                   m_xpins.get(), m_pins.get(), cost, nullptr, &error);
 
-  auto p = mt_kahypar_partition(hgraph, context);
+  auto p = mt_kahypar_partition(hgraph, context, &error);
 
   mt_kahypar_get_partition(p, m_partition.data());
 
-  mt_kahypar_free_partitioned_hypergraph(p);
   mt_kahypar_free_hypergraph(hgraph);
+  mt_kahypar_free_partitioned_hypergraph(p);
+
   for (unsigned i = 0; i < elts.size(); i++)
     partition[elts[i]] = m_partition[i];
 } // computePartition

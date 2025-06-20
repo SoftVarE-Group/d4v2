@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.30)
 
 project(d4 VERSION 2.0.0 LANGUAGES CXX)
 
@@ -35,7 +35,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/glucose-3.0)
 include_directories(${GMP_INCLUDE_DIRS})
 include_directories(${GMPXX_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${MtKaHyPar_INCLUDE_DIR})
 include_directories(${arjun_INCLUDE_DIR})
 include_directories(${GMPC_INCLUDE_DIR})
 include_directories(${glucose_INCLUDE_DIRS})
@@ -156,7 +155,7 @@ add_library(core STATIC
     $<TARGET_OBJECTS:utils>
 )
 
-target_link_libraries(core MtKaHyPar::MtKaHyPar GPMC::GPMC arjun glucose::glucose GMP::GMPXX GMP::GMP cadiback cadical)
+target_link_libraries(core MtKaHyPar::mtkahypar GPMC::GPMC arjun glucose::glucose GMP::GMPXX GMP::GMP cadiback cadical)
 
 if(USE_GLUCOSE)
     target_link_libraries(core glucose::glucose)
