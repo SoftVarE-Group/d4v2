@@ -19,16 +19,6 @@
       # If building for Windows, appends -windows, otherwise nothing.
       windowsSuffix = pkgs: name: if pkgs.stdenv.hostPlatform.isWindows then "${name}-windows" else name;
 
-      # Different platforms require different TBB versions and the Windows one is not in upstream Nixpkgs yet.
-      tbb =
-        pkgs:
-        if pkgs.stdenv.isDarwin && lib.versionOlder pkgs.stdenv.hostPlatform.darwinMinVersion "10.13" then
-          pkgs.tbb
-        else if pkgs.stdenv.hostPlatform.isWindows then
-          pkgs.callPackage ./nix/tbb-windows.nix { }
-        else
-          pkgs.tbb_2021_11;
-
       # All required runtime dependencies.
       dependencies =
         pkgs:
@@ -41,8 +31,8 @@
           paths =
             [
               self.packages.${system}.${windowsSuffix' "mt-kahypar"}
-              self.packages.${system}.${windowsSuffix' "tbb"}
               pkgs.hwloc.lib
+              pkgs.tbb_2022_0
             ]
             ++ lib.optionals pkgs.stdenv.cc.isGNU [ pkgs.libgcc ]
             ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
@@ -133,9 +123,6 @@
             arjun = self.packages.${system}.arjun-windows;
             cryptominisat = self.packages.${system}.cryptominisat-windows;
           };
-
-          tbb = tbb pkgs;
-          tbb-windows = tbb pkgs-windows;
 
           mt-kahypar = pkgs.callPackage ./nix/mt-kahypar.nix { };
           mt-kahypar-windows = pkgs-windows.callPackage ./nix/mt-kahypar.nix { };
