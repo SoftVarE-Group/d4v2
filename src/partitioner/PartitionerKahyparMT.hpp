@@ -19,8 +19,8 @@
 
 #include <vector>
 #include <memory>
-#include <libmtkahypar.h>
 
+#include "mtkahypar.h"
 #include "src/config/Config.hpp"
 
 #include "PartitionerManager.hpp"
