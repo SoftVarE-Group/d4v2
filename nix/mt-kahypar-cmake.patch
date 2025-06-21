@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 62b55d3a..22d067f9 100644
+index 854e52a6..64064719 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -262,30 +262,32 @@ set(KAHYPAR_PYBIND11_VERSION     v2.13.6)
+@@ -263,30 +263,27 @@ set(KAHYPAR_PYBIND11_VERSION     v2.13.6)
  message(STATUS "Fetching dependencies...")
  
  # Include header-only dependencies
@@ -15,38 +15,34 @@ index 62b55d3a..22d067f9 100644
 +  OVERRIDE_FIND_PACKAGE
  )
 -FetchContent_Populate(
-+
 +FetchContent_Declare(
    WHFC QUIET EXLUDE_FROM_ALL
    GIT_REPOSITORY https://github.com/larsgottesbueren/WHFC.git
    GIT_TAG        ${KAHYPAR_WHFC_TAG}
    SOURCE_DIR     external_tools/WHFC
-+  OVERRIDE_FIND_PACKAGE
- )
+-)
 -FetchContent_Populate(
 -  growt QUIET EXLUDE_FROM_ALL
 -  GIT_REPOSITORY https://github.com/TooBiased/growt.git
 -  GIT_TAG        ${KAHYPAR_GROWT_TAG}
 -  SOURCE_DIR     external_tools/growt
--)
-+
-+find_package(kahypar-shared-resources)
-+find_package(WHFC)
-+
-+include(CMakePrintHelpers)
++  OVERRIDE_FIND_PACKAGE
+ )
  
- target_include_directories(MtKaHyPar-Include INTERFACE
+-target_include_directories(MtKaHyPar-Include INTERFACE
 -                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/kahypar-shared-resources
 -                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/growt
 -                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/WHFC)
++find_package(kahypar-shared-resources)
++find_package(WHFC)
+ 
++target_include_directories(MtKaHyPar-Include INTERFACE
 +                           ${kahypar-shared-resources_SOURCE_DIR}
 +                           ${WHFC_SOURCE_DIR})
  
-+cmake_print_properties(TARGETS ${PROJECT_NAME} PROPERTIES LOCATION INCLUDE_DIRECTORIES)
- 
  if (KAHYPAR_ENABLE_TESTING)
    FetchContent_Declare(
-@@ -437,11 +439,6 @@ if (KAHYPAR_X86 AND KAHYPAR_ENABLE_EXTENDED_INSTRUCTIONS)
+@@ -438,11 +435,6 @@ if (KAHYPAR_X86 AND KAHYPAR_ENABLE_EXTENDED_INSTRUCTIONS)
    if(BUILTIN_POPCNT)
      target_compile_options(MtKaHyPar-BuildFlags INTERFACE -msse4.2)
    endif()
@@ -58,3 +54,16 @@ index 62b55d3a..22d067f9 100644
  endif()
  
  if(KAHYPAR_ENABLE_ARCH_COMPILE_OPTIMIZATIONS)
+@@ -506,10 +498,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+       DEPENDS MtKaHyPar-CLI)
+   endif()
+ 
+-  if(NOT WIN32 AND BUILD_SHARED_LIBS)
+-    # library installation target
+-    include(SetupInstallation)
+-  endif()
++  # library installation target
++  include(SetupInstallation)
+ 
+   if(KAHYPAR_BUILD_DEBIAN_PACKAGE)
+     # packaging via CPack
