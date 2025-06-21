@@ -59,7 +59,7 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-D FETCHCONTENT_SOURCE_DIR_KAHYPAR-SHARED-RESOURCES=${shared-resources}"
     "-D FETCHCONTENT_SOURCE_DIR_WHFC=${WHFC}"
-  ];
+  ] ++ lib.optionals stdenv.hostPlatform.isWindows [ "-D BUILD_SHARED_LIBS=ON" ];
 
   buildPhase = "cmake --build . --target mtkahypar --parallel $NIX_BUILD_CORES";
   installPhase = "cmake --install .";
