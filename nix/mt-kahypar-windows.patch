@@ -1,0 +1,12 @@
+diff --git a/mt-kahypar/parallel/thread_pinning_observer.h b/mt-kahypar/parallel/thread_pinning_observer.h
+index 8fc5f8b9..4353ac67 100644
+--- a/mt-kahypar/parallel/thread_pinning_observer.h
++++ b/mt-kahypar/parallel/thread_pinning_observer.h
+@@ -33,6 +33,7 @@
+ #include <sstream>
+ 
+ #ifdef _WIN32
++#include <windows.h>
+ #include <winbase.h>
+ #elif KAHYPAR_ENABLE_THREAD_PINNING
+ #include <sched.h>
