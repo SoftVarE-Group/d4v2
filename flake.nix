@@ -34,8 +34,8 @@
           paths =
             [
               self.packages.${system}.${windowsSuffix' "mt-kahypar"}
-              pkgs.hwloc.lib
               pkgs.tbb_2022_0
+              (boost pkgs)
             ]
             ++ lib.optionals pkgs.stdenv.cc.isGNU [ pkgs.libgcc ]
             ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
