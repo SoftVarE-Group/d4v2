@@ -137,6 +137,19 @@ class DecisionDNNFOperation : public Operation<T, U> {
      @param[in] out, the output stream.
   */
   void manageResult(U &result, Config &config, std::ostream &out) {
+    if (!config.dump_gmap.empty()) {
+      std::string fileName = config.dump_gmap;
+
+      std::ofstream outFile;
+      outFile.open(fileName);
+
+      for (auto literal : m_problem->gmap()) {
+        outFile << literal << "\n";
+      }
+
+      outFile.close();
+    }
+
     if (!config.dump_ddnnf.empty()) {
       std::ofstream outFile;
       std::string fileName = config.dump_ddnnf;
