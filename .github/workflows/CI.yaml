@@ -9,10 +9,10 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - double: aarch64-linux                   # target we are building for
-            system: aarch64-linux                   # system we are building on
-            runner: ubuntu-24.04-arm                # GitHub runner the build is running on
-            flake: bundled                          # flake package to build
+          - double: aarch64-linux # target we are building for
+            system: aarch64-linux # system we are building on
+            runner: ubuntu-24.04-arm # GitHub runner the build is running on
+            flake: bundled # flake package to build
             interpreter: /lib/ld-linux-aarch64.so.1 # path to libc interpreter
           - double: x86_64-linux
             system: x86_64-linux
@@ -21,11 +21,11 @@ jobs:
             interpreter: /lib64/ld-linux-x86-64.so.2
           - double: aarch64-darwin
             system: aarch64-darwin
-            runner: macos-15
+            runner: macos-26
             flake: bundled
           - double: x86_64-darwin
             system: x86_64-darwin
-            runner: macos-13
+            runner: macos-26-intel
             flake: bundled
           - double: x86_64-windows
             system: x86_64-linux
@@ -34,13 +34,13 @@ jobs:
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Nix
         uses: cachix/install-nix-action@v31
       - name: Cache
-        uses: cachix/cachix-action@v16
+        uses: cachix/cachix-action@v17
         with:
-          name: softvare-group
+          name: ${{ vars.CACHIX_NAME }}
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build
         run: nix build -L .#packages.${{ matrix.target.system }}.${{ matrix.target.flake }}
@@ -58,3 +58,39 @@ jobs:
         with:
           name: d4-${{ matrix.target.double }}
           path: result
+
+  Container:
+    needs: [Build]
+    strategy:
+      matrix:
+        target:
+          - double: aarch64-linux # target we are building for
+            architecture: arm64 # container architecture label
+            runner: ubuntu-24.04-arm # GitHub runner the build is running on
+          - double: x86_64-linux
+            architecture: amd64
+            runner: ubuntu-24.04
+    env:
+      REGISTRY: ${{ vars.CONTAINER_REGISTRY }}
+      IMAGE_NAME: ${{ vars.CONTAINER_IMAGE }}
+      TAG: ${{ github.ref_name }}
+    runs-on: ${{ matrix.target.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Nix
+        uses: cachix/install-nix-action@v31
+      - name: Cache
+        uses: cachix/cachix-action@v17
+        with:
+          name: ${{ vars.CACHIX_NAME }}
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - name: Build
+        run: nix build -L .#packages.${{ matrix.target.double }}.container
+      - name: Login
+        run: skopeo login $REGISTRY --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+      - name: Push
+        run: skopeo copy docker-archive:result docker://$REGISTRY/$IMAGE_NAME:$TAG-${{ matrix.target.architecture }}
+      - name: Push latest tag
+        if: ${{ github.ref_type == 'tag' }}
+        run: skopeo copy docker://$REGISTRY/$IMAGE_NAME:$TAG-${{ matrix.target.architecture }} docker://$REGISTRY/$IMAGE_NAME:latest-${{ matrix.target.architecture }}
