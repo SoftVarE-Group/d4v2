@@ -5,7 +5,7 @@
   cmake,
   git,
   boost,
-  tbb_2022_0,
+  tbb_2022,
   windows,
 }:
 let
@@ -46,7 +46,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     boost.dev
-    tbb_2022_0.dev
+    tbb_2022.dev
   ] ++ lib.optionals stdenv.hostPlatform.isWindows [ windows.pthreads ];
 
   patches = [

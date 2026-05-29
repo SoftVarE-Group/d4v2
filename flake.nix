@@ -1,7 +1,7 @@
 {
   description = "Packages and development environments for d4";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
   outputs =
     { self, nixpkgs, ... }:
@@ -34,7 +34,7 @@
           paths =
             [
               self.packages.${system}.${windowsSuffix' "mt-kahypar"}
-              pkgs.tbb_2022_0
+              pkgs.tbb_2022
               (boost pkgs)
             ]
             ++ lib.optionals pkgs.stdenv.cc.isGNU [ pkgs.libgcc ]
