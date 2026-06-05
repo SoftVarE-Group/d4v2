@@ -37,7 +37,7 @@
       dependencies =
         pkgs:
         let
-          system = pkgs.buildPlatform.system;
+          system = pkgs.stdenv.buildPlatform.system;
           windowsSuffix' = windowsSuffix pkgs;
         in
         pkgs.buildEnv {
@@ -66,7 +66,7 @@
       bundled =
         pkgs:
         let
-          system = pkgs.buildPlatform.system;
+          system = pkgs.stdenv.buildPlatform.system;
           windowsSuffix' = windowsSuffix pkgs;
         in
         pkgs.buildEnv {
