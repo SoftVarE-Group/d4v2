@@ -1,10 +1,21 @@
 {
   description = "Packages and development environments for d4";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
 
   outputs =
-    { self, nixpkgs, ... }:
+    {
+      self,
+      nixpkgs,
+      treefmt-nix,
+      ...
+    }:
     let
       lib = nixpkgs.lib;
 
@@ -31,14 +42,13 @@
         in
         pkgs.buildEnv {
           name = "d4-dependencies";
-          paths =
-            [
-              self.packages.${system}.${windowsSuffix' "mt-kahypar"}
-              pkgs.tbb_2022
-              (boost pkgs)
-            ]
-            ++ lib.optionals pkgs.stdenv.cc.isGNU [ pkgs.libgcc ]
-            ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
+          paths = [
+            self.packages.${system}.${windowsSuffix' "mt-kahypar"}
+            pkgs.tbb_2022
+            (boost pkgs)
+          ]
+          ++ lib.optionals pkgs.stdenv.cc.isGNU [ pkgs.libgcc ]
+          ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
         };
 
       documentation =
@@ -67,9 +77,13 @@
             self.packages.${system}.${windowsSuffix' "documentation"}
           ];
         };
+
+      treefmt =
+        system:
+        (treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} ./nix/treefmt.nix).config.build;
     in
     {
-      formatter = lib.genAttrs systems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
+      formatter = lib.genAttrs systems (system: (treefmt system).wrapper);
       packages = lib.genAttrs systems (
         system:
         let
@@ -182,6 +196,11 @@
           bundled-windows = bundled pkgs-windows;
         }
       );
+
+      checks = lib.genAttrs systems (system: {
+        formatting = (treefmt system).check self;
+      });
+
       devShells = lib.genAttrs systems (
         system:
         let
