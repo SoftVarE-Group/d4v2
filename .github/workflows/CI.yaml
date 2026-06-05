@@ -10,25 +10,20 @@ jobs:
       matrix:
         target:
           - double: aarch64-linux # target we are building for
-            system: aarch64-linux # system we are building on
             runner: ubuntu-24.04-arm # GitHub runner the build is running on
             flake: bundled # flake package to build
             interpreter: /lib/ld-linux-aarch64.so.1 # path to libc interpreter
           - double: x86_64-linux
-            system: x86_64-linux
             runner: ubuntu-24.04
             flake: bundled
             interpreter: /lib64/ld-linux-x86-64.so.2
           - double: aarch64-darwin
-            system: aarch64-darwin
             runner: macos-26
             flake: bundled
           - double: x86_64-darwin
-            system: x86_64-darwin
             runner: macos-26-intel
             flake: bundled
           # - double: x86_64-windows
-          #   system: x86_64-linux
           #   runner: ubuntu-24.04
           #   flake: bundled-windows
     runs-on: ${{ matrix.target.runner }}
@@ -43,7 +38,7 @@ jobs:
           name: ${{ vars.CACHIX_NAME }}
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build
-        run: nix build -L .#packages.${{ matrix.target.system }}.${{ matrix.target.flake }}
+        run: nix build -L .#${{ matrix.target.flake }}
       - name: Set interpreter
         if: ${{ matrix.target.interpreter }}
         run: |
@@ -54,7 +49,7 @@ jobs:
           chmod -w output/bin/*
           mv output result
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: d4-${{ matrix.target.double }}
           path: result
