@@ -17,6 +17,31 @@ nix build -L
 
 Implicitly, the `.#default` flake output is built, which builds d4.
 
+## Formatting
+
+This project uses [`treefmt`][treefmt] for formatting the Nix and C++ code.
+To format the code, simply run:
+
+```
+nix fmt
+```
+
+For Nix code, [`nixmft`][nixfmt] is used and for C++ we use [`clang-format`][clang-format].
+The configuration is done in `nix/treefmt.nix`.
+
+Formatting is automatically checked by the CI.
+It can be manually checked as well by Nix.
+
+## Check
+
+To check whether the Nix configuration is valid and the code is formatted properly, a Nix check can be done:
+
+```
+nix flake check -L
+```
+
+This will error on any problems and show the full output of each check.
+
 ## Development Shell
 
 For manual builds and IDE setup, a Nix development shell can be used.
@@ -73,4 +98,7 @@ A manual build is usually not necessary as they automatically get built when req
 [cmake]: https://cmake.org
 [nix]: https://nixos.org
 [flakes]: https://wiki.nixos.org/wiki/Flakes
+[treefmt]: https://treefmt.com
+[nixfmt]: https://github.com/NixOS/nixfmt
+[clang-format]: https://clang.llvm.org/docs/ClangFormat.html
 [cachix]: https://www.cachix.org
