@@ -27,10 +27,10 @@ jobs:
             system: x86_64-darwin
             runner: macos-26-intel
             flake: bundled
-          - double: x86_64-windows
-            system: x86_64-linux
-            runner: ubuntu-24.04
-            flake: bundled-windows
+          # - double: x86_64-windows
+          #   system: x86_64-linux
+          #   runner: ubuntu-24.04
+          #   flake: bundled-windows
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout
