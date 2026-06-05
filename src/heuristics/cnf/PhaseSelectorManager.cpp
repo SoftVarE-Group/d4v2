@@ -34,7 +34,7 @@ namespace d4 {
 PhaseSelectorManager::PhaseSelectorManager(
     PartitioningHeuristicStaticSingle *staticPartitioner) {
   m_staticPartitioner = staticPartitioner;
-}  // constructor
+} // constructor
 
 /**
    Create a selector manager regarding the given options.
@@ -49,13 +49,19 @@ PhaseSelectorManager::PhaseSelectorManager(
 PhaseSelectorManager *PhaseSelectorManager::makePhaseSelectorManager(
     Config &config, PartitioningHeuristicStaticSingle *staticPartitioner,
     std::ostream &out) {
-  if (config.partitioning_heuristic_bipartite_phase == "none" || (config.partitioning_heuristic_bipartite_phase_static <= 0 && !config.partitioning_heuristic_bipartite_phase_dynamic))
+  if (config.partitioning_heuristic_bipartite_phase == "none" ||
+      (config.partitioning_heuristic_bipartite_phase_static <= 0 &&
+       !config.partitioning_heuristic_bipartite_phase_dynamic))
     return new PhaseSelectorNone(staticPartitioner, out);
 
   if (!config.partitioning_heuristic_bipartite_phase_dynamic)
-    return new PhaseSelectorStatic(staticPartitioner, config.partitioning_heuristic_bipartite_phase_static, out);
+    return new PhaseSelectorStatic(
+        staticPartitioner, config.partitioning_heuristic_bipartite_phase_static,
+        out);
 
-  return new PhaseSelectorDynamic(staticPartitioner, config.partitioning_heuristic_bipartite_phase_dynamic, out);
-}  // makePhaseSelectorManager
+  return new PhaseSelectorDynamic(
+      staticPartitioner, config.partitioning_heuristic_bipartite_phase_dynamic,
+      out);
+} // makePhaseSelectorManager
 
-}  // namespace d4
+} // namespace d4

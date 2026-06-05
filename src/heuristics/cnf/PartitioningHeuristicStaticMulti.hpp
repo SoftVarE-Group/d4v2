@@ -29,7 +29,7 @@ namespace d4 {
 class PhaseSelectorManager;
 
 class PartitioningHeuristicStaticMulti : public PartitioningHeuristicStatic {
- private:
+private:
   PartitioningHeuristicStaticSingle *m_partitionStaticDual;
   PartitioningHeuristicStaticSinglePrimal *m_partitionStaticPrimal;
   PartitioningHeuristicStaticSingle *m_partitionStaticUsed;
@@ -37,12 +37,12 @@ class PartitioningHeuristicStaticMulti : public PartitioningHeuristicStatic {
   double m_ratio;
   std::vector<Var> m_equivClass;
 
- protected:
+protected:
   void computeDecomposition(std::vector<Var> &component,
                             std::vector<Var> &equivClass,
                             std::vector<std::vector<Var>> &equivVar);
 
- public:
+public:
   PartitioningHeuristicStaticMulti(Config &config, WrapperSolver &s,
                                    SpecManager &om, std::ostream &out);
 
@@ -58,4 +58,4 @@ class PartitioningHeuristicStaticMulti : public PartitioningHeuristicStatic {
 
   void init(std::ostream &out);
 };
-}  // namespace d4
+} // namespace d4

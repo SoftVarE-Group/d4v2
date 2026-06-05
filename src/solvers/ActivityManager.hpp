@@ -20,7 +20,7 @@
 
 namespace d4 {
 class ActivityManager {
- public:
+public:
   virtual double getActivity(Var v) = 0;
   virtual double getCountConflict(Var v) = 0;
   virtual void setCountConflict(Var v, double count) = 0;
@@ -28,4 +28,4 @@ class ActivityManager {
   void setCountConflict(std::vector<double> &counts, unsigned minVar,
                         unsigned maxVar);
 };
-}  // namespace d4
+} // namespace d4

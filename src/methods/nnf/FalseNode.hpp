@@ -24,9 +24,8 @@
 #include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
-template <class T>
-class FalseNode : public Node<T> {
- public:
+template <class T> class FalseNode : public Node<T> {
+public:
   T nbModels;
   using Node<T>::header;
 
@@ -36,7 +35,7 @@ class FalseNode : public Node<T> {
   FalseNode() {
     header.typeNode = TypeNode::TypeFalseNode;
     header.stamp = 0;
-  }  // constructor.
+  } // constructor.
 
   /**
      Deallocate the memory.
@@ -47,10 +46,11 @@ class FalseNode : public Node<T> {
   */
   static void deallocate(Node<T> *node, void (**func)(), unsigned globalStamp) {
     auto *p = reinterpret_cast<FalseNode *>(node);
-    if (p->header.stamp == globalStamp) return;
+    if (p->header.stamp == globalStamp)
+      return;
     p->header.stamp = globalStamp;
     p->nbModels.~T();
-  }  // destructor
+  } // destructor
 
   /**
      Ask for the number of models of the formula under an interpretation.
@@ -69,7 +69,7 @@ class FalseNode : public Node<T> {
                            std::vector<ValueVar> &fixedValue,
                            ProblemManager &problem, unsigned globalStamp) {
     return T(0);
-  }  // computeNbModels
+  } // computeNbModels
 
   /**
      Ask if the formula is satisfiable under an interpretation.
@@ -84,7 +84,7 @@ class FalseNode : public Node<T> {
   static bool isSAT(Node<T> *node, bool (**func)(),
                     std::vector<ValueVar> &fixedValue, unsigned globalStamp) {
     return false;
-  }  // isSAT
+  } // isSAT
 
   /**
      Print out the NNF in a stream.
@@ -101,13 +101,14 @@ class FalseNode : public Node<T> {
                            std::ostream &out, unsigned &idx,
                            unsigned globalStamp) {
     auto *p = reinterpret_cast<FalseNode *>(node);
-    if (p->header.stamp == globalStamp) return (unsigned)p->nbModels;
+    if (p->header.stamp == globalStamp)
+      return (unsigned)p->nbModels;
     p->nbModels = idx++;
 
     out << "f " << (unsigned)p->nbModels << " 0\n";
 
     p->header.stamp = globalStamp;
     return (unsigned)p->nbModels;
-  }  // printNNF
+  } // printNNF
 };
-}  // namespace d4
+} // namespace d4

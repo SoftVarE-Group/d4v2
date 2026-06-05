@@ -17,20 +17,19 @@
  */
 #pragma once
 
+#include "src/config/Config.hpp"
 #include "src/preprocs/PreprocManager.hpp"
 #include "src/problem/ProblemManager.hpp"
-#include "src/config/Config.hpp"
 
 namespace d4 {
 class MethodManager {
- protected:
+protected:
   std::clock_t currentTime;
 
- public:
+public:
   virtual ~MethodManager() {}
 
-  static MethodManager *makeMethodManager(Config &config,
-                                          std::ostream &out);
+  static MethodManager *makeMethodManager(Config &config, std::ostream &out);
 
   static MethodManager *makeMethodManager(Config &config,
                                           ProblemManager *problem,
@@ -39,8 +38,7 @@ class MethodManager {
 
   static void displayInfoVariables(ProblemManager *problem, std::ostream &out);
 
-  static ProblemManager *runPreproc(Config &config,
-                                    ProblemManager *initProblem,
+  static ProblemManager *runPreproc(Config &config, ProblemManager *initProblem,
                                     std::ostream &out,
                                     LastBreathPreproc &lastBreath);
 
@@ -52,4 +50,4 @@ class MethodManager {
     return (float)(clock() - currentTime) / CLOCKS_PER_SEC;
   }
 };
-}  // namespace d4
+} // namespace d4

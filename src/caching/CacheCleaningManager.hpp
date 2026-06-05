@@ -25,15 +25,13 @@
 #include "src/exceptions/FactoryException.hpp"
 
 namespace d4 {
-template <class T>
-class CacheList;
+template <class T> class CacheList;
 
-template <class T>
-class CacheCleaningManager {
- protected:
+template <class T> class CacheCleaningManager {
+protected:
   CacheManager<T> *m_cache;
 
- public:
+public:
   virtual ~CacheCleaningManager() {}
 
   /**
@@ -44,17 +42,18 @@ class CacheCleaningManager {
      @param[in] nbVar, the number of variables in the problem.
      @param[in] out, the stream where are print out the information.
    */
-  static CacheCleaningManager<T> *makeCacheCleaningManager(
-      Config &config, CacheManager<T> *cache, int nbVar,
-      std::ostream &out) {
-    out << "c [CONSTRUCTOR] Cache cleaning manager: " << config.cache_reduction_strategy << "\n";
+  static CacheCleaningManager<T> *
+  makeCacheCleaningManager(Config &config, CacheManager<T> *cache, int nbVar,
+                           std::ostream &out) {
+    out << "c [CONSTRUCTOR] Cache cleaning manager: "
+        << config.cache_reduction_strategy << "\n";
 
     if (config.cache_reduction_strategy == "expectation") {
       return new CacheCleaningExpectation<T>(cache, nbVar);
     } else {
       return new CacheCleaningNone<T>(cache);
     }
-  }  // makeCacheCleaningManager
+  } // makeCacheCleaningManager
 
   virtual void initCountCachedBucket(CachedBucket<T> *cb) = 0;
   virtual void updateCountCachedBucket(CachedBucket<T> *cb, int nbVar) = 0;
@@ -72,7 +71,7 @@ class CacheCleaningManager {
    */
   void releaseMemory(char *data, int size) {
     m_cache->getBucketManager()->releaseMemory(data, size);
-  }  // releaseMemory
+  } // releaseMemory
 };
 
-}  // namespace d4
+} // namespace d4

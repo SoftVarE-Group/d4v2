@@ -30,5 +30,5 @@ PartitionerManager *PartitionerManager::makePartitioner(unsigned maxNodes,
                                                         unsigned maxSumEdgeSize,
                                                         std::ostream &out) {
   return new PartitionerKahyparMT(maxNodes, maxEdges, maxSumEdgeSize, out);
-}  // makePartitioner
-}  // namespace d4
+} // makePartitioner
+} // namespace d4

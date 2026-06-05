@@ -27,7 +27,7 @@ namespace d4 {
 
    @param[in] nbVar, the number of variables.
  */
-AtMost1Extractor::AtMost1Extractor(int nbVar) { init(nbVar); }  // constructor
+AtMost1Extractor::AtMost1Extractor(int nbVar) { init(nbVar); } // constructor
 
 /**
    Init the structure with the good number of variables.
@@ -40,7 +40,7 @@ void AtMost1Extractor::init(int nbVar) {
   m_markedVar.resize((nbVar + 1), false);
   m_stamp.resize(nbVar + 1, 0);
   m_counter.resize((nbVar + 1) << 1, 0);
-}  // initAtMost1Extractor
+} // initAtMost1Extractor
 
 /**
    Compute for each variable given in parameter the list of literals their are
@@ -53,7 +53,7 @@ void AtMost1Extractor::init(int nbVar) {
  */
 void AtMost1Extractor::extractLitBlock(
     WrapperSolver &s, std::vector<Var> &vars,
-    std::vector<std::vector<Lit> > &litBlock) {
+    std::vector<std::vector<Lit>> &litBlock) {
   litBlock.clear();
   litBlock.resize((m_nbVar + 1) << 1, std::vector<Lit>());
 
@@ -70,7 +70,7 @@ void AtMost1Extractor::extractLitBlock(
       litBlock[(~l).intern()][0] = l;
     }
   }
-}  // extractVarBlock
+} // extractVarBlock
 
 /**
    Research equivalences in the set of variable v.
@@ -82,32 +82,38 @@ void AtMost1Extractor::extractLitBlock(
 void AtMost1Extractor::searchAtMost1(WrapperSolver &s, std::vector<Var> &vars,
                                      std::vector<AtMost1> &atMostList) {
   // init
-  for (auto &v : vars) m_markedVar[v] = true;
+  for (auto &v : vars)
+    m_markedVar[v] = true;
 
   // compute the list of binary block.
-  std::vector<std::vector<Lit> > litBlock;
+  std::vector<std::vector<Lit>> litBlock;
   extractLitBlock(s, vars, litBlock);
 
   // sort the varblock regarding their size.
   std::vector<unsigned> indexSorted;
-  for (unsigned i = 0; i < litBlock.size(); i++) indexSorted.push_back(i);
+  for (unsigned i = 0; i < litBlock.size(); i++)
+    indexSorted.push_back(i);
   std::sort(indexSorted.begin(), indexSorted.end(), MapLitBlock(litBlock));
 
   for (auto &idx : indexSorted) {
-    if (litBlock[idx].size() < 3) continue;
+    if (litBlock[idx].size() < 3)
+      continue;
 
     // init the counter.
-    std::vector<Lit> lits = litBlock[idx];  // copy
-    for (auto &l : lits) m_counter[l.intern()] = 0;
+    std::vector<Lit> lits = litBlock[idx]; // copy
+    for (auto &l : lits)
+      m_counter[l.intern()] = 0;
 
     // consider all the literals and remove not considered variables.
     unsigned j = 0;
     for (unsigned i = 0; i < lits.size(); i++) {
       Lit &l = lits[i];
-      if (!m_markedVar[l.var()]) continue;
+      if (!m_markedVar[l.var()])
+        continue;
 
       lits[j++] = l;
-      for (auto &m : litBlock[(~l).intern()]) m_counter[m.intern()]++;
+      for (auto &m : litBlock[(~l).intern()])
+        m_counter[m.intern()]++;
     }
     lits.resize(j);
 
@@ -122,7 +128,8 @@ void AtMost1Extractor::searchAtMost1(WrapperSolver &s, std::vector<Var> &vars,
 
       // mark the intersection.
       Lit l = lits[pos];
-      for (auto &m : litBlock[(~l).intern()]) m_markedLit[m.intern()] = true;
+      for (auto &m : litBlock[(~l).intern()])
+        m_markedLit[m.intern()] = true;
       m_markedLit[l.intern()] = false;
 
       unsigned j = 0;
@@ -131,11 +138,13 @@ void AtMost1Extractor::searchAtMost1(WrapperSolver &s, std::vector<Var> &vars,
           lits[j++] = lits[i];
         else {
           // adjust the counter regarding the literals we removed.
-          for (auto &m : litBlock[(~lits[i]).intern()]) m_counter[m.intern()]--;
+          for (auto &m : litBlock[(~lits[i]).intern()])
+            m_counter[m.intern()]--;
         }
       lits.resize(j);
 
-      for (auto &m : litBlock[(~l).intern()]) m_markedLit[m.intern()] = false;
+      for (auto &m : litBlock[(~l).intern()])
+        m_markedLit[m.intern()] = false;
       resLits.push_back(l);
     }
 
@@ -153,7 +162,8 @@ void AtMost1Extractor::searchAtMost1(WrapperSolver &s, std::vector<Var> &vars,
   }
 
   // re-init
-  for (auto &v : vars) m_markedVar[v] = false;
-}  // searchAtMost1
+  for (auto &v : vars)
+    m_markedVar[v] = false;
+} // searchAtMost1
 
-}  // namespace d4
+} // namespace d4

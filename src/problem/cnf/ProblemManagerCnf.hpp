@@ -27,10 +27,12 @@ class ProblemManagerCnf : public ProblemManager {
 protected:
   std::vector<std::vector<Lit>> m_clauses;
   std::vector<std::vector<Lit>> m_learnt;
+
 public:
   ProblemManagerCnf();
   ProblemManagerCnf(int nbVar, std::vector<double> &weightLit,
-                    std::vector<double> &weightVar, std::vector<Var> &selected,int freevars=0);
+                    std::vector<double> &weightVar, std::vector<Var> &selected,
+                    int freevars = 0);
   ProblemManagerCnf(ProblemManager *problem);
   ProblemManagerCnf(std::string &nameFile);
   ~ProblemManagerCnf();

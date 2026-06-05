@@ -28,7 +28,7 @@ namespace d4 {
 PhaseHeuristicOccurrence::PhaseHeuristicOccurrence(SpecManager &s, bool isRev)
     : sm(s) {
   isReversed = isRev;
-}  // constructor
+} // constructor
 
 /**
    Assign the next decision variable regarding the number of occurrence of the
@@ -38,6 +38,6 @@ bool PhaseHeuristicOccurrence::selectPhase(Var v) {
   bool ret = sm.getNbOccurrence(Lit::makeLit(v, false)) <
              sm.getNbOccurrence(Lit::makeLit(v, true));
   return (ret + isReversed) & 1;
-}  // selectPhase
+} // selectPhase
 
-}  // namespace d4
+} // namespace d4

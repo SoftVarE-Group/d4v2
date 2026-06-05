@@ -19,9 +19,8 @@
 #include "CachedBucket.hpp"
 
 namespace d4 {
-template <class T>
-class TmpEntry {
- public:
+template <class T> class TmpEntry {
+public:
   CachedBucket<T> e;
   unsigned int hashValue;
   bool defined;
@@ -37,4 +36,4 @@ class TmpEntry {
   inline CachedBucket<T> &getCachedBucket() { return e; }
   inline T getValue() { return e.fc; }
 };
-}  // namespace d4
+} // namespace d4

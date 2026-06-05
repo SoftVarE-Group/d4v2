@@ -40,7 +40,8 @@ struct DistribSize {
   }
 
   double getRatio() {
-    if (!leftTreeSize || !rightTreeSize) return 0;
+    if (!leftTreeSize || !rightTreeSize)
+      return 0;
 
     if (leftTreeSize > rightTreeSize)
       return (double)rightTreeSize / (double)leftTreeSize;
@@ -49,7 +50,7 @@ struct DistribSize {
 };
 
 class PartitioningHeuristicStaticSingle : public PartitioningHeuristicStatic {
- protected:
+protected:
   struct Strata {
     unsigned fatherId;
     std::vector<unsigned> part;
@@ -94,19 +95,20 @@ class PartitioningHeuristicStaticSingle : public PartitioningHeuristicStatic {
   void setHyperGraph(std::vector<std::vector<unsigned>> &savedHyperGraph,
                      std::vector<unsigned> &indices, HyperGraph &hypergraph);
 
-  virtual void setBucketLevelFromEdges(
-      std::vector<std::vector<unsigned>> &hypergraph,
-      std::vector<unsigned> &indices, std::vector<int> &mapping,
-      unsigned level) {}
+  virtual void
+  setBucketLevelFromEdges(std::vector<std::vector<unsigned>> &hypergraph,
+                          std::vector<unsigned> &indices,
+                          std::vector<int> &mapping, unsigned level) {}
 
-  virtual void setCutSetBucketLevelFromEdges(
-      std::vector<std::vector<unsigned>> &hypergraph,
-      std::vector<int> &partition, std::vector<unsigned> &indices,
-      std::vector<int> &mapping, unsigned level) {
+  virtual void
+  setCutSetBucketLevelFromEdges(std::vector<std::vector<unsigned>> &hypergraph,
+                                std::vector<int> &partition,
+                                std::vector<unsigned> &indices,
+                                std::vector<int> &mapping, unsigned level) {
     setBucketLevelFromEdges(hypergraph, indices, mapping, level);
   }
 
- public:
+public:
   PartitioningHeuristicStaticSingle(Config &config, WrapperSolver &s,
                                     SpecManager &om, std::ostream &out);
 
@@ -139,4 +141,4 @@ class PartitioningHeuristicStaticSingle : public PartitioningHeuristicStatic {
     return m_levelInfo[i].cutSize;
   }
 };
-}  // namespace d4
+} // namespace d4

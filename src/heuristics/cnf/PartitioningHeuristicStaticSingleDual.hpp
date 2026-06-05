@@ -25,13 +25,13 @@
 namespace d4 {
 class PartitioningHeuristicStaticSingleDual
     : public PartitioningHeuristicStaticSingle {
- private:
- protected:
+private:
+protected:
   void setBucketLevelFromEdges(std::vector<std::vector<unsigned>> &hypergraph,
                                std::vector<unsigned> &indices,
                                std::vector<int> &mapping, unsigned level);
 
- public:
+public:
   PartitioningHeuristicStaticSingleDual(Config &config, WrapperSolver &s,
                                         SpecManager &om, std::ostream &out);
 
@@ -42,4 +42,4 @@ class PartitioningHeuristicStaticSingleDual
 
   ~PartitioningHeuristicStaticSingleDual();
 };
-}  // namespace d4
+} // namespace d4

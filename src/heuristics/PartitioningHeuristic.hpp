@@ -29,7 +29,7 @@
 
 namespace d4 {
 class PartitioningHeuristic {
- protected:
+protected:
   unsigned m_nbVar;
 
   void computeEquivClass(EquivExtractor &eqManager, WrapperSolver &solver,
@@ -38,15 +38,15 @@ class PartitioningHeuristic {
                          std::vector<Var> &equivClass,
                          std::vector<std::vector<Var>> &equivVar);
 
- public:
+public:
   virtual ~PartitioningHeuristic() {}
   static PartitioningHeuristic *makePartitioningHeuristic(Config &config,
                                                           SpecManager &sm,
                                                           WrapperSolver &ws,
                                                           std::ostream &out);
 
-  static PartitioningHeuristic *makePartitioningHeuristicNone(
-      std::ostream &out);
+  static PartitioningHeuristic *
+  makePartitioningHeuristicNone(std::ostream &out);
 
   /**
      Compute a cutset regarding the subformula built on the set of given
@@ -71,4 +71,4 @@ class PartitioningHeuristic {
    */
   virtual void displayStat(std::ostream &out) {}
 };
-}  // namespace d4
+} // namespace d4

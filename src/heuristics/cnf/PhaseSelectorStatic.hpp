@@ -22,13 +22,13 @@
 
 namespace d4 {
 class PhaseSelectorStatic : public PhaseSelectorManager {
- private:
+private:
   unsigned m_limitPhase;
 
- public:
+public:
   PhaseSelectorStatic(PartitioningHeuristicStaticSingle *staticPartitioner,
                       unsigned limitPhase, std::ostream &out);
 
   bool isStillOk(std::vector<Var> &component);
 };
-}  // namespace d4
+} // namespace d4

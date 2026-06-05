@@ -29,22 +29,23 @@ struct AndGate {
 
   void display() {
     std::cout << output << " <-> ";
-    for (auto &l : input) std::cout << l << " ";
+    for (auto &l : input)
+      std::cout << l << " ";
     std::cout << "\n";
   }
 };
 
 class AndGatesExtractor {
- private:
+private:
   std::vector<bool> m_markedVar;
   std::vector<uint8_t> m_flagVar;
 
- public:
-  AndGatesExtractor() { ; }  // empty constructor
+public:
+  AndGatesExtractor() { ; } // empty constructor
   AndGatesExtractor(int nbVar);
   void init(int nbVar);
 
   void searchAndGates(SpecManagerCnf *om, std::vector<Var> &v,
                       std::vector<AndGate> &gates);
 };
-}  // namespace d4
+} // namespace d4

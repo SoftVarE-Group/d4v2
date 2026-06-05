@@ -2,14 +2,14 @@
 
 #include <string>
 
-#include "src/heuristics/cnf/ProjBackupHeuristicHypergraph.hpp"
 #include "src/heuristics/cnf/ProjBackupHeuristicComponents.hpp"
+#include "src/heuristics/cnf/ProjBackupHeuristicHypergraph.hpp"
 
 namespace d4 {
 
 std::unique_ptr<ProjBackupHeuristic>
-ProjBackupHeuristic::make(Config &config, SpecManager &p,
-                          WrapperSolver &s, std::ostream &out) {
+ProjBackupHeuristic::make(Config &config, SpecManager &p, WrapperSolver &s,
+                          std::ostream &out) {
   std::string meth = "hypergraph"; // vm["proj-backup"].as<std::string>();
   if (meth == "hypergraph") {
     return std::make_unique<ProjBackupHeuristicHypergraph>(config, p, s, out);

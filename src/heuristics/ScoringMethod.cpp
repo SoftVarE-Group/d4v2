@@ -34,8 +34,7 @@ namespace d4 {
 
    \return the scoring method
  */
-ScoringMethod *ScoringMethod::makeScoringMethod(Config &config,
-                                                SpecManager &p,
+ScoringMethod *ScoringMethod::makeScoringMethod(Config &config, SpecManager &p,
                                                 ActivityManager &am,
                                                 std::ostream &out) {
   std::string inType = config.input_type;
@@ -91,7 +90,7 @@ Var ScoringMethod::selectVariable(std::vector<Var> &vars, SpecManager &s,
       bestScore = current;
     }
   }
-  //sleep(1);
+  // sleep(1);
 
   return ret;
 } // selectVariable
@@ -112,12 +111,13 @@ Var ScoringMethod::selectVariable(std::vector<Var> &vars, SpecManager &s) {
   }
   return ret;
 } // selectVariable
-Var ScoringMethod:: selectVariable(std::vector<Var> &vars,std::function<bool(Var)> can_select){
+Var ScoringMethod::selectVariable(std::vector<Var> &vars,
+                                  std::function<bool(Var)> can_select) {
   Var ret = var_Undef;
   double bestScore = -1;
 
   for (auto &v : vars) {
-    if(!can_select(v))
+    if (!can_select(v))
       continue;
     double current = computeScore(v);
     if (ret == var_Undef || current > bestScore) {
@@ -126,7 +126,6 @@ Var ScoringMethod:: selectVariable(std::vector<Var> &vars,std::function<bool(Var
     }
   }
   return ret;
-
 }
 
 } // namespace d4

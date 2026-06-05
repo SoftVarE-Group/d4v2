@@ -21,13 +21,10 @@
 #include "CachedBucket.hpp"
 
 namespace d4 {
-template <class T>
-class CacheCleaningManager;
-template <class T>
-class CacheManager;
-template <class T>
-class CacheCleaningNone : public CacheCleaningManager<T> {
- public:
+template <class T> class CacheCleaningManager;
+template <class T> class CacheManager;
+template <class T> class CacheCleaningNone : public CacheCleaningManager<T> {
+public:
   /**
      Constructor.
 
@@ -35,13 +32,13 @@ class CacheCleaningNone : public CacheCleaningManager<T> {
    */
   CacheCleaningNone(CacheManager<T> *cache) {
     this->m_cache = cache;
-  }  // constructor
+  } // constructor
 
-  void initCountCachedBucket(CachedBucket<T> *cb) {}  // nothing to do.
+  void initCountCachedBucket(CachedBucket<T> *cb) {} // nothing to do.
   void updateCountCachedBucket(CachedBucket<T> *cb, int nbVar) {
-  }                                             // nothing to do.
-  void reduceCache() {}                         // nothing to do.
-  void printCleaningInfo(std::ostream &out) {}  // nothing to do.
+  } // nothing to do.
+  void reduceCache() {}                        // nothing to do.
+  void printCleaningInfo(std::ostream &out) {} // nothing to do.
 };
 
-}  // namespace d4
+} // namespace d4

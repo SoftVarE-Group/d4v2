@@ -27,18 +27,16 @@
 #include "src/specs/SpecManager.hpp"
 
 namespace d4 {
-template <class T>
-class CacheManager;
+template <class T> class CacheManager;
 
-template <class T>
-class CacheNoCollision : public CacheManager<T> {
- private:
+template <class T> class CacheNoCollision : public CacheManager<T> {
+private:
   const unsigned SIZE_HASH = 22041997;
 
- protected:
+protected:
   std::vector<CachedBucket<T>> hashTable;
 
- public:
+public:
   /**
    * @brief Construct a new Cache No Collision object.
    *
@@ -52,13 +50,13 @@ class CacheNoCollision : public CacheManager<T> {
       : CacheManager<T>(config, nbVar, specs, out) {
     out << "c [CACHE NO-COLLISION CONSTRUCTOR]\n";
     initHashTable(nbVar);
-  }  // constructor
+  } // constructor
 
   /**
    * @brief Destroy the Cache No Collision object.
    *
    */
-  ~CacheNoCollision() {}  // destructor
+  ~CacheNoCollision() {} // destructor
 
   /**
    * @brief Add an entry in the cache.
@@ -72,7 +70,8 @@ class CacheNoCollision : public CacheManager<T> {
     CachedBucket<T> &cbi = hashTable[hashValue % SIZE_HASH];
 
     // remove the previous entry if needed.
-    if (cbi.nbVar()) this->releaseMemory(cbi.data, cbi.szData());
+    if (cbi.nbVar())
+      this->releaseMemory(cbi.data, cbi.szData());
 
     cbi = cb;
     cbi.lockedBucket(val);
@@ -81,7 +80,7 @@ class CacheNoCollision : public CacheManager<T> {
     this->m_nbCreationBucket++;
     this->m_sumDataSize += cb.szData();
     this->m_nbEntry++;
-  }  // pushInCache
+  } // pushInCache
 
   /**
    * @brief Research in the set of buckets if the bucket pointed by i
@@ -105,7 +104,7 @@ class CacheNoCollision : public CacheManager<T> {
 
     this->m_nbNegativeHit++;
     return NULL;
-  }  // bucketAlreadyExist
+  } // bucketAlreadyExist
 
   /**
    * @brief Initialized the hashTable
@@ -118,7 +117,7 @@ class CacheNoCollision : public CacheManager<T> {
     // init hash tables
     hashTable.clear();
     hashTable.resize(SIZE_HASH);
-  }  // initHashTable
+  } // initHashTable
 
   /**
    * @brief Clean up the cache.
@@ -139,6 +138,6 @@ class CacheNoCollision : public CacheManager<T> {
       }
     }
     return nbRemoveEntry;
-  }  // removeEntry
+  } // removeEntry
 };
-}  // namespace d4
+} // namespace d4

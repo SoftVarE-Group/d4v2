@@ -1,20 +1,20 @@
 #pragma once
 
+#include <cassert>
 #include <cstdint>
 #include <cstdlib>
-#include <vector>
 #include <cstring>
-#include <random>
-#include <limits>
-#include <cassert>
 #include <functional>
+#include <limits>
+#include <random>
+#include <vector>
 
 #define BITS 64
 
 namespace sharpsat_td {
 class Bitset {
- public:
-  uint64_t* data_;
+public:
+  uint64_t *data_;
   size_t chunks_;
   Bitset() {
     chunks_ = 0;
@@ -22,41 +22,39 @@ class Bitset {
   }
   explicit Bitset(size_t size) {
     chunks_ = (size + BITS - 1) / BITS;
-    data_ = (uint64_t*)std::malloc(chunks_*sizeof(uint64_t));
-    for (size_t i=0;i<chunks_;i++){
+    data_ = (uint64_t *)std::malloc(chunks_ * sizeof(uint64_t));
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = 0;
     }
   }
-  ~Bitset() {
-    std::free(data_);
-  }
-  Bitset(const Bitset& other) {
+  ~Bitset() { std::free(data_); }
+  Bitset(const Bitset &other) {
     chunks_ = other.chunks_;
-    data_ = (uint64_t*)std::malloc(chunks_*sizeof(uint64_t));
-    for (size_t i=0;i<chunks_;i++){
+    data_ = (uint64_t *)std::malloc(chunks_ * sizeof(uint64_t));
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = other.data_[i];
     }
   }
-  Bitset& operator=(const Bitset& other) {
+  Bitset &operator=(const Bitset &other) {
     if (this != &other) {
       if (chunks_ != other.chunks_) {
         std::free(data_);
         chunks_ = other.chunks_;
-        data_ = (uint64_t*)std::malloc(chunks_*sizeof(uint64_t));
+        data_ = (uint64_t *)std::malloc(chunks_ * sizeof(uint64_t));
       }
-      for (size_t i=0;i<chunks_;i++){
+      for (size_t i = 0; i < chunks_; i++) {
         data_[i] = other.data_[i];
       }
     }
     return *this;
   }
-  Bitset(Bitset&& other) {
+  Bitset(Bitset &&other) {
     data_ = other.data_;
     chunks_ = other.chunks_;
     other.data_ = nullptr;
     other.chunks_ = 0;
   }
-  Bitset& operator=(Bitset&& other) {
+  Bitset &operator=(Bitset &&other) {
     if (this != &other) {
       std::free(data_);
       data_ = other.data_;
@@ -66,90 +64,94 @@ class Bitset {
     }
     return *this;
   }
-  bool operator<(const Bitset& other) const {
-    for (size_t i=0;i<chunks_;i++){
-      if (data_[i]<other.data_[i]) return true;
-      else if(data_[i]>other.data_[i]) return false;
+  bool operator<(const Bitset &other) const {
+    for (size_t i = 0; i < chunks_; i++) {
+      if (data_[i] < other.data_[i])
+        return true;
+      else if (data_[i] > other.data_[i])
+        return false;
     }
     return false;
   }
-  bool operator==(const Bitset& other) const {
-    for (size_t i=0;i<chunks_;i++){
-      if (data_[i] != other.data_[i]) return false;
+  bool operator==(const Bitset &other) const {
+    for (size_t i = 0; i < chunks_; i++) {
+      if (data_[i] != other.data_[i])
+        return false;
     }
     return true;
   }
-  bool operator!=(const Bitset& other) const {
-    for (size_t i=0;i<chunks_;i++){
-      if (data_[i] != other.data_[i]) return true;
+  bool operator!=(const Bitset &other) const {
+    for (size_t i = 0; i < chunks_; i++) {
+      if (data_[i] != other.data_[i])
+        return true;
     }
     return false;
   }
-  Bitset operator|(const Bitset& other) const {
-    Bitset ret(BITS*chunks_);
-    for (size_t i=0;i<chunks_;i++){
+  Bitset operator|(const Bitset &other) const {
+    Bitset ret(BITS * chunks_);
+    for (size_t i = 0; i < chunks_; i++) {
       ret.data_[i] = data_[i] | other.data_[i];
     }
     return ret;
   }
-  Bitset operator&(const Bitset& other) const {
-    Bitset ret(BITS*chunks_);
-    for (size_t i=0;i<chunks_;i++){
+  Bitset operator&(const Bitset &other) const {
+    Bitset ret(BITS * chunks_);
+    for (size_t i = 0; i < chunks_; i++) {
       ret.data_[i] = data_[i] & other.data_[i];
     }
     return ret;
   }
   Bitset operator~() const {
-    Bitset ret(BITS*chunks_);
-    for (size_t i=0;i<chunks_;i++){
+    Bitset ret(BITS * chunks_);
+    for (size_t i = 0; i < chunks_; i++) {
       ret.data_[i] = (~data_[i]);
     }
     return ret;
   }
-  void CopyFrom(const Bitset& other) {
-    for (size_t i=0;i<chunks_;i++){
+  void CopyFrom(const Bitset &other) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = other.data_[i];
     }
   }
   void Set(size_t i, bool v) {
     if (v) {
-      data_[i/BITS] |= ((uint64_t)1 << (uint64_t)(i%BITS));
+      data_[i / BITS] |= ((uint64_t)1 << (uint64_t)(i % BITS));
     } else {
-      data_[i/BITS] &= (~((uint64_t)1 << (uint64_t)(i%BITS)));
+      data_[i / BITS] &= (~((uint64_t)1 << (uint64_t)(i % BITS)));
     }
   }
   void SetTrue(size_t i) {
-    data_[i/BITS] |= ((uint64_t)1 << (uint64_t)(i%BITS));
+    data_[i / BITS] |= ((uint64_t)1 << (uint64_t)(i % BITS));
   }
   void SetFalse(size_t i) {
-    data_[i/BITS] &= (~((uint64_t)1 << (uint64_t)(i%BITS)));
+    data_[i / BITS] &= (~((uint64_t)1 << (uint64_t)(i % BITS)));
   }
-  void SetTrue(const std::vector<size_t>& v) {
+  void SetTrue(const std::vector<size_t> &v) {
     for (size_t x : v) {
       SetTrue(x);
     }
   }
-  void SetTrue(const std::vector<int>& v) {
+  void SetTrue(const std::vector<int> &v) {
     for (int x : v) {
       SetTrue(x);
     }
   }
-  void SetFalse(const std::vector<int>& v) {
+  void SetFalse(const std::vector<int> &v) {
     for (int x : v) {
       SetFalse(x);
     }
   }
   void FillTrue() {
-    for (size_t i=0;i<chunks_;i++){
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = ~0;
     }
   }
   void FillUpTo(size_t n) {
-    for (size_t i=0;i<chunks_;i++){
-      if ((i+1)*BITS <= n) {
+    for (size_t i = 0; i < chunks_; i++) {
+      if ((i + 1) * BITS <= n) {
         data_[i] = ~0;
-      } else if (i*BITS < n) {
-        for (size_t j=i*BITS;j<n;j++){
+      } else if (i * BITS < n) {
+        for (size_t j = i * BITS; j < n; j++) {
           SetTrue(j);
         }
       } else {
@@ -158,75 +160,71 @@ class Bitset {
     }
   }
   bool Get(size_t i) const {
-    return data_[i/BITS] & ((uint64_t)1 << (uint64_t)(i%BITS));
+    return data_[i / BITS] & ((uint64_t)1 << (uint64_t)(i % BITS));
   }
   void Clear() {
-    for (size_t i=0;i<chunks_;i++){
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = 0;
     }
   }
   bool IsEmpty() const {
-    for (size_t i=0;i<chunks_;i++){
-      if (data_[i]) return false;
+    for (size_t i = 0; i < chunks_; i++) {
+      if (data_[i])
+        return false;
     }
     return true;
   }
-  uint64_t Chunk(size_t i) const {
-    return data_[i];
-  }
-  uint64_t& Chunk(size_t i) {
-    return data_[i];
-  }
-  size_t Chunks() const {
-    return chunks_;
-  }
-  void operator |= (const Bitset& rhs) {
-    for (size_t i=0;i<chunks_;i++){
+  uint64_t Chunk(size_t i) const { return data_[i]; }
+  uint64_t &Chunk(size_t i) { return data_[i]; }
+  size_t Chunks() const { return chunks_; }
+  void operator|=(const Bitset &rhs) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] |= rhs.data_[i];
     }
   }
-  void operator &= (const Bitset& rhs) {
-    for (size_t i=0;i<chunks_;i++){
+  void operator&=(const Bitset &rhs) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] &= rhs.data_[i];
     }
   }
-  void TurnOff(const Bitset& rhs) {
-    for (size_t i=0;i<chunks_;i++){
+  void TurnOff(const Bitset &rhs) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] &= (~rhs.data_[i]);
     }
   }
-  void InvertAnd(const Bitset& rhs) {
-    for (size_t i=0;i<chunks_;i++){
+  void InvertAnd(const Bitset &rhs) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = (~data_[i]) & rhs.data_[i];
     }
   }
-  void SetNeg(const Bitset& rhs) {
-    for (size_t i=0;i<chunks_;i++){
+  void SetNeg(const Bitset &rhs) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = ~rhs.data_[i];
     }
   }
-  void SetNegAnd(const Bitset& rhs1, const Bitset& rhs2) {
-    for (size_t i=0;i<chunks_;i++){
+  void SetNegAnd(const Bitset &rhs1, const Bitset &rhs2) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = (~rhs1.data_[i]) & rhs2.data_[i];
     }
   }
-  void SetAnd(const Bitset& rhs1, const Bitset& rhs2) {
-    for (size_t i=0;i<chunks_;i++){
+  void SetAnd(const Bitset &rhs1, const Bitset &rhs2) {
+    for (size_t i = 0; i < chunks_; i++) {
       data_[i] = rhs1.data_[i] & rhs2.data_[i];
     }
   }
-  bool Subsumes(const Bitset& other) const {
-    for (size_t i=0;i<chunks_;i++){
-      if ((data_[i] | other.data_[i]) != data_[i]) return false;
+  bool Subsumes(const Bitset &other) const {
+    for (size_t i = 0; i < chunks_; i++) {
+      if ((data_[i] | other.data_[i]) != data_[i])
+        return false;
     }
     return true;
   }
   std::vector<int> Elements() const {
     std::vector<int> ret;
-    for (size_t i=0;i<chunks_;i++){
+    for (size_t i = 0; i < chunks_; i++) {
       uint64_t td = data_[i];
       while (td) {
-        ret.push_back(i*BITS + __builtin_ctzll(td));
+        ret.push_back(i * BITS + __builtin_ctzll(td));
         td &= ~-td;
       }
     }
@@ -234,44 +232,47 @@ class Bitset {
   }
   int Popcount() const {
     int cnt = 0;
-    for (size_t i=0;i<chunks_;i++) {
+    for (size_t i = 0; i < chunks_; i++) {
       cnt += __builtin_popcountll(data_[i]);
     }
     return cnt;
   }
-  bool Intersects(const Bitset& other) const {
-    for (size_t i=0;i<chunks_;i++){
-      if (data_[i] & other.data_[i]) return true;
+  bool Intersects(const Bitset &other) const {
+    for (size_t i = 0; i < chunks_; i++) {
+      if (data_[i] & other.data_[i])
+        return true;
     }
     return false;
   }
-  int IntersectionPopcount(const Bitset& other) const {
+  int IntersectionPopcount(const Bitset &other) const {
     int cnt = 0;
-    for (size_t i=0;i<chunks_;i++) {
+    for (size_t i = 0; i < chunks_; i++) {
       cnt += __builtin_popcountll(data_[i] & other.data_[i]);
     }
     return cnt;
   }
   int First() const {
-    for (size_t i=0;i<chunks_;i++) {
+    for (size_t i = 0; i < chunks_; i++) {
       if (data_[i]) {
-        return i*BITS + __builtin_ctzll(data_[i]);
+        return i * BITS + __builtin_ctzll(data_[i]);
       }
     }
     return chunks_ * BITS;
   }
 
   class BitsetIterator {
-   private:
-    const Bitset* const bitset_;
+  private:
+    const Bitset *const bitset_;
     size_t pos_;
     uint64_t tb_;
-   public:
-    BitsetIterator(const Bitset* const bitset, size_t pos, uint64_t tb) : bitset_(bitset), pos_(pos), tb_(tb) { }
-    bool operator!=(const BitsetIterator& other) const {
+
+  public:
+    BitsetIterator(const Bitset *const bitset, size_t pos, uint64_t tb)
+        : bitset_(bitset), pos_(pos), tb_(tb) {}
+    bool operator!=(const BitsetIterator &other) const {
       return pos_ != other.pos_ || tb_ != other.tb_;
     }
-    const BitsetIterator& operator++() {
+    const BitsetIterator &operator++() {
       tb_ &= ~-tb_;
       while (tb_ == 0 && pos_ < bitset_->chunks_) {
         pos_++;
@@ -281,9 +282,7 @@ class Bitset {
       }
       return *this;
     }
-    int operator*() const {
-      return pos_*BITS + __builtin_ctzll(tb_);
-    }
+    int operator*() const { return pos_ * BITS + __builtin_ctzll(tb_); }
   };
 
   BitsetIterator begin() const {
@@ -297,8 +296,6 @@ class Bitset {
       return BitsetIterator(this, pos, 0);
     }
   }
-  BitsetIterator end() const {
-    return BitsetIterator(this, chunks_, 0);
-  }
+  BitsetIterator end() const { return BitsetIterator(this, chunks_, 0); }
 };
 } // namespace sharpsat_td

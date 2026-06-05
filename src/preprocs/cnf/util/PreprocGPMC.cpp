@@ -1,13 +1,11 @@
 #include "PreprocGPMC.hpp"
-#include "arjun/arjun.h"
 #include "3rdParty/glucose-3.0/utils/System.h"
+#include "arjun/arjun.h"
 #include "lib_sharpsat_td/subsumer.hpp"
 
 #include <boost/multiprecision/gmp.hpp>
 #include <unordered_map>
 #include <unordered_set>
-
-
 
 using namespace PRE;
 using namespace Glucose;
@@ -428,7 +426,7 @@ template <class T_data>
 inline bool
 Preprocessor<T_data>::isVECandidate(Graph &G, bool def, vector<int> &freq,
                                     std::vector<double> &cl_size, int i) const {
-  return (((!def&& !config.ve_only_simpical) || G.isSimplical(i)) &&
+  return (((!def && !config.ve_only_simpical) || G.isSimplical(i)) &&
           min(freq[toInt(mkLit(i))], freq[toInt(~mkLit(i))]) <=
               config.ve_limit) ||
          (config.ve_more && (freq[toInt(mkLit(i))] * freq[toInt(~mkLit(i))] <=
@@ -578,7 +576,7 @@ void Preprocessor<T_data>::pickDefVars(vector<Var> &vars) {
   Graph G(ins->vars, ins->clauses, ins->learnts, freq, cl_size);
 
   for (int i = 0; i < ins->npvars; i++) {
-    if (set.find(i) == set.end() && isVECandidate(G,false,freq,cl_size,i)) {
+    if (set.find(i) == set.end() && isVECandidate(G, false, freq, cl_size, i)) {
       vars.push_back(i);
       is_simpical[i] = G.isSimplical(i);
     }
@@ -628,7 +626,7 @@ int Preprocessor<T_data>::ElimVars(const vector<Var> &vars) {
           }
         }
       }
-      if (!(min(p, n) <= config.ve_limit|| p * n <= n + p)) {
+      if (!(min(p, n) <= config.ve_limit || p * n <= n + p)) {
         break;
       }
     }

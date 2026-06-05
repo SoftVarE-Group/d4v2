@@ -33,10 +33,10 @@ PhaseSelectorStatic::PhaseSelectorStatic(
   out << "c [CONSTRUCTOR] Switching between static and dynamic decompostion:"
       << " static\n";
   m_limitPhase = limitPhase;
-}  // constructor
+} // constructor
 
 bool PhaseSelectorStatic::isStillOk(std::vector<Var> &component) {
   return component.size() > m_limitPhase;
-}  // isStillok
+} // isStillok
 
-}  // namespace d4
+} // namespace d4

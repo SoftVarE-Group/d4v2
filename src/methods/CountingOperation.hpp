@@ -96,7 +96,7 @@ public:
    */
   PersistentNodesOperation(ProblemManager *problem, std::string filename)
       : m_problem(problem), to_write(0), end(false) {
-    writer = std::thread([&,filename] {
+    writer = std::thread([&, filename] {
       std::cout << "Start writer" << std::endl;
       std::ofstream file =
           std::ofstream(filename, std::ios_base::out | std::ios_base::binary);
@@ -194,7 +194,7 @@ public:
 
      \return the product of each element of elts.
    */
-  size_t manageDecomposableAnd(size_t *elts, unsigned size)  final {
+  size_t manageDecomposableAnd(size_t *elts, unsigned size) final {
     size_t id = index++;
     AndNode node{id, std::vector<size_t>(size)};
     for (unsigned i = 0; i < size; i++) {
@@ -225,7 +225,7 @@ public:
 
      \return 0 as number of models.
    */
-  inline size_t manageTop(std::vector<Var> &component)final { return top; }
+  inline size_t manageTop(std::vector<Var> &component) final { return top; }
 
   /**
      Return true, that is given by the value 1.
@@ -252,8 +252,8 @@ public:
      Manage the final result compute.
 
      @param[in] result, the result we are considering.
-     @param[in] config, the configuration that describes what we want to do on the
-     given result.
+     @param[in] config, the configuration that describes what we want to do on
+     the given result.
      @param[in] out, the output stream.
    */
   void manageResult(size_t &result, Config &config, std::ostream &out) {
@@ -376,8 +376,8 @@ public:
      Manage the final result compute.
 
      @param[in] result, the result we are considering.
-     @param[in] config, the configuration that describes what we want to do on the
-     given result.
+     @param[in] config, the configuration that describes what we want to do on
+     the given result.
      @param[in] out, the output stream.
    */
   void manageResult(T &result, Config &config, std::ostream &out) {

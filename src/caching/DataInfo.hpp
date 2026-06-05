@@ -17,22 +17,22 @@
  */
 #pragma once
 
-#include <math.h>
-#include <stdio.h>
 #include <bitset>
 #include <cassert>
 #include <cstdint>
 #include <iostream>
+#include <math.h>
+#include <stdio.h>
 
 #define MASK_SIZE (~((((uint64_t)1 << 21) - 1) << 21))
 
 namespace d4 {
 class DataInfo {
- protected:
+protected:
   // we reserve 64 bytes to store information in the cached bucket
   // We always at least have the following distribution:
   // info1 => |free(12)|nbBitFormula(5)|nbBitVar(5)|szData(21)|nbVar(21)|
- public:
+public:
   uint64_t info1;
 
   DataInfo();
@@ -44,7 +44,7 @@ class DataInfo {
 
   bool operator==(const DataInfo &d) const {
     return info1 == d.info1;
-  }  // operator ==
+  } // operator ==
 
   virtual ~DataInfo() {}
 
@@ -62,13 +62,12 @@ class DataInfo {
 
   inline void reset() { info1 = 0; }
 
-  template <typename U>
-  void printData(void *data, int sz, std::ostream &out) {
+  template <typename U> void printData(void *data, int sz, std::ostream &out) {
     char *p = (char *)data;
     for (int i = 0; i < sz; i++) {
       out << std::bitset<8>(p[i]) << " ";
     }
     out << "\n";
-  }  // printdata
+  } // printdata
 };
-}  // namespace d4
+} // namespace d4

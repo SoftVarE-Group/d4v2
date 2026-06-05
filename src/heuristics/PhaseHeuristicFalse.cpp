@@ -27,7 +27,7 @@ namespace d4 {
  */
 PhaseHeuristicFalse::PhaseHeuristicFalse(bool isRev) {
   isReversed = isRev;
-}  // constructor
+} // constructor
 
 /**
    We assign the next varaible to false.
@@ -36,6 +36,6 @@ PhaseHeuristicFalse::PhaseHeuristicFalse(bool isRev) {
  */
 bool PhaseHeuristicFalse::selectPhase(Var v) {
   return (false + isReversed) & 1;
-}  // selectPhase
+} // selectPhase
 
-}  // namespace d4
+} // namespace d4

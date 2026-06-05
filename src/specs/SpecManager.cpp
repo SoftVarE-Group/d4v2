@@ -30,8 +30,7 @@ namespace d4 {
 
    \return the occurrence manager that fits the command line.
  */
-SpecManager *SpecManager::makeSpecManager(Config &config,
-                                          ProblemManager &p,
+SpecManager *SpecManager::makeSpecManager(Config &config, ProblemManager &p,
                                           std::ostream &out) {
   std::string inType = config.input_type;
   std::string meth = config.occurrence_manager;

@@ -25,13 +25,12 @@ namespace d4 {
    @param[in] _om, a structure manager.
 */
 PartitioningHeuristicBipartitePrimal::PartitioningHeuristicBipartitePrimal(
-    Config &config, WrapperSolver &_s, SpecManager &_om,
-    std::ostream &out)
+    Config &config, WrapperSolver &_s, SpecManager &_om, std::ostream &out)
     : PartitioningHeuristicBipartitePrimal(
           config, _s, _om, dynamic_cast<SpecManagerCnf &>(_om).getNbClause(),
           dynamic_cast<SpecManagerCnf &>(_om).getNbVariable(),
           dynamic_cast<SpecManagerCnf &>(_om).getSumSizeClauses(), out) {
-}  // constructor
+} // constructor
 
 /**
    Constructor.
@@ -44,9 +43,10 @@ PartitioningHeuristicBipartitePrimal::PartitioningHeuristicBipartitePrimal(
    @param[in] sumSize, which give the number of literals.
 */
 PartitioningHeuristicBipartitePrimal::PartitioningHeuristicBipartitePrimal(
-    Config &config, WrapperSolver &s, SpecManager &om, int nbClause,
-    int nbVar, int sumSize, std::ostream &out)
-    : PartitioningHeuristicBipartite(config, om, s, nbClause, nbVar, sumSize, out) {
+    Config &config, WrapperSolver &s, SpecManager &om, int nbClause, int nbVar,
+    int sumSize, std::ostream &out)
+    : PartitioningHeuristicBipartite(config, om, s, nbClause, nbVar, sumSize,
+                                     out) {
   // initialize the vectors.
   m_partition.resize(m_nbVar + 1, 0);
 
@@ -58,5 +58,5 @@ PartitioningHeuristicBipartitePrimal::PartitioningHeuristicBipartitePrimal(
   m_staticPartitioner =
       PartitioningHeuristicStatic::makePartitioningHeuristicStatic(
           config, s, om, nbClause, nbVar, sumSize, "primal", out);
-}  // constructor
-}  // namespace d4
+} // constructor
+} // namespace d4

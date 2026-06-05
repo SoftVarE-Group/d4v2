@@ -30,8 +30,8 @@ namespace d4 {
    @param[in] _sumsize, the maximum size for the hyper graph.
  */
 PartitioningHeuristicBipartite::PartitioningHeuristicBipartite(
-    Config &config, SpecManager &om, WrapperSolver &s, int nbClause,
-    int nbVar, int sumSize, std::ostream &out)
+    Config &config, SpecManager &om, WrapperSolver &s, int nbClause, int nbVar,
+    int sumSize, std::ostream &out)
     : m_om(dynamic_cast<SpecManagerCnf &>(om)), m_s(s) {
   m_nbVar = nbVar;
   m_nbClause = nbClause;
@@ -50,7 +50,7 @@ PartitioningHeuristicBipartite::PartitioningHeuristicBipartite(
   m_nbDynamic = 0;
   m_pm = nullptr;
   m_hypergraphExtractor = nullptr;
-}  // constructor
+} // constructor
 
 /**
    Destructor.
@@ -59,7 +59,7 @@ PartitioningHeuristicBipartite::~PartitioningHeuristicBipartite() {
   delete m_staticPartitioner;
   delete m_hypergraphExtractor;
   delete m_pm;
-}  // destructor
+} // destructor
 
 /**
    Compute the equivalence class.
@@ -78,8 +78,9 @@ void PartitioningHeuristicBipartite::computeEquivClass(
     PartitioningHeuristic::computeEquivClass(m_em, m_s, component, unitEquiv,
                                              equivClass, equivVar);
   else
-    for (auto &v : component) equivClass[v] = v;
-}  // computeEquivclass
+    for (auto &v : component)
+      equivClass[v] = v;
+} // computeEquivclass
 
 /**
    Compute a cutset by computing a bipartition of the hypergraph of the clauses.
@@ -114,7 +115,8 @@ void PartitioningHeuristicBipartite::computeCutSet(std::vector<Var> &component,
   } else {
     m_nbDynamic++;
 
-    m_pm->computePartition(m_hypergraph, PartitionerManager::Level::NORMAL, m_partition);
+    m_pm->computePartition(m_hypergraph, PartitionerManager::Level::NORMAL,
+                           m_partition);
     m_hypergraphExtractor->extractCutFromHyperGraph(m_hypergraph, considered,
                                                     m_partition, cutSet);
 
@@ -141,12 +143,12 @@ void PartitioningHeuristicBipartite::computeCutSet(std::vector<Var> &component,
   }
 
   m_om.postUpdate(unitEquiv);
-}  // computeCutset
+} // computeCutset
 
 void PartitioningHeuristicBipartite::displayStat(std::ostream &out) {
   out << "c \033[1m\033[36mPartioning Information\033[0m\n";
   out << "c Number of static decomposition used: " << m_nbStatic << "\n";
   out << "c Number of dynamic decomposition used: " << m_nbDynamic << "\n";
-}  // displayStat
+} // displayStat
 
-}  // namespace d4
+} // namespace d4

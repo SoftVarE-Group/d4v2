@@ -27,17 +27,18 @@ struct AtMost1 {
   std::vector<Var> list;
 
   void display() {
-    for (auto &l : list) std::cout << l << " ";
+    for (auto &l : list)
+      std::cout << l << " ";
     std::cout << "\n";
   }
 };
 
 class AtMost1Extractor {
- private:
+private:
   struct MapLitBlock {
-    std::vector<std::vector<Lit> > &m_litBlock;
+    std::vector<std::vector<Lit>> &m_litBlock;
 
-    MapLitBlock(std::vector<std::vector<Lit> > &litBlock)
+    MapLitBlock(std::vector<std::vector<Lit>> &litBlock)
         : m_litBlock(litBlock) {}
 
     bool operator()(int i, int j) {
@@ -53,14 +54,14 @@ class AtMost1Extractor {
   unsigned m_nbVar;
 
   void extractLitBlock(WrapperSolver &s, std::vector<Var> &vars,
-                       std::vector<std::vector<Lit> > &litBlock);
+                       std::vector<std::vector<Lit>> &litBlock);
 
- public:
-  AtMost1Extractor() { ; }  // empty constructor
+public:
+  AtMost1Extractor() { ; } // empty constructor
   AtMost1Extractor(int nbVar);
   void init(int nbVar);
 
   void searchAtMost1(WrapperSolver &s, std::vector<Var> &v,
                      std::vector<AtMost1> &atMostList);
 };
-}  // namespace d4
+} // namespace d4

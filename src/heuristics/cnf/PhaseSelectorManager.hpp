@@ -28,17 +28,18 @@ namespace d4 {
 class PartitioningHeuristicStaticSingle;
 
 class PhaseSelectorManager {
- protected:
+protected:
   PartitioningHeuristicStaticSingle *m_staticPartitioner;
   PhaseSelectorManager(PartitioningHeuristicStaticSingle *staticPartitioner);
 
- public:
+public:
   virtual ~PhaseSelectorManager() {}
 
-  static PhaseSelectorManager *makePhaseSelectorManager(
-      Config &config,
-      PartitioningHeuristicStaticSingle *staticPartitioner, std::ostream &out);
+  static PhaseSelectorManager *
+  makePhaseSelectorManager(Config &config,
+                           PartitioningHeuristicStaticSingle *staticPartitioner,
+                           std::ostream &out);
 
   virtual bool isStillOk(std::vector<Var> &component) = 0;
 };
-}  // namespace d4
+} // namespace d4

@@ -41,7 +41,7 @@ struct DataOccurrence {
         return;
       }
     }
-    assert(0);  // we have to remove one element.
+    assert(0); // we have to remove one element.
   }
   void removeNotBin(int idx) {
     for (unsigned i = 0; i < nbNotBin; i++) {
@@ -50,7 +50,7 @@ struct DataOccurrence {
         return;
       }
     }
-    assert(0);  // we have to remove one element.
+    assert(0); // we have to remove one element.
   }
 
   inline void addBin(int idx) {
@@ -66,4 +66,4 @@ struct DataOccurrence {
   }
   inline IteratorIdxClause getClauses() { return {bin, &notBin[nbNotBin]}; }
 };
-}  // namespace d4
+} // namespace d4

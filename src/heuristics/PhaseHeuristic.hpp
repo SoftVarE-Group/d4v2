@@ -24,15 +24,15 @@
 
 namespace d4 {
 class PhaseHeuristic {
- protected:
+protected:
   bool isReversed;
 
- public:
+public:
   virtual ~PhaseHeuristic() {}
-  static PhaseHeuristic *makePhaseHeuristic(Config &config,
-                                            SpecManager &s, PolarityManager &p,
+  static PhaseHeuristic *makePhaseHeuristic(Config &config, SpecManager &s,
+                                            PolarityManager &p,
                                             std::ostream &out);
 
   virtual bool selectPhase(Var v) = 0;
 };
-}  // namespace d4
+} // namespace d4

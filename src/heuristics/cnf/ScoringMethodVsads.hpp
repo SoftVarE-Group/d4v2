@@ -23,12 +23,12 @@
 
 namespace d4 {
 class ScoringMethodVsads : public ScoringMethod {
- private:
+private:
   SpecManagerCnf &om;
   ActivityManager &activity;
 
- public:
+public:
   ScoringMethodVsads(SpecManagerCnf &o, ActivityManager &a);
   double computeScore(Var v);
 };
-}  // namespace d4
+} // namespace d4

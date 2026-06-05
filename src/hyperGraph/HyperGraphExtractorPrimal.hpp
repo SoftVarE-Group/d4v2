@@ -28,7 +28,7 @@
 
 namespace d4 {
 class HyperGraphExtractorPrimal : public HyperGraphExtractor {
- private:
+private:
   std::vector<bool> m_markedVar;
   std::vector<int> m_unmarkSet;
 
@@ -50,12 +50,12 @@ class HyperGraphExtractorPrimal : public HyperGraphExtractor {
                            std::vector<int> &partition,
                            std::vector<int> &cutSet);
 
- public:
+public:
   HyperGraphExtractorPrimal(unsigned nbVar, unsigned nbClause);
 
   void constructHyperGraph(SpecManagerCnf &om, std::vector<Var> &component,
                            std::vector<Var> &equivClass,
-                           std::vector<std::vector<Var> > &equivVar,
+                           std::vector<std::vector<Var>> &equivVar,
                            bool reduceFormula, std::vector<Var> &considered,
                            HyperGraph &hypergraph);
 
@@ -64,4 +64,4 @@ class HyperGraphExtractorPrimal : public HyperGraphExtractor {
                                 std::vector<int> &partition,
                                 std::vector<int> &cutSet);
 };
-}  // namespace d4
+} // namespace d4

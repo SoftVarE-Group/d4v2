@@ -17,9 +17,9 @@
  */
 #pragma once
 
+#include <cstdint>
 #include <iostream>
 #include <vector>
-#include <cstdint>
 
 namespace d4 {
 
@@ -44,7 +44,7 @@ struct Lit {
   bool operator!=(Lit p) const { return m_x != p.m_x; }
   bool operator<(Lit p) const {
     return m_x < p.m_x;
-  }  // '<' makes p, ~p adjacent in the ordering.
+  } // '<' makes p, ~p adjacent in the ordering.
 
   friend Lit operator~(Lit p);
   friend std::ostream &operator<<(std::ostream &os, Lit l);
@@ -54,12 +54,13 @@ struct Lit {
   static inline Lit makeLitTrue(Var v) { return {v << 1}; }
 };
 
-const Lit lit_Undef = {-2};  // }- Useful special constants.
-const Lit lit_Error = {-1};  // }
+const Lit lit_Undef = {-2}; // }- Useful special constants.
+const Lit lit_Error = {-1}; // }
 
 inline void showListLit(std::ostream &out, std::vector<Lit> &v) {
-  for (auto &l : v) out << l << " ";
-}  // showListLit
+  for (auto &l : v)
+    out << l << " ";
+} // showListLit
 
 inline Lit operator~(Lit p) { return {p.m_x ^ 1}; }
-}  // namespace d4
+} // namespace d4

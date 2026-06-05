@@ -25,15 +25,15 @@
 
 namespace d4 {
 class SpecManagerCnfDyn : public SpecManagerCnf {
- protected:
+protected:
   std::vector<int> m_reviewWatcher;
   void initClauses(std::vector<std::vector<Lit>> &clauses);
 
- public:
+public:
   SpecManagerCnfDyn(ProblemManager &p);
 
   void preUpdate(std::vector<Lit> &lits);
-  void preUpdate(std::vector<Lit> &lits,std::vector<Lit>& pure ) override;
+  void preUpdate(std::vector<Lit> &lits, std::vector<Lit> &pure) override;
   void postUpdate(std::vector<Lit> &lits);
 
   // we cannot use this function here
@@ -41,4 +41,4 @@ class SpecManagerCnfDyn : public SpecManagerCnf {
     assert(0);
   }
 };
-}  // namespace d4
+} // namespace d4

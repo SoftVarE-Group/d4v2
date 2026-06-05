@@ -24,24 +24,23 @@
 
 namespace d4 {
 class WrapperSolver : public ActivityManager, public PolarityManager {
- private:
- protected:
+private:
+protected:
   std::vector<char> m_isInAssumption;
 
- public:
-  static WrapperSolver *makeWrapperSolver(Config &config,
-                                          std::ostream &out);
+public:
+  static WrapperSolver *makeWrapperSolver(Config &config, std::ostream &out);
   static WrapperSolver *makeWrapperSolverPreproc(Config &config,
                                                  std::ostream &out);
 
   virtual ~WrapperSolver() {}
   virtual void initSolver(ProblemManager &p) = 0;
-  virtual void initSolver(ProblemManager &p,std::vector<std::vector<Lit>>& learnt) = 0;
+  virtual void initSolver(ProblemManager &p,
+                          std::vector<std::vector<Lit>> &learnt) = 0;
   virtual bool solve(std::vector<Var> &setOfVar) = 0;
   virtual bool solve() = 0;
-  virtual void  exportLearnt(std::vector<std::vector<Lit>>& clause) {
-      throw std::runtime_error("No solver support");
-
+  virtual void exportLearnt(std::vector<std::vector<Lit>> &clause) {
+    throw std::runtime_error("No solver support");
   }
   virtual void uncheckedEnqueue(Lit l) = 0;
   virtual void restart() = 0;
@@ -62,8 +61,8 @@ class WrapperSolver : public ActivityManager, public PolarityManager {
 
   // this function returns false if the propagation gives a conflict.
   virtual bool decideAndComputeUnit(Lit l, std::vector<Lit> &units) = 0;
-  virtual bool decideAndComputeUnit(std::vector<Lit>, std::vector<Lit> &units){
-      throw std::runtime_error("Unimplemented");
+  virtual bool decideAndComputeUnit(std::vector<Lit>, std::vector<Lit> &units) {
+    throw std::runtime_error("Unimplemented");
   }
 
   virtual void whichAreUnits(std::vector<Var> &component,
@@ -84,7 +83,7 @@ class WrapperSolver : public ActivityManager, public PolarityManager {
   */
   inline bool isInAssumption(Lit l) {
     return m_isInAssumption[l.var()] == 1 + l.sign();
-  }  // isInassumption
+  } // isInassumption
 
   /**
      Check out if a variable is already in the assumption.
@@ -96,7 +95,7 @@ class WrapperSolver : public ActivityManager, public PolarityManager {
   */
   inline bool isInAssumption(Var v) {
     return m_isInAssumption[v];
-  }  // isInassumption
+  } // isInassumption
 
   /**
    * @brief Pop all the element of the assumption.
@@ -104,4 +103,4 @@ class WrapperSolver : public ActivityManager, public PolarityManager {
    */
   inline void resetAssumption() { popAssumption(getAssumption().size()); }
 };
-}  // namespace d4
+} // namespace d4

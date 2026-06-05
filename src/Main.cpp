@@ -35,9 +35,10 @@ d4::MethodManager *methodRun = nullptr;
  */
 void signalHandler(int signum) {
   std::cout << "c [MAIN] Method stop\n";
-  if (methodRun != nullptr) methodRun->interrupt();
+  if (methodRun != nullptr)
+    methodRun->interrupt();
   exit(signum);
-}  // signalHandler
+} // signalHandler
 
 /**
    The main function!
@@ -77,5 +78,5 @@ int main(int argc, char **argv) {
   methodRun = nullptr;
 
   return 0;
-}  // main
+} // main
 #endif

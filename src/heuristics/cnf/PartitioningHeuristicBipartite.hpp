@@ -31,11 +31,11 @@
 
 namespace d4 {
 class PartitioningHeuristicBipartite : public PartitioningHeuristic {
- private:
+private:
   unsigned m_nbStatic;
   unsigned m_nbDynamic;
 
- protected:
+protected:
   SpecManagerCnf &m_om;
   WrapperSolver &m_s;
   EquivExtractor m_em;
@@ -67,9 +67,10 @@ class PartitioningHeuristicBipartite : public PartitioningHeuristic {
                          std::vector<Var> &equivClass,
                          std::vector<std::vector<Var>> &equivVar);
 
- public:
-  void computeCutSet(std::vector<Var> &component, std::vector<Var> &cutSet) override;
+public:
+  void computeCutSet(std::vector<Var> &component,
+                     std::vector<Var> &cutSet) override;
 
   void displayStat(std::ostream &out) override;
 };
-}  // namespace d4
+} // namespace d4

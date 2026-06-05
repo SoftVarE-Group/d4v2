@@ -28,13 +28,13 @@ namespace d4 {
    @param[in] om, a structure manager.
 */
 PartitioningHeuristicStaticMulti::PartitioningHeuristicStaticMulti(
-        Config &config, WrapperSolver &s, SpecManager &om, std::ostream &out)
+    Config &config, WrapperSolver &s, SpecManager &om, std::ostream &out)
     : PartitioningHeuristicStaticMulti(
           config, s, om, dynamic_cast<SpecManagerCnf &>(om).getNbClause(),
           dynamic_cast<SpecManagerCnf &>(om).getNbVariable(),
           dynamic_cast<SpecManagerCnf &>(om).getSumSizeClauses(), out) {
 
-}  // constructor
+} // constructor
 
 /**
    Constructor.
@@ -47,25 +47,28 @@ PartitioningHeuristicStaticMulti::PartitioningHeuristicStaticMulti(
    @param[in] sumSize, which give the number of literals.
  */
 PartitioningHeuristicStaticMulti::PartitioningHeuristicStaticMulti(
-        Config &config, WrapperSolver &s, SpecManager &om, int nbClause,
-    int nbVar, int sumSize, std::ostream &out)
-    : PartitioningHeuristicStatic(config, s, om, nbClause, nbVar, sumSize, out) {
+    Config &config, WrapperSolver &s, SpecManager &om, int nbClause, int nbVar,
+    int sumSize, std::ostream &out)
+    : PartitioningHeuristicStatic(config, s, om, nbClause, nbVar, sumSize,
+                                  out) {
   m_partitionStaticDual = new PartitioningHeuristicStaticSingleDual(
-          config, s, om, nbClause, nbVar, sumSize, out);
+      config, s, om, nbClause, nbVar, sumSize, out);
 
   m_partitionStaticPrimal = new PartitioningHeuristicStaticSinglePrimal(
-          config, s, om, nbClause, nbVar, sumSize, out);
+      config, s, om, nbClause, nbVar, sumSize, out);
 
   m_partitionStaticUsed = NULL;
-}  // constructor
+} // constructor
 
 /**
    Destructor.
  */
 PartitioningHeuristicStaticMulti::~PartitioningHeuristicStaticMulti() {
-  if (m_partitionStaticDual) delete m_partitionStaticDual;
-  if (m_partitionStaticPrimal) delete m_partitionStaticPrimal;
-}  // destructor
+  if (m_partitionStaticDual)
+    delete m_partitionStaticDual;
+  if (m_partitionStaticPrimal)
+    delete m_partitionStaticPrimal;
+} // destructor
 
 /**
    Initialize the bucket level.
@@ -75,7 +78,8 @@ void PartitioningHeuristicStaticMulti::init(std::ostream &out) {
 
   // the list of all variables.
   std::vector<Var> component;
-  for (unsigned i = 1; i <= m_nbVar; i++) component.push_back(i);
+  for (unsigned i = 1; i <= m_nbVar; i++)
+    component.push_back(i);
 
   // search for equiv class if requiered.
   std::vector<Lit> unitEquiv;
@@ -86,7 +90,8 @@ void PartitioningHeuristicStaticMulti::init(std::ostream &out) {
     PartitioningHeuristic::computeEquivClass(m_em, m_s, component, unitEquiv,
                                              m_equivClass, equivVar);
   else
-    for (auto &v : component) m_equivClass[v] = v;
+    for (auto &v : component)
+      m_equivClass[v] = v;
 
   // synchronize the SAT solver and the spec manager.
   m_om.preUpdate(unitEquiv);
@@ -95,19 +100,23 @@ void PartitioningHeuristicStaticMulti::init(std::ostream &out) {
   std::vector<bool> markedVar;
   markedVar.resize(m_nbVar + 1, false);
   for (unsigned i = 0; i < om->getNbClause(); i++) {
-    if (om->isSatisfiedClause(i) || om->getInitSize(i) < 10) continue;
+    if (om->isSatisfiedClause(i) || om->getInitSize(i) < 10)
+      continue;
 
     std::vector<Lit> &cl = om->getClause(i);
     for (auto &l : cl) {
-      if (om->litIsAssigned(l)) continue;
+      if (om->litIsAssigned(l))
+        continue;
       markedVar[l.var()] = true;
     }
   }
 
   unsigned cptMarked = 0, cpt = 0;
   for (auto &v : component) {
-    if (om->varIsAssigned(v)) continue;
-    if (markedVar[v]) cptMarked++;
+    if (om->varIsAssigned(v))
+      continue;
+    if (markedVar[v])
+      cptMarked++;
     cpt++;
   }
 
@@ -127,7 +136,7 @@ void PartitioningHeuristicStaticMulti::init(std::ostream &out) {
 
   // restore the initial state.
   m_om.postUpdate(unitEquiv);
-}  // init
+} // init
 
 /**
    Ask if the current decomposition is still correct.
@@ -138,7 +147,7 @@ void PartitioningHeuristicStaticMulti::init(std::ostream &out) {
  */
 bool PartitioningHeuristicStaticMulti::isStillOk(std::vector<Var> &component) {
   return m_partitionStaticUsed->isStillOk(component);
-}  // isStillOk
+} // isStillOk
 
 /**
    Compute a cutset by computing a bipartition of the hypergraph of the clauses.
@@ -149,7 +158,7 @@ bool PartitioningHeuristicStaticMulti::isStillOk(std::vector<Var> &component) {
 void PartitioningHeuristicStaticMulti::computeCutSet(
     std::vector<Var> &component, std::vector<Var> &cutSet) {
   m_partitionStaticUsed->computeCutSet(component, cutSet);
-}  // component
+} // component
 
 /**
    Search a decomposition tree regarding a component.
@@ -168,6 +177,6 @@ void PartitioningHeuristicStaticMulti::computeDecomposition(
   m_partitionStaticUsed->computeDecomposition(
       component, equivClass, equivVar,
       m_partitionStaticUsed->getBucketNumber());
-}  // computeDecomposition
+} // computeDecomposition
 
-}  // namespace d4
+} // namespace d4

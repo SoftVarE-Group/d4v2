@@ -38,7 +38,7 @@ PartitioningHeuristicStaticSingleDual::PartitioningHeuristicStaticSingleDual(
           dynamic_cast<SpecManagerCnf &>(om).getNbVariable(),
           dynamic_cast<SpecManagerCnf &>(om).getSumSizeClauses(), out) {
 
-}  // constructor
+} // constructor
 
 /**
    Constructor.
@@ -51,24 +51,24 @@ PartitioningHeuristicStaticSingleDual::PartitioningHeuristicStaticSingleDual(
    @param[in] sumSize, which give the number of literals.
  */
 PartitioningHeuristicStaticSingleDual::PartitioningHeuristicStaticSingleDual(
-    Config &config, WrapperSolver &s, SpecManager &om, int nbClause,
-    int nbVar, int sumSize, std::ostream &out)
+    Config &config, WrapperSolver &s, SpecManager &om, int nbClause, int nbVar,
+    int sumSize, std::ostream &out)
     : PartitioningHeuristicStaticSingle(config, s, om, nbClause, nbVar, sumSize,
                                         out) {
   out << "c [CONSTRUCTOR] Static partitioner: dual\n";
 
-  m_pm = PartitionerManager::makePartitioner(m_nbClause, m_nbVar, sumSize,out);
+  m_pm = PartitionerManager::makePartitioner(m_nbClause, m_nbVar, sumSize, out);
   m_hypergraph.init(m_nbVar + m_nbClause + sumSize + 1);
   m_hypergraphExtractor = new HyperGraphExtractorDual(m_nbVar, m_nbClause);
   m_maxNbNodes = m_nbClause + 1;
   m_maxNbEdges = m_nbVar + 1;
-}  // constructor
+} // constructor
 
 /**
    Destructor.
  */
 PartitioningHeuristicStaticSingleDual::
-    ~PartitioningHeuristicStaticSingleDual() {}  // destructor
+    ~PartitioningHeuristicStaticSingleDual() {} // destructor
 
 /**
    Set the elements given by indices in the bucketNumber structure.
@@ -81,7 +81,8 @@ PartitioningHeuristicStaticSingleDual::
 void PartitioningHeuristicStaticSingleDual::setBucketLevelFromEdges(
     std::vector<std::vector<unsigned>> &hypergraph,
     std::vector<unsigned> &indices, std::vector<int> &mapping, unsigned level) {
-  for (auto &id : indices) m_bucketNumber[mapping[id]] = level;
-}  // setBucketLevelFromEdges
+  for (auto &id : indices)
+    m_bucketNumber[mapping[id]] = level;
+} // setBucketLevelFromEdges
 
-}  // namespace d4
+} // namespace d4

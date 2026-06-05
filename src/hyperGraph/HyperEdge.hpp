@@ -21,11 +21,11 @@
 namespace d4 {
 
 class HyperEdge {
- private:
+private:
   unsigned m_id;
   unsigned *m_data;
 
- public:
+public:
   HyperEdge(unsigned id, unsigned *data);
   inline unsigned getId() const { return m_id; }
   inline unsigned getSize() { return *m_data; }
@@ -39,11 +39,11 @@ class HyperEdge {
   inline unsigned operator[](unsigned i) const { return m_data[1 + i]; }
 
   class Iterator {
-   private:
+  private:
     unsigned *m_edge;
     unsigned m_pos;
 
-   public:
+  public:
     Iterator(unsigned *ptr, unsigned pos) : m_edge(ptr), m_pos(pos) {}
 
     inline unsigned &operator*() { return m_edge[1 + m_pos]; }
@@ -71,4 +71,4 @@ class HyperEdge {
   Iterator end() { return Iterator(m_data, *m_data); }
 };
 
-}  // namespace d4
+} // namespace d4

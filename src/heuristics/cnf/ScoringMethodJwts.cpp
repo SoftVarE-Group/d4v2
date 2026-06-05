@@ -28,7 +28,7 @@ namespace d4 {
    @param[in] om, the manager that give information about the CNF formula.
  */
 ScoringMethodJwts::ScoringMethodJwts(SpecManagerCnf &o)
-    : om(o) {}  // constructor
+    : om(o) {} // constructor
 
 /**
    This scoring function favorises the varaibles which appear in
@@ -49,18 +49,20 @@ double ScoringMethodJwts::computeScore(Var v) {
   IteratorIdxClause listIdx = om.getVecIdxClauseNotBin(lp);
   for (int *ptr = listIdx.start; ptr != listIdx.end; ptr++) {
     assert(!om.isSatisfiedClause(*ptr));
-    if (om.getInitSize(*ptr) > 5) continue;
+    if (om.getInitSize(*ptr) > 5)
+      continue;
     res += ((double)1.0) / (1 << om.getCurrentSize(*ptr));
   }
 
   listIdx = om.getVecIdxClauseNotBin(~lp);
   for (int *ptr = listIdx.start; ptr != listIdx.end; ptr++) {
     assert(!om.isSatisfiedClause(*ptr));
-    if (om.getInitSize(*ptr) > 5) continue;
+    if (om.getInitSize(*ptr) > 5)
+      continue;
     res += ((double)1.0) / (1 << om.getCurrentSize(*ptr));
   }
 
   return res;
-}  // computeScore
+} // computeScore
 
-}  // namespace d4
+} // namespace d4

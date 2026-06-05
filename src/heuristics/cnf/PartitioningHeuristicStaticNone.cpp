@@ -33,7 +33,7 @@ PartitioningHeuristicStaticNone::PartitioningHeuristicStaticNone(
           dynamic_cast<SpecManagerCnf &>(om).getNbVariable(),
           dynamic_cast<SpecManagerCnf &>(om).getSumSizeClauses(), out) {
 
-}  // constructor
+} // constructor
 
 /**
    Constructor.
@@ -46,20 +46,21 @@ PartitioningHeuristicStaticNone::PartitioningHeuristicStaticNone(
    @param[in] sumSize, which give the number of literals.
  */
 PartitioningHeuristicStaticNone::PartitioningHeuristicStaticNone(
-    Config &config, WrapperSolver &s, SpecManager &om, int nbClause,
-    int nbVar, int sumSize, std::ostream &out)
-    : PartitioningHeuristicStatic(config, s, om, nbClause, nbVar, sumSize, out) {
+    Config &config, WrapperSolver &s, SpecManager &om, int nbClause, int nbVar,
+    int sumSize, std::ostream &out)
+    : PartitioningHeuristicStatic(config, s, om, nbClause, nbVar, sumSize,
+                                  out) {
   out << "c [CONSTRUCTOR] Static partitioner: none\n";
 
   m_isInitialized = true;
-}  // constructor
+} // constructor
 
 /**
    Destructor.
  */
 PartitioningHeuristicStaticNone::~PartitioningHeuristicStaticNone() {
 
-}  // destructor
+} // destructor
 
 /**
    In the case where we do not considere tree decomposition, then we return the
@@ -71,7 +72,7 @@ PartitioningHeuristicStaticNone::~PartitioningHeuristicStaticNone() {
 void PartitioningHeuristicStaticNone::computeCutSet(std::vector<Var> &component,
                                                     std::vector<Var> &cutSet) {
   cutSet = component;
-}  // computeCutSet
+} // computeCutSet
 
 /**
    Put all the variables in the same bucket 1.
@@ -85,7 +86,8 @@ void PartitioningHeuristicStaticNone::computeDecomposition(
     std::vector<Var> &component, std::vector<Var> &equivClass,
     std::vector<std::vector<Var>> &equivVar,
     std::vector<unsigned> &bucketNumber) {
-  for (auto &v : component) bucketNumber[v] = 1;
-}  // computeDecomposition
+  for (auto &v : component)
+    bucketNumber[v] = 1;
+} // computeDecomposition
 
-}  // namespace d4
+} // namespace d4

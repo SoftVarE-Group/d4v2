@@ -154,7 +154,8 @@ void HyperGraphExtractorDualProj::constructHyperGraph(
     if (!size)
       pos--;
     else {
-      hypergraph.getCost()[hypergraph.getSize()] = m_specs.isSelected(v) ? 1 : m_nproj_cost;
+      hypergraph.getCost()[hypergraph.getSize()] =
+          m_specs.isSelected(v) ? 1 : m_nproj_cost;
       hypergraph.incSize();
       considered.push_back(v);
     }

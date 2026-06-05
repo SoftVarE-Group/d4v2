@@ -28,7 +28,7 @@
 namespace d4 {
 template <class T, typename U>
 class BinaryDeterministicOrNode : public Node<T> {
- public:
+public:
   using Node<T>::header;
   T nbModels;
   Branch<T, U> l, r;
@@ -50,7 +50,8 @@ class BinaryDeterministicOrNode : public Node<T> {
      @param[in] globalstamp, get the stamp number.
   */
   static void deallocate(Node<T> *node, void (**func)(), unsigned globalStamp) {
-    if (node->header.stamp == globalStamp) return;
+    if (node->header.stamp == globalStamp)
+      return;
     node->header.stamp = globalStamp;
 
     auto *p = reinterpret_cast<BinaryDeterministicOrNode *>(node);
@@ -59,7 +60,7 @@ class BinaryDeterministicOrNode : public Node<T> {
         func)[(p->l).d->header.typeNode]((p->l).d, func, globalStamp);
     reinterpret_cast<void (**)(Node<T> *, void (**func)(), unsigned)>(
         func)[(p->r).d->header.typeNode]((p->r).d, func, globalStamp);
-  }  // destructor
+  } // destructor
 
   /**
      Init the two branches using the data coming from the solver.
@@ -82,11 +83,15 @@ class BinaryDeterministicOrNode : public Node<T> {
     r.nbFree = right.freeVars.size();
 
     unsigned pos = 0;
-    for (auto &lit : left.unitLits) data[pos++] = lit.intern();
-    for (auto &var : left.freeVars) data[pos++] = var;
-    for (auto &lit : right.unitLits) data[pos++] = lit.intern();
-    for (auto &var : right.freeVars) data[pos++] = var;
-  }  // constructor
+    for (auto &lit : left.unitLits)
+      data[pos++] = lit.intern();
+    for (auto &var : left.freeVars)
+      data[pos++] = var;
+    for (auto &lit : right.unitLits)
+      data[pos++] = lit.intern();
+    for (auto &var : right.freeVars)
+      data[pos++] = var;
+  } // constructor
 
   /**
      Ask for the number of models of the formula under an interpretation.
@@ -105,7 +110,8 @@ class BinaryDeterministicOrNode : public Node<T> {
                            ProblemManager &problem, unsigned globalStamp) {
     auto *p = reinterpret_cast<BinaryDeterministicOrNode *>(node);
 
-    if (node->header.stamp == globalStamp) return p->nbModels;
+    if (node->header.stamp == globalStamp)
+      return p->nbModels;
 
     p->nbModels =
         (p->l).computeNbModels(func, p->data, fixedValue, problem,
@@ -115,7 +121,7 @@ class BinaryDeterministicOrNode : public Node<T> {
 
     node->header.stamp = globalStamp;
     return p->nbModels;
-  }  // computeNbModels
+  } // computeNbModels
 
   /**
      Ask if the formula is satisfiable under an interpretation.
@@ -131,16 +137,18 @@ class BinaryDeterministicOrNode : public Node<T> {
                     std::vector<ValueVar> &fixedValue, unsigned globalStamp) {
     auto *p = reinterpret_cast<BinaryDeterministicOrNode *>(node);
 
-    if (node->header.stamp == globalStamp) return p->nbModels == 1;
+    if (node->header.stamp == globalStamp)
+      return p->nbModels == 1;
     node->header.stamp = globalStamp;
 
     p->nbModels = (p->l).isSAT(func, p->data, fixedValue, globalStamp);
-    if (p->nbModels == 1) return true;
+    if (p->nbModels == 1)
+      return true;
 
     p->nbModels = (p->r).isSAT(func, &p->data[p->l.nbUnits + p->l.nbFree],
                                fixedValue, globalStamp);
     return p->nbModels == 1;
-  }  // isSAT
+  } // isSAT
 
   /**
      Print out the NNF in a stream.
@@ -157,7 +165,8 @@ class BinaryDeterministicOrNode : public Node<T> {
                            std::ostream &out, unsigned &idx,
                            unsigned globalStamp) {
     auto *p = reinterpret_cast<BinaryDeterministicOrNode *>(node);
-    if (p->header.stamp == globalStamp) return (unsigned)p->nbModels;
+    if (p->header.stamp == globalStamp)
+      return (unsigned)p->nbModels;
     p->nbModels = idx++;
 
     out << "o " << (unsigned)p->nbModels << " 0\n";
@@ -167,6 +176,6 @@ class BinaryDeterministicOrNode : public Node<T> {
 
     p->header.stamp = globalStamp;
     return (unsigned)p->nbModels;
-  }  // printNNF
+  } // printNNF
 };
-}  // namespace d4
+} // namespace d4

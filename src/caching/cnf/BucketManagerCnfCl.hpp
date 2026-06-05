@@ -21,8 +21,8 @@
 
 #include <algorithm>
 #include <bitset>
-#include <cstring>
 #include <cstdint>
+#include <cstring>
 
 #include "BucketInConstruction.hpp"
 #include "BucketSortInfo.hpp"
@@ -33,12 +33,10 @@
 #include "src/utils/Enum.hpp"
 
 namespace d4 {
-template <class T>
-class BucketManagerCnf;
+template <class T> class BucketManagerCnf;
 
-template <class T>
-class BucketManagerCnfCl : public BucketManagerCnf<T> {
- private:
+template <class T> class BucketManagerCnfCl : public BucketManagerCnf<T> {
+private:
   /**
    * @brief Compute the number of bit needed to encode an unsigned given in
    * parameter.
@@ -51,8 +49,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     const unsigned int S[] = {1, 2, 4, 8, 16};
     int i;
 
-    unsigned int r = 0;       // result of log2(v) will go here
-    for (i = 4; i >= 0; i--)  // unroll for speed...
+    unsigned int r = 0;      // result of log2(v) will go here
+    for (i = 4; i >= 0; i--) // unroll for speed...
     {
       if (v & b[i]) {
         v >>= S[i];
@@ -61,7 +59,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     }
 
     return r + 1;
-  }  // nbBitUnsigned
+  } // nbBitUnsigned
 
   struct AllocSizeInfo {
     unsigned nbBitEltVar = 0;
@@ -91,7 +89,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
   unsigned *m_memoryPosWrtClauseSize;
   unsigned *m_offsetClauses;
 
- public:
+public:
   /**
      Function called in order to initialized variables before using
 
@@ -114,7 +112,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     m_markIdx.resize(this->m_nbClauseCnf, -1);
     m_memoryPosWrtClauseSize = new unsigned[occM.getMaxSizeClause() + 1];
     m_offsetClauses = new unsigned[this->m_nbClauseCnf + 1];
-  }  // BucketManagerCnfCl
+  } // BucketManagerCnfCl
 
   /**
      Destructor.
@@ -122,7 +120,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
   ~BucketManagerCnfCl() {
     delete[] m_memoryPosWrtClauseSize;
     delete[] m_offsetClauses;
-  }  // destructor
+  } // destructor
 
   /**
    * Get an index to store the distribution information.
@@ -143,7 +141,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
       m_unusedBucket = -1;
 
     return ret;
-  }  // getIdxBucketSortInfo
+  } // getIdxBucketSortInfo
 
   /**
    * Push sorted, use the natural order.
@@ -155,7 +153,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
         std::swap(tab[i], tab[i - 1]);
       else
         break;
-  }  // pushSorted
+  } // pushSorted
 
   /**
      It is used in order to construct a sorted residual formula.
@@ -165,8 +163,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
      construction.
   */
   void createDistribWrTLit(const Lit &l, BucketInConstruction &inConstruction) {
-    unsigned currentPos = inConstruction.sizeDistrib;  // where we put l.
-    inConstruction.sizeDistrib += 2;  // save memory for l and the size.
+    unsigned currentPos = inConstruction.sizeDistrib; // where we put l.
+    inConstruction.sizeDistrib += 2; // save memory for l and the size.
 
     // associate a bucket to the literal.
     unsigned counter = 0, nbElt = 0;
@@ -181,7 +179,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
         this->m_specManager.getVecIdxClause(l, this->m_modeStore);
     for (int *ptr = listIndex.start; ptr != listIndex.end; ptr++) {
       int idx = *ptr;
-      if (!this->isKeptClause(idx)) continue;
+      if (!this->isKeptClause(idx))
+        continue;
 
       assert((unsigned)idx < m_markIdx.size());
       if (m_markIdx[idx] == -1) {
@@ -223,9 +222,9 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     if (!counter)
       m_unusedBucket = ownBucket;
     else {
-      m_vecBucketSortInfo[ownBucket].reset(
-          inConstruction.nbClauseInDistrib,
-          inConstruction.nbClauseInDistrib + counter);
+      m_vecBucketSortInfo[ownBucket].reset(inConstruction.nbClauseInDistrib,
+                                           inConstruction.nbClauseInDistrib +
+                                               counter);
       inConstruction.nbClauseInDistrib += counter;
     }
 
@@ -236,7 +235,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
       inConstruction.distrib[currentPos + 1] =
           inConstruction.sizeDistrib - currentPos - 2;
     }
-  }  // createDistribWrTLit
+  } // createDistribWrTLit
 
   /**
      Collect the clause distribution. The result is stored in distrib.
@@ -252,7 +251,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
                                  BucketInConstruction &inConstruction) {
     // sort the set of clauses
     for (auto &v : component) {
-      if (this->m_specManager.varIsAssigned(v)) continue;
+      if (this->m_specManager.varIsAssigned(v))
+        continue;
       createDistribWrTLit(Lit::makeLitFalse(v), inConstruction);
       createDistribWrTLit(Lit::makeLitTrue(v), inConstruction);
     }
@@ -286,9 +286,9 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
         inConstruction.shiftedIndexClause[i] = inConstruction.sizeDistrib;
       inConstruction.markedAsRedundant[i] = false;
     }
-    inConstruction.nbClauseInDistrib = index;  // resize
+    inConstruction.nbClauseInDistrib = index; // resize
     return realSizeDistrib;
-  }  // collectDistrib
+  } // collectDistrib
 
   /**
      Prepare the data to store a new bucket.
@@ -300,7 +300,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     inConstruction.reinit();
     m_unusedBucket = -1;
     m_vecBucketSortInfo.resize(0);
-  }  // initSortBucket
+  } // initSortBucket
 
   /**
    * @brief Display the bucket in construction (for debugging purpose).
@@ -314,7 +314,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     for (auto &e : v)
       out << "[" << e.start << " " << e.end << " " << e.counter << " "
           << e.redirected << "]\n";
-  }  // showListBucketSort
+  } // showListBucketSort
 
   /**
    * @brief Search for the number of bytes needed to store the different element
@@ -328,8 +328,9 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
    * @param nbEltDist
    * @return an AllocSizeInfo structure with the requiered information.
    */
-  inline AllocSizeInfo computeNeededBytes(
-      std::vector<Var> &component, BucketInConstruction &inConstruction) {
+  inline AllocSizeInfo
+  computeNeededBytes(std::vector<Var> &component,
+                     BucketInConstruction &inConstruction) {
     AllocSizeInfo ret;
 
     // info about the variables.
@@ -346,7 +347,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     // info about the distribution.
     unsigned cptLitFormula = 0, cptDistrib = 0;
     for (unsigned i = 0; i <= inConstruction.maxSizeClause; i++) {
-      if (!inConstruction.distribDiffSize[i]) continue;
+      if (!inConstruction.distribDiffSize[i])
+        continue;
 
       cptDistrib++;
       cptLitFormula += i * inConstruction.distribDiffSize[i];
@@ -360,7 +362,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
 
     ret.totalByte = ret.nbByteStoreVar + ret.nbByteStoreFormula;
     return ret;
-  }  // computeNeededBytes
+  } // computeNeededBytes
 
   /**
    * @brief
@@ -403,7 +405,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     std::cout << "<= " << std::bitset<8>(*p) << "\n";
 #endif
     return p;
-  }  // addElementInData
+  } // addElementInData
 
   /**
    * @brief Store the variables respecting the information of size concerning
@@ -423,7 +425,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
 
     // fill the array.
     if (!info.nbBitEltVar) {
-      for (auto v : component) p[v >> 3] |= ((uint8_t)1) << (v & 7);
+      for (auto v : component)
+        p[v >> 3] |= ((uint8_t)1) << (v & 7);
     } else {
       unsigned remaining = 8;
       for (auto v : component) {
@@ -433,7 +436,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     }
 
     return &data[info.nbByteStoreVar];
-  }  // storeVariables
+  } // storeVariables
 
   /**
      Store the formula representation respecting the information of size
@@ -464,7 +467,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
 
     // store the different size of the distribution.
     for (unsigned i = 0; i <= inConstruction.maxSizeClause; i++) {
-      if (!inConstruction.distribDiffSize[i]) continue;
+      if (!inConstruction.distribDiffSize[i])
+        continue;
       p = addElementInData(p, i, info.nbBitStoreLit, remaining);
     }
 
@@ -472,7 +476,8 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     // We also add a zero to separate ditrib from formula.
     unsigned offSet = (8 - remaining) + info.nbBitStoreLit;
     for (unsigned i = 0; i <= inConstruction.maxSizeClause; i++) {
-      if (!inConstruction.distribDiffSize[i]) continue;
+      if (!inConstruction.distribDiffSize[i])
+        continue;
       m_memoryPosWrtClauseSize[i] = offSet;
       offSet += inConstruction.distribDiffSize[i] * i * info.nbBitStoreLit;
     }
@@ -480,11 +485,12 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     // allocate an offset for each clauses.
     for (unsigned i = 0; i < inConstruction.nbClauseInDistrib; i++) {
       unsigned &szClause = inConstruction.shiftedSizeClause[i];
-      if (!szClause) continue;
+      if (!szClause)
+        continue;
 
       m_offsetClauses[i] = m_memoryPosWrtClauseSize[szClause];
       m_memoryPosWrtClauseSize[szClause] += szClause * info.nbBitStoreLit;
-      szClause = 0;  // reinit shiftedSizeClause for the next run.
+      szClause = 0; // reinit shiftedSizeClause for the next run.
     }
 
     // store the formula.
@@ -499,11 +505,12 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
 
         unsigned idx =
             inConstruction.shiftedIndexClause[inConstruction.distrib[i++]];
-        if (idx >= inConstruction.nbClauseInDistrib) continue;
+        if (idx >= inConstruction.nbClauseInDistrib)
+          continue;
 
         // compute the position in the array.
         unsigned &offSet = m_offsetClauses[idx];
-        char *q = &p[offSet >> 3];  // divide by 8
+        char *q = &p[offSet >> 3]; // divide by 8
         remaining = 8 - (offSet & 7);
 
         // add the element and move the offset for the next lit.
@@ -513,7 +520,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     }
 
     return &data[info.nbByteStoreFormula];
-  }  // storeClauses
+  } // storeClauses
 
   /**
      Transfer the formula store in distib in a table given in parameter.
@@ -524,7 +531,7 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
   */
   inline void storeFormula(std::vector<Var> &component, CachedBucket<T> &b) {
     initSortBucket(m_inConstruction);
-    collectDistrib(component, m_inConstruction);  // built the sorted formula
+    collectDistrib(component, m_inConstruction); // built the sorted formula
 
     // ask for memory
     AllocSizeInfo sizeInfo = computeNeededBytes(component, m_inConstruction);
@@ -539,6 +546,6 @@ class BucketManagerCnfCl : public BucketManagerCnf<T> {
     DataInfo di(sizeInfo.totalByte, component.size(), sizeInfo.nbBitEltVar,
                 sizeInfo.nbBitStoreLit);
     b.set(data, di);
-  }  // storeFormula
+  } // storeFormula
 };
-}  // namespace d4
+} // namespace d4

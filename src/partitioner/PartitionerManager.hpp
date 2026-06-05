@@ -25,7 +25,7 @@
 namespace d4 {
 
 class PartitionerManager {
- public:
+public:
   enum Level { NORMAL, SPEED, QUALITY };
 
   static PartitionerManager *makePartitioner(unsigned maxNodes,
@@ -38,4 +38,4 @@ class PartitionerManager {
   virtual void computePartition(HyperGraph &hypergraph, Level level,
                                 std::vector<int> &partition) = 0;
 };
-}  // namespace d4
+} // namespace d4

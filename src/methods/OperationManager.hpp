@@ -29,9 +29,8 @@
 #include "src/exceptions/FactoryException.hpp"
 
 namespace d4 {
-template <class T, class U>
-class Operation {
- public:
+template <class T, class U> class Operation {
+public:
   /**
      Operation factory.
 
@@ -49,20 +48,20 @@ class Operation {
         << "method(" << meth << ") "
         << "float(" << isFloat << ")\n";
 
-    if (meth == "counting") return new CountingOperation<T>(problem);
+    if (meth == "counting")
+      return new CountingOperation<T>(problem);
 
     if (meth == "ddnnf-compiler")
       return new DecisionDNNFOperation<T, Node<T> *>(problem, specs, solver);
 
     throw(FactoryException("Cannot create a Operation", __FILE__, __LINE__));
-  }  // makeOperationManager
+  } // makeOperationManager
 
   virtual ~Operation() {}
 
   virtual U createTop() = 0;
   virtual U createBottom() = 0;
-  virtual void manageResult(U &result, Config &config,
-                            std::ostream &out) = 0;
+  virtual void manageResult(U &result, Config &config, std::ostream &out) = 0;
   virtual U manageBottom() = 0;
   virtual U manageTop(std::vector<Var> &component) = 0;
   virtual U manageBranch(DataBranch<U> &e) = 0;
@@ -71,4 +70,4 @@ class Operation {
   virtual T count(U &result) = 0;
   virtual T count(U &result, std::vector<Lit> &assum) = 0;
 };
-}  // namespace d4
+} // namespace d4

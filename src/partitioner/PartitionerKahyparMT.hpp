@@ -17,8 +17,8 @@
  */
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "mtkahypar.h"
 #include "src/config/Config.hpp"
@@ -27,7 +27,7 @@
 
 namespace d4 {
 class PartitionerKahyparMT : public PartitionerManager {
- private:
+private:
   std::vector<bool> m_markedNodes;
   std::vector<int> m_mapNodes;
   std::unique_ptr<mt_kahypar_hyperedge_weight_t[]> m_cwghts;
@@ -36,9 +36,9 @@ class PartitionerKahyparMT : public PartitionerManager {
   std::vector<mt_kahypar_partition_id_t> m_partition;
   mt_kahypar_context_s *context;
 
- public:
+public:
   PartitionerKahyparMT(unsigned maxNodes, unsigned maxEdges,
-                     unsigned maxSumEdgeSize, std::ostream &out);
+                       unsigned maxSumEdgeSize, std::ostream &out);
 
   ~PartitionerKahyparMT();
   void computePartition(HyperGraph &hypergraph, Level level,
@@ -46,4 +46,4 @@ class PartitionerKahyparMT : public PartitionerManager {
 
   static void initPartitioner(Config &config);
 };
-}  // namespace d4
+} // namespace d4

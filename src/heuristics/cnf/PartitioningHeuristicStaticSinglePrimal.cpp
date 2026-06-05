@@ -19,8 +19,8 @@
 
 #include <ostream>
 
-#include "src/hyperGraph/HyperGraphExtractorPrimal.hpp"
 #include "src/config/Config.hpp"
+#include "src/hyperGraph/HyperGraphExtractorPrimal.hpp"
 
 namespace d4 {
 
@@ -32,15 +32,14 @@ namespace d4 {
    @param[in] om, a structure manager.
  */
 PartitioningHeuristicStaticSinglePrimal::
-    PartitioningHeuristicStaticSinglePrimal(Config &config,
-                                            WrapperSolver &s, SpecManager &om,
-                                            std::ostream &out)
+    PartitioningHeuristicStaticSinglePrimal(Config &config, WrapperSolver &s,
+                                            SpecManager &om, std::ostream &out)
     : PartitioningHeuristicStaticSinglePrimal(
           config, s, om, dynamic_cast<SpecManagerCnf &>(om).getNbClause(),
           dynamic_cast<SpecManagerCnf &>(om).getNbVariable(),
           dynamic_cast<SpecManagerCnf &>(om).getSumSizeClauses(), out) {
 
-}  // constructor
+} // constructor
 
 /**
    Constructor.
@@ -53,27 +52,27 @@ PartitioningHeuristicStaticSinglePrimal::
    @param[in] sumSize, which give the number of literals.
  */
 PartitioningHeuristicStaticSinglePrimal::
-    PartitioningHeuristicStaticSinglePrimal(Config &config,
-                                            WrapperSolver &s, SpecManager &om,
-                                            int nbClause, int nbVar,
-                                            int sumSize, std::ostream &out)
+    PartitioningHeuristicStaticSinglePrimal(Config &config, WrapperSolver &s,
+                                            SpecManager &om, int nbClause,
+                                            int nbVar, int sumSize,
+                                            std::ostream &out)
     : PartitioningHeuristicStaticSingle(config, s, om, nbClause, nbVar, sumSize,
                                         out) {
   out << "c [CONSTRUCTOR] Static partitioner: primal\n";
 
-  m_pm = PartitionerManager::makePartitioner(m_nbVar, m_nbClause, sumSize,out);
+  m_pm = PartitionerManager::makePartitioner(m_nbVar, m_nbClause, sumSize, out);
   m_hypergraph.init(m_nbClause + sumSize + 1);
   m_hypergraphExtractor = new HyperGraphExtractorPrimal(m_nbVar, m_nbClause);
   m_maxNbNodes = m_nbVar + 1;
   m_maxNbEdges = m_nbClause + 1;
   m_markedVar.resize(m_nbVar + 1, false);
-}  // constructor
+} // constructor
 
 /**
    Destructor.
  */
 PartitioningHeuristicStaticSinglePrimal::
-    ~PartitioningHeuristicStaticSinglePrimal() {}  // destructor
+    ~PartitioningHeuristicStaticSinglePrimal() {} // destructor
 
 /**
    Set the elements given by indices in the bucketNumber structure.
@@ -87,8 +86,9 @@ void PartitioningHeuristicStaticSinglePrimal::setBucketLevelFromEdges(
     std::vector<std::vector<unsigned>> &hypergraph,
     std::vector<unsigned> &indices, std::vector<int> &mapping, unsigned level) {
   for (auto id : indices)
-    for (auto v : hypergraph[id]) m_bucketNumber[v] = level;
-}  // setBucketLevelFromEdges
+    for (auto v : hypergraph[id])
+      m_bucketNumber[v] = level;
+} // setBucketLevelFromEdges
 
 /**
    Compute the cut.
@@ -107,10 +107,12 @@ void PartitioningHeuristicStaticSinglePrimal::setCutSetBucketLevelFromEdges(
   for (auto index : indices) {
     int cpt0 = 0, cpt1 = 0;
     std::vector<unsigned> &edge = hypergraph[index];
-    if (!edge.size()) continue;
+    if (!edge.size())
+      continue;
 
     for (auto x : edge) {
-      if (m_markedVar[x]) continue;
+      if (m_markedVar[x])
+        continue;
       if (partition[x])
         cpt1++;
       else
@@ -131,14 +133,15 @@ void PartitioningHeuristicStaticSinglePrimal::setCutSetBucketLevelFromEdges(
   for (auto &edge : hypergraph) {
     unsigned j = 0;
     for (unsigned i = 0; i < edge.size(); i++)
-      if (!m_markedVar[edge[i]]) edge[j++] = edge[i];
+      if (!m_markedVar[edge[i]])
+        edge[j++] = edge[i];
     edge.resize(j);
   }
 
   for (auto &x : cutSet) {
     m_bucketNumber[x] = level;
-    m_markedVar[x] = false;  // reinit
+    m_markedVar[x] = false; // reinit
   }
-}  // setCutSetBucketLevelFromEdges
+} // setCutSetBucketLevelFromEdges
 
-}  // namespace d4
+} // namespace d4

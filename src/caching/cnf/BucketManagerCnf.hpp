@@ -29,14 +29,11 @@
 #include "src/utils/Enum.hpp"
 
 namespace d4 {
-template <class T>
-class BucketManager;
-template <class T>
-class CacheManager;
+template <class T> class BucketManager;
+template <class T> class CacheManager;
 
-template <class T>
-class BucketManagerCnf : public BucketManager<T> {
- protected:
+template <class T> class BucketManagerCnf : public BucketManager<T> {
+protected:
   SpecManagerCnf &m_specManager;
 
   ModeStore m_modeStore;
@@ -47,7 +44,7 @@ class BucketManagerCnf : public BucketManager<T> {
   std::vector<bool> m_varInComponent;
   std::vector<int> m_idxClauses;
 
- public:
+public:
   /**
      Constructor.
 
@@ -73,7 +70,7 @@ class BucketManagerCnf : public BucketManager<T> {
     m_varInComponent.resize(m_nbVarCnf, false);
 
     this->m_bucketAllocator->init(sizeFirstPage, sizeAdditionalPage);
-  }  // BucketManager
+  } // BucketManager
 
   virtual ~BucketManagerCnf() { ; }
   virtual void storeFormula(std::vector<Var> &component,
@@ -89,14 +86,14 @@ class BucketManagerCnf : public BucketManager<T> {
    */
   bool isKeptClause(int idx) {
     switch (m_modeStore) {
-      case NT:
-        return m_specManager.getNbUnsat(idx);
-      case NB:
-        return m_specManager.getClause(idx).size() > 2;
-      default:
-        return true;
+    case NT:
+      return m_specManager.getNbUnsat(idx);
+    case NB:
+      return m_specManager.getClause(idx).size() > 2;
+    default:
+      return true;
     }
-  }  // isKeptClause
+  } // isKeptClause
 
   /**
      Get the clauses that will be used, that are the clause that respect the
@@ -116,10 +113,11 @@ class BucketManagerCnf : public BucketManager<T> {
 
     unsigned i, j;
     for (i = j = 0; i < idxClauses.size(); i++) {
-      if (!isKeptClause(idxClauses[i])) continue;
+      if (!isKeptClause(idxClauses[i]))
+        continue;
       idxClauses[j++] = idxClauses[i];
     }
     idxClauses.resize(j);
-  }  // collectIdActiveClauses
+  } // collectIdActiveClauses
 };
-}  // namespace d4
+} // namespace d4

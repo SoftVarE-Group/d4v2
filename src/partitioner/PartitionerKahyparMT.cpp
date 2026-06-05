@@ -100,10 +100,9 @@ void PartitionerKahyparMT::computePartition(HyperGraph &hypergraph, Level level,
 
       m_pins[posPins++] = m_mapNodes[x];
     }
-
   }
 
-  if (elts.size()<=1)
+  if (elts.size() <= 1)
     return;
 
   for (auto &x : elts)
@@ -113,9 +112,9 @@ void PartitionerKahyparMT::computePartition(HyperGraph &hypergraph, Level level,
   const mt_kahypar_hypernode_id_t num_vertices = elts.size();
   const mt_kahypar_hyperedge_id_t num_hyperedges = sizeXpins;
 
-  auto hgraph =
-      mt_kahypar_create_hypergraph(context, num_vertices, num_hyperedges,
-                                   m_xpins.get(), m_pins.get(), cost, nullptr, &error);
+  auto hgraph = mt_kahypar_create_hypergraph(
+      context, num_vertices, num_hyperedges, m_xpins.get(), m_pins.get(), cost,
+      nullptr, &error);
 
   if (error.status != SUCCESS) {
     std::cerr << error.msg << std::endl;

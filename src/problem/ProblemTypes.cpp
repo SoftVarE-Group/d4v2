@@ -22,9 +22,9 @@ namespace d4 {
 /**
    Redefinition of the toString method.
  */
-std::ostream& operator<<(std::ostream& os, Lit l) {
+std::ostream &operator<<(std::ostream &os, Lit l) {
   os << (l.sign() ? -l.var() : l.var());
   return os;
-}  // redefinition of <<
+} // redefinition of <<
 
-}  // namespace d4
+} // namespace d4

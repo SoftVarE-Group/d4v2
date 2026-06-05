@@ -35,17 +35,17 @@ namespace d4 {
 WrapperSolver *WrapperSolver::makeWrapperSolver(Config &config,
                                                 std::ostream &out) {
   if (config.input_type == "cnf" || config.input_type == "dimacs") {
-    #if D4_SOLVER == minisat
-      out << "c [CONSTRUCTOR] Solver: minisat" << config.input_type << "\n";
-      return new WrapperMinisat();
-    #elif D4_SOLVER == glucose
-      out << "c [CONSTRUCTOR] Solver: glucose" << config.input_type << "\n";
-      return new WrapperGlucose();
-    #endif
+#if D4_SOLVER == minisat
+    out << "c [CONSTRUCTOR] Solver: minisat" << config.input_type << "\n";
+    return new WrapperMinisat();
+#elif D4_SOLVER == glucose
+    out << "c [CONSTRUCTOR] Solver: glucose" << config.input_type << "\n";
+    return new WrapperGlucose();
+#endif
   }
 
   throw(FactoryException("Cannot create a WrapperSolver", __FILE__, __LINE__));
-}  // makeWrapperSolver
+} // makeWrapperSolver
 
 /**
    Wrapper to get a solver able to solve the input problem for the preprocessing
@@ -56,17 +56,19 @@ WrapperSolver *WrapperSolver::makeWrapperSolver(Config &config,
 WrapperSolver *WrapperSolver::makeWrapperSolverPreproc(Config &config,
                                                        std::ostream &out) {
   if (config.input_type == "cnf" || config.input_type == "dimacs") {
-    #if D4_PREPROC_SOLVER == minisat
-      out << "c [CONSTRUCTOR] Preproc solver: minisat" << config.input_type << "\n";
-      return new WrapperMinisat();
-    #elif D4_PREPROC_SOLVER == glucose
-      out << "c [CONSTRUCTOR] Preproc solver: glucose" << config.input_type << "\n";
-      return new WrapperGlucose();
-    #endif
+#if D4_PREPROC_SOLVER == minisat
+    out << "c [CONSTRUCTOR] Preproc solver: minisat" << config.input_type
+        << "\n";
+    return new WrapperMinisat();
+#elif D4_PREPROC_SOLVER == glucose
+    out << "c [CONSTRUCTOR] Preproc solver: glucose" << config.input_type
+        << "\n";
+    return new WrapperGlucose();
+#endif
   }
 
   throw(FactoryException("Cannot create a WrapperSolver", __FILE__, __LINE__));
-}  // makeWrapperSolverPreproc
+} // makeWrapperSolverPreproc
 
 /**
    Prepare the solver by running it a given number of iteration for some queries
@@ -81,7 +83,8 @@ WrapperSolver *WrapperSolver::makeWrapperSolverPreproc(Config &config,
  */
 bool WrapperSolver::warmStart(int iteration, int sizeQuery,
                               std::vector<Var> &setOfVar, std::ostream &out) {
-  if (!solve()) return false;
+  if (!solve())
+    return false;
 
   int nbSAT = 0;
   std::vector<Lit> query(sizeQuery);
@@ -95,12 +98,14 @@ bool WrapperSolver::warmStart(int iteration, int sizeQuery,
       bool isIn = false;
       for (unsigned j = 0; !isIn && j < query.size(); j++)
         isIn = l.var() == query[j].var();
-      if (!isIn) query.push_back(l);
+      if (!isIn)
+        query.push_back(l);
     }
 
     setAssumption(query);
-    bool res = solve();  // we do not care the result.
-    if (res) nbSAT++;
+    bool res = solve(); // we do not care the result.
+    if (res)
+      nbSAT++;
     restart();
   }
 
@@ -111,6 +116,6 @@ bool WrapperSolver::warmStart(int iteration, int sizeQuery,
   out << "c Warm start process (" << sizeQuery << "): " << nbSAT << "/"
       << iteration << "\n";
   return true;
-}  // warmStart
+} // warmStart
 
-}  // namespace d4
+} // namespace d4

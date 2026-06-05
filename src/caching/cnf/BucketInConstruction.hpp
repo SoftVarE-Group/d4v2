@@ -20,7 +20,7 @@
 
 namespace d4 {
 class BucketInConstruction {
- public:
+public:
   unsigned *distrib;
   unsigned *shiftedIndexClause;
   unsigned *shiftedSizeClause;
@@ -38,4 +38,4 @@ class BucketInConstruction {
   ~BucketInConstruction();
   void reinit();
 };
-}  // namespace d4
+} // namespace d4

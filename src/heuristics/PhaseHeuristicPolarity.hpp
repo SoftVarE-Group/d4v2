@@ -23,11 +23,11 @@
 namespace d4 {
 
 class PhaseHeuristicPolarity : public PhaseHeuristic {
- private:
+private:
   PolarityManager &pm;
 
- public:
+public:
   PhaseHeuristicPolarity(PolarityManager &p, bool isReversed);
   bool selectPhase(Var v);
 };
-}  // namespace d4
+} // namespace d4

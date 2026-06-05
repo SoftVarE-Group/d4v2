@@ -69,8 +69,7 @@ ProblemManager *PreprocProj::run(ProblemManager *pin,
       ins.gmap.push_back(Glucose::mkLit(i));
   }
   ins.keepVarMap = keep_map;
-  
-    
+
   Preprocessor<double> preproc;
   preproc.setConfig(config);
 
@@ -99,9 +98,10 @@ ProblemManager *PreprocProj::run(ProblemManager *pin,
                                       Glucose::sign(ins.gmap[i]));
       }
     }
-    std::cout<<"Fixed Lits: "<<std::endl;
-    for(auto i: ins.fixedLits){
-        std::cout<<(Glucose::sign(i)?"-":" ")<<Glucose::var(i)+1<<" ,";
+    std::cout << "Fixed Lits: " << std::endl;
+    for (auto i : ins.fixedLits) {
+      std::cout << (Glucose::sign(i) ? "-" : " ") << Glucose::var(i) + 1
+                << " ,";
     }
   }
 

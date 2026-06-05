@@ -107,7 +107,8 @@ void SpecManagerCnfDyn::preUpdate(std::vector<Lit> &lits,
       for (auto &ll : m_clauses[idxCl])
         if (m_currentValue[ll.var()] == l_Undef) {
           m_occurrence[ll.intern()].removeNotBin(idxCl);
-          if (!isSelected(ll.var())&&!litIsAssigned(ll) &&m_occurrence[ll.intern()].nbNotBin == 0 &&
+          if (!isSelected(ll.var()) && !litIsAssigned(ll) &&
+              m_occurrence[ll.intern()].nbNotBin == 0 &&
               m_occurrence[ll.intern()].nbBin == 0 &&
               m_occurrence[(~ll).intern()].nbBin +
                       m_occurrence[(~ll).intern()].nbNotBin >
@@ -132,7 +133,8 @@ void SpecManagerCnfDyn::preUpdate(std::vector<Lit> &lits,
       for (auto &ll : m_clauses[idxCl]) {
         if (m_currentValue[ll.var()] == l_Undef) {
           m_occurrence[ll.intern()].removeBin(idxCl);
-          if (!isSelected(ll.var())&&!litIsAssigned(ll)&&m_occurrence[ll.intern()].nbBin == 0 &&
+          if (!isSelected(ll.var()) && !litIsAssigned(ll) &&
+              m_occurrence[ll.intern()].nbBin == 0 &&
               m_occurrence[ll.intern()].nbNotBin == 0 &&
               m_occurrence[(~ll).intern()].nbBin +
                       m_occurrence[(~ll).intern()].nbNotBin >

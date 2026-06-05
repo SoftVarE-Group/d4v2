@@ -5,8 +5,8 @@
 #include "Config.hpp"
 
 namespace d4 {
-  class ConfigConverter {
-  public:
-    static Config fromVariablesMap(boost::program_options::variables_map &vm);
-  };
-}
+class ConfigConverter {
+public:
+  static Config fromVariablesMap(boost::program_options::variables_map &vm);
+};
+} // namespace d4

@@ -1,35 +1,23 @@
 #pragma once
 #include <vector>
 
-#include "src/preprocs/PreprocManager.hpp"
 #include "3rdParty/glucose-3.0/core/Solver.h"
+#include "src/preprocs/PreprocManager.hpp"
 #include "src/problem/cnf/ProblemManagerCnf.hpp"
 
-
-
-namespace d4{
+namespace d4 {
 // Use GPMCs preproc in D4
-class PreprocGPMC:public PreprocManager{
+class PreprocGPMC : public PreprocManager {
 
   WrapperSolver *ws;
 
-public: 
+public:
   PreprocGPMC(Config &config, std::ostream &out);
   virtual ~PreprocGPMC();
-  
+
   virtual ProblemManager *run(ProblemManager *pin,
                               LastBreathPreproc &lastBreath) override;
-
 };
-}
+} // namespace d4
 
-
-
-
-namespace gpmc {
-
-
-
-
-
-}
+namespace gpmc {}

@@ -23,9 +23,8 @@
 #include "DataInfo.hpp"
 
 namespace d4 {
-template <class T>
-class CachedBucket {
- public:
+template <class T> class CachedBucket {
+public:
   char *data;
   DataInfo header;
   T fc;
@@ -38,7 +37,7 @@ class CachedBucket {
   inline void set(char *d, DataInfo &dnew) {
     data = d;
     header = dnew;
-  }  // set
+  } // set
 
   inline void lockedBucket(T v) { fc = v; }
 
@@ -58,4 +57,4 @@ class CachedBucket {
   inline DataInfo &getDataInfo() { return header; }
   inline bool sameHeader(CachedBucket<T> &b) { return header == b.header; }
 };
-}  // namespace d4
+} // namespace d4

@@ -34,7 +34,7 @@ PhaseSelectorDynamic::PhaseSelectorDynamic(
       << " dynamic(" << limitRatio << ")\n";
 
   m_limitRatio = limitRatio;
-}  // constructor
+} // constructor
 
 /**
    Check out if the current tree decomposition is still OK. To do it we check
@@ -43,9 +43,10 @@ PhaseSelectorDynamic::PhaseSelectorDynamic(
    @param[in] component, the current set of variables.
  */
 bool PhaseSelectorDynamic::isStillOk(std::vector<Var> &component) {
-  if (!component.size() || component.size() <= 10) return true;
+  if (!component.size() || component.size() <= 10)
+    return true;
   DistribSize d = m_staticPartitioner->computeDistribSize(component);
   return d.getRatio() > m_limitRatio;
-}  // isStillok
+} // isStillok
 
-}  // namespace d4
+} // namespace d4

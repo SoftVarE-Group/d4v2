@@ -22,11 +22,11 @@
 
 namespace d4 {
 class ScoringMethodMom : public ScoringMethod {
- private:
+private:
   SpecManagerCnf &om;
 
- public:
+public:
   ScoringMethodMom(SpecManagerCnf &om);
   double computeScore(Var v);
 };
-}  // namespace d4
+} // namespace d4

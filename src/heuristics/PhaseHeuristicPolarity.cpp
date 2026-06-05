@@ -28,7 +28,7 @@ namespace d4 {
 PhaseHeuristicPolarity::PhaseHeuristicPolarity(PolarityManager &p, bool isRev)
     : pm(p) {
   isReversed = isRev;
-}  // constructor
+} // constructor
 
 /**
    We assign the next varaible regarding the polarity given by a solver.  We
@@ -38,6 +38,6 @@ PhaseHeuristicPolarity::PhaseHeuristicPolarity(PolarityManager &p, bool isRev)
  */
 bool PhaseHeuristicPolarity::selectPhase(Var v) {
   return (pm.getPolarity(v) + isReversed) & 1;
-}  // selectPhase
+} // selectPhase
 
-}  // namespace d4
+} // namespace d4

@@ -29,15 +29,15 @@ namespace d4 {
 enum TypeQuery { QueryCounting, QueryDecision, QueryEnd };
 
 class QueryManager {
- private:
+private:
   FILE *m_in;
   void readNextQuery(std::vector<Lit> &query);
 
- public:
+public:
   QueryManager() = delete;
   QueryManager(std::string &inputFile);
   ~QueryManager();
   TypeQuery next(std::vector<Lit> &query);
 };
 
-}  // namespace d4
+} // namespace d4

@@ -32,14 +32,11 @@
 #include "src/specs/SpecManager.hpp"
 
 namespace d4 {
-template <class T>
-class CacheCleaningManager;
-template <class T>
-class BucketManager;
+template <class T> class CacheCleaningManager;
+template <class T> class BucketManager;
 
-template <class T>
-class CacheManager {
- public:
+template <class T> class CacheManager {
+public:
   bool verb;
 
   // statistics
@@ -84,11 +81,11 @@ class CacheManager {
     verb = m_nbRemoveEntry = sumAffectedHitCache = 0;
     m_limitVarCached = (nbVar < MAX_NBVAR_CACHED) ? nbVar : MAX_NBVAR_CACHED;
 
-    m_cacheCleaningManager =
-        CacheCleaningManager<T>::makeCacheCleaningManager(config, this, nbVar, out);
+    m_cacheCleaningManager = CacheCleaningManager<T>::makeCacheCleaningManager(
+        config, this, nbVar, out);
     m_bucketManager =
         BucketManager<T>::makeBucketManager(config, this, *specs, out);
-  }  // constructor
+  } // constructor
 
   /**
    * @brief Destroy the Cache Manager object
@@ -96,7 +93,7 @@ class CacheManager {
   virtual ~CacheManager() {
     delete m_cacheCleaningManager;
     delete m_bucketManager;
-  }  // destructor
+  } // destructor
 
   /**
    * @brief Factory.
@@ -107,18 +104,19 @@ class CacheManager {
    * @param out is the stream where are printed out the logs.
    * @return CacheManager<T>*
    */
-  static CacheManager<T> *makeCacheManager(Config &config,
-                                           unsigned nbVar, SpecManager *specs,
+  static CacheManager<T> *makeCacheManager(Config &config, unsigned nbVar,
+                                           SpecManager *specs,
                                            std::ostream &out) {
     out << "c [CACHE] Cache method used: " << config.cache_method << "\n";
 
     if (config.cache_method == "no-collision")
       return new CacheNoCollision<T>(config, nbVar, specs, out);
-    if (config.cache_method == "list") return new CacheList<T>(config, nbVar, specs, out);
+    if (config.cache_method == "list")
+      return new CacheList<T>(config, nbVar, specs, out);
 
     throw(
         FactoryException("Cannot create a ProblemManager", __FILE__, __LINE__));
-  }  // makeCacheManager
+  } // makeCacheManager
 
   virtual void pushInHashTable(CachedBucket<T> &cb, unsigned int hashValue,
                                T val) = 0;
@@ -126,8 +124,8 @@ class CacheManager {
                                               unsigned hashValue) = 0;
   virtual void initHashTable(unsigned maxVar) = 0;
 
-  virtual unsigned removeEntry(
-      std::function<bool(CachedBucket<T> &c)> test) = 0;
+  virtual unsigned
+  removeEntry(std::function<bool(CachedBucket<T> &c)> test) = 0;
 
   /**
    * @brief Get the memory used by the cache (to store the ).
@@ -158,7 +156,7 @@ class CacheManager {
    */
   inline void releaseMemory(char *data, int size) {
     this->m_bucketManager->releaseMemory(data, size);
-  }  // releaseMemory
+  } // releaseMemory
 
   inline void printCacheInformation(std::ostream &out) {
     out << "c \033[1m\033[34mCache Information\033[0m\n";
@@ -166,7 +164,7 @@ class CacheManager {
     out << "c Number of negative hit: " << m_nbNegativeHit << "\n";
     m_cacheCleaningManager->printCleaningInfo(out);
     out << "c\n";
-  }  // printCacheInformation
+  } // printCacheInformation
 
   /**
    * @brief Compute the hash value of an entry.
@@ -176,7 +174,7 @@ class CacheManager {
    */
   inline unsigned computeHash(CachedBucket<T> &bucket) {
     return hashMethod.hash(bucket.data, bucket.szData(), bucket.getInfo());
-  }  // computeHash
+  } // computeHash
 
   /**
    * @brief Add an entry in the cache structure.
@@ -186,7 +184,7 @@ class CacheManager {
    */
   void addInCache(TmpEntry<T> &cb, T val) {
     pushInHashTable(cb.e, cb.hashValue, val);
-  }  // addInCache
+  } // addInCache
 
   /**
    * @brief Take a bucket manager (in attribute) as well as a set of variables
@@ -212,12 +210,13 @@ class CacheManager {
 
     m_cacheCleaningManager->updateCountCachedBucket(cacheBucket,
                                                     varConnected.size());
-    if (!cacheBucket) return TmpEntry<T>(*formulaBucket, hashValue, false);
+    if (!cacheBucket)
+      return TmpEntry<T>(*formulaBucket, hashValue, false);
 
     m_bucketManager->releaseMemory(formulaBucket->data,
                                    formulaBucket->szData());
     return TmpEntry<T>(*cacheBucket, hashValue, true);
-  }  // searchInCache
+  } // searchInCache
 
   /**
    * @brief Release the memory allocated to store a bucket.
@@ -226,7 +225,7 @@ class CacheManager {
    */
   void releaseMemory(CachedBucket<T> &formulaBucket) {
     m_bucketManager->releaseMemory(formulaBucket.data, formulaBucket.szData());
-  }  // releaseMemory
+  } // releaseMemory
 
   /**
    * @brief Set the information concerning the number of clauses, variables and
@@ -238,6 +237,6 @@ class CacheManager {
   void setInfoFormula(unsigned mVar) {
     minAffectedHitCache = mVar;
     m_nbInitVar = mVar;
-  }  // setInfoFormula
+  } // setInfoFormula
 };
-}  // namespace d4
+} // namespace d4

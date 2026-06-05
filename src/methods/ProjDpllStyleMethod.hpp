@@ -84,9 +84,8 @@ private:
       m_operation =
           new DecisionDNNFOperation<T, U>(m_problem, m_specs, m_solver);
     }
-    if constexpr (std::is_same_v<O,   PersistentNodesOperation<T>>) {
-      m_operation = new PersistentNodesOperation<T>(
-          m_problem, config.output);
+    if constexpr (std::is_same_v<O, PersistentNodesOperation<T>>) {
+      m_operation = new PersistentNodesOperation<T>(m_problem, config.output);
     }
     if constexpr (std::is_same_v<O, CountingOperation<T>>) {
       m_operation = new CountingOperation<T>(m_problem);
@@ -152,7 +151,8 @@ public:
     assert(m_specs);
 
     // we initialize the object used to compute score and partition.
-    m_hVar = ScoringMethod::makeScoringMethod(config, *m_specs, *m_solver, m_out);
+    m_hVar =
+        ScoringMethod::makeScoringMethod(config, *m_specs, *m_solver, m_out);
     m_hPhase =
         PhaseHeuristic::makePhaseHeuristic(config, *m_specs, *m_solver, m_out);
 
@@ -175,11 +175,11 @@ public:
         double(m_specs->nbSelected()) / double(m_specs->getNbVariable());
     double clause_var_ratio = double(m_specs->nbSelected()) /
                               ((SpecManagerCnf *)m_specs)->getNbClause();
-    if (projected_ratio<0.10 | clause_var_ratio> 0.5) {
+    if (projected_ratio < 0.10 | clause_var_ratio > 0.5) {
       m_hCutSet = PartitioningHeuristic::makePartitioningHeuristicNone(m_out);
     } else {
       m_hCutSet = PartitioningHeuristic::makePartitioningHeuristic(
-              config, *m_specs, *m_solver, m_out);
+          config, *m_specs, *m_solver, m_out);
     }
 
     assert(m_hVar && m_hPhase && m_hCutSet);

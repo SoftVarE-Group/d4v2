@@ -28,13 +28,12 @@
 #include "src/specs/SpecManager.hpp"
 
 namespace d4 {
-template <class T>
-class CacheList : public CacheManager<T> {
- private:
+template <class T> class CacheList : public CacheManager<T> {
+private:
   const unsigned SIZE_HASH = 999331;
   std::vector<std::vector<CachedBucket<T>>> hashTable;
 
- public:
+public:
   /**
    * @brief Construct a new Cache List object
    *
@@ -48,12 +47,12 @@ class CacheList : public CacheManager<T> {
       : CacheManager<T>(config, nbVar, specs, out) {
     out << "c [CACHE LIST CONSTRUCTOR]\n";
     initHashTable(nbVar);
-  }  // constructor
+  } // constructor
 
   /**
    * @brief Destroy the Cache List object
    */
-  ~CacheList() { hashTable.clear(); }  // destructor
+  ~CacheList() { hashTable.clear(); } // destructor
 
   /**
    * @brief Add an entry in the cache.
@@ -72,7 +71,7 @@ class CacheList : public CacheManager<T> {
     this->m_sumDataSize += cb.szData();
     this->m_cacheCleaningManager->initCountCachedBucket(&cbIn);
     this->m_nbEntry++;
-  }  // pushinhashtable
+  } // pushinhashtable
 
   /**
    * @brief Research in the set of buckets if the bucket pointed by i already
@@ -88,7 +87,8 @@ class CacheList : public CacheManager<T> {
         hashTable[hashValue % SIZE_HASH];
 
     for (auto &cbi : listCollision) {
-      if (!cb.sameHeader(cbi)) continue;
+      if (!cb.sameHeader(cbi))
+        continue;
 
       if (!memcmp(refData, cbi.data, cbi.szData())) {
         this->m_nbPositiveHit++;
@@ -98,7 +98,7 @@ class CacheList : public CacheManager<T> {
 
     this->m_nbNegativeHit++;
     return NULL;
-  }  // bucketAlreadyExist
+  } // bucketAlreadyExist
 
   /**
    * Create a bucket and store it in the cache.
@@ -111,7 +111,7 @@ class CacheList : public CacheManager<T> {
         this->m_bucketManager->collectBuckect(varConnected);
     unsigned int hashValue = computeHash(*formulaBucket);
     pushInHashTable(*formulaBucket, hashValue, c);
-  }  // createBucket
+  } // createBucket
 
   /**
    * @brief Init the hashTable.
@@ -124,7 +124,7 @@ class CacheList : public CacheManager<T> {
     // init hash tables
     hashTable.clear();
     hashTable.resize(SIZE_HASH, std::vector<CachedBucket<T>>());
-  }  // initHashTable
+  } // initHashTable
 
   /**
    * @brief Clean up the cache.
@@ -152,6 +152,6 @@ class CacheList : public CacheManager<T> {
       list.resize(j);
     }
     return nbRemoveEntry;
-  }  // removeEntry
+  } // removeEntry
 };
-}  // namespace d4
+} // namespace d4

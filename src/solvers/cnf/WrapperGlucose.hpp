@@ -25,7 +25,7 @@
 
 namespace d4 {
 class WrapperGlucose : public WrapperSolver {
- private:
+private:
   Glucose::Solver s;
   Glucose::vec<Glucose::Var> m_setOfVar_m;
 
@@ -34,10 +34,10 @@ class WrapperGlucose : public WrapperSolver {
   bool m_activeModel;
   bool m_needModel;
 
- protected:
+protected:
   using WrapperSolver::m_isInAssumption;
 
- public:
+public:
   void initSolver(ProblemManager &p) override;
   bool solve(std::vector<Var> &setOfVar) override;
   bool solve() override;
@@ -66,4 +66,4 @@ class WrapperGlucose : public WrapperSolver {
   unsigned getNbConflict() override;
   void setReversePolarity(bool value) override;
 };
-}  // namespace d4
+} // namespace d4

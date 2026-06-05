@@ -24,10 +24,9 @@
 #include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
-template <class T>
-class TrueNode : public Node<T> {
- public:
-  T nbModels;  // is used to get an index to print out the problem.
+template <class T> class TrueNode : public Node<T> {
+public:
+  T nbModels; // is used to get an index to print out the problem.
 
   using Node<T>::header;
 
@@ -37,7 +36,7 @@ class TrueNode : public Node<T> {
   TrueNode() {
     header.typeNode = TypeNode::TypeTrueNode;
     header.stamp = 0;
-  }  // constructor.
+  } // constructor.
 
   /**
      Deallocate the memory.
@@ -48,10 +47,11 @@ class TrueNode : public Node<T> {
    */
   static void deallocate(Node<T> *node, void (**func)(), unsigned globalStamp) {
     auto *p = reinterpret_cast<TrueNode *>(node);
-    if (p->header.stamp == globalStamp) return;
+    if (p->header.stamp == globalStamp)
+      return;
     p->header.stamp = globalStamp;
     p->nbModels.~T();
-  }  // destructor
+  } // destructor
 
   /**
      Ask for the number of models of the formula under an interpretation.
@@ -71,7 +71,7 @@ class TrueNode : public Node<T> {
                            std::vector<ValueVar> &fixedValue,
                            ProblemManager &problem, unsigned globalStamp) {
     return T(1);
-  }  // computeNbModels
+  } // computeNbModels
 
   /**
      Ask if the formula is satisfiable under an interpretation.
@@ -86,7 +86,7 @@ class TrueNode : public Node<T> {
   static bool isSAT(Node<T> *node, bool (**func)(),
                     std::vector<ValueVar> &fixedValue, unsigned globalStamp) {
     return true;
-  }  // isSAT
+  } // isSAT
 
   /**
      Print out the NNF in a stream.
@@ -103,13 +103,14 @@ class TrueNode : public Node<T> {
                            std::ostream &out, unsigned &idx,
                            unsigned globalStamp) {
     auto *p = reinterpret_cast<TrueNode *>(node);
-    if (p->header.stamp == globalStamp) return (unsigned)p->nbModels;
+    if (p->header.stamp == globalStamp)
+      return (unsigned)p->nbModels;
     p->nbModels = idx++;
 
     out << "t " << (unsigned)p->nbModels << " 0\n";
 
     p->header.stamp = globalStamp;
     return (unsigned)p->nbModels;
-  }  // printNNF
+  } // printNNF
 };
-}  // namespace d4
+} // namespace d4

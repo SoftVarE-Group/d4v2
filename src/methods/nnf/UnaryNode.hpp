@@ -25,9 +25,8 @@
 #include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
-template <class T, typename U>
-class UnaryNode : public Node<T> {
- public:
+template <class T, typename U> class UnaryNode : public Node<T> {
+public:
   using Node<T>::header;
   T nbModels;
   Branch<T, U> b;
@@ -54,9 +53,11 @@ class UnaryNode : public Node<T> {
     b.nbFree = branch.freeVars.size();
 
     unsigned pos = 0;
-    for (auto &l : branch.unitLits) data[pos++] = l.intern();
-    for (auto &v : branch.freeVars) data[pos++] = v;
-  }  // constructor
+    for (auto &l : branch.unitLits)
+      data[pos++] = l.intern();
+    for (auto &v : branch.freeVars)
+      data[pos++] = v;
+  } // constructor
 
   /**
      Deallocate the memory.
@@ -66,13 +67,14 @@ class UnaryNode : public Node<T> {
      @param[in] globalstamp, get the stamp number.
   */
   static void deallocate(Node<T> *node, void (**func)(), unsigned globalStamp) {
-    if (node->header.stamp == globalStamp) return;
+    if (node->header.stamp == globalStamp)
+      return;
     node->header.stamp = globalStamp;
     reinterpret_cast<UnaryNode *>(node)->nbModels.~T();
     reinterpret_cast<void (**)(Node<T> *, void (**func)(), unsigned)>(
         func)[(reinterpret_cast<UnaryNode *>(node)->b).d->header.typeNode](
         (reinterpret_cast<UnaryNode *>(node)->b).d, func, globalStamp);
-  }  // destructor
+  } // destructor
 
   /**
      Ask for the number of models of the formula under an interpretation.
@@ -91,12 +93,13 @@ class UnaryNode : public Node<T> {
                            ProblemManager &problem, unsigned globalStamp) {
     auto *p = reinterpret_cast<UnaryNode *>(node);
 
-    if (node->header.stamp == globalStamp) return p->nbModels;
+    if (node->header.stamp == globalStamp)
+      return p->nbModels;
     p->nbModels =
         p->b.computeNbModels(func, p->data, fixedValue, problem, globalStamp);
     node->header.stamp = globalStamp;
     return p->nbModels;
-  }  // computeNbModels
+  } // computeNbModels
 
   /**
      Ask if the formula is satisfiable under an interpretation.
@@ -112,11 +115,12 @@ class UnaryNode : public Node<T> {
                     std::vector<ValueVar> &fixedValue, unsigned globalStamp) {
     auto *p = reinterpret_cast<UnaryNode *>(node);
 
-    if (node->header.stamp == globalStamp) return p->nbModels == 1;
+    if (node->header.stamp == globalStamp)
+      return p->nbModels == 1;
     p->nbModels = p->b.isSAT(func, p->data, fixedValue, globalStamp);
     node->header.stamp = globalStamp;
     return p->nbModels == 1;
-  }  // isSAT
+  } // isSAT
 
   /**
      Print out the NNF in a stream.
@@ -133,7 +137,8 @@ class UnaryNode : public Node<T> {
                            std::ostream &out, unsigned &idx,
                            unsigned globalStamp) {
     auto *p = reinterpret_cast<UnaryNode *>(node);
-    if (p->header.stamp == globalStamp) return (unsigned)p->nbModels;
+    if (p->header.stamp == globalStamp)
+      return (unsigned)p->nbModels;
     p->nbModels = idx++;
 
     out << "o " << (unsigned)p->nbModels << " 0\n";
@@ -141,6 +146,6 @@ class UnaryNode : public Node<T> {
 
     p->header.stamp = globalStamp;
     return (unsigned)p->nbModels;
-  }  // printNNF
+  } // printNNF
 };
-}  // namespace d4
+} // namespace d4

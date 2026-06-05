@@ -31,7 +31,7 @@
 
 namespace d4 {
 class PartitioningHeuristicStatic : public PartitioningHeuristic {
- protected:
+protected:
   WrapperSolver &m_s;
   SpecManagerCnf &m_om;
   EquivExtractor m_em;
@@ -46,22 +46,22 @@ class PartitioningHeuristicStatic : public PartitioningHeuristic {
   bool m_reduceFormula;
   bool m_equivSimp;
 
- protected:
+protected:
   virtual void init(std::ostream &out) = 0;
 
- protected:
-  PartitioningHeuristicStatic(Config &config, WrapperSolver &s,
-                              SpecManager &om, std::ostream &out);
+protected:
+  PartitioningHeuristicStatic(Config &config, WrapperSolver &s, SpecManager &om,
+                              std::ostream &out);
 
-  PartitioningHeuristicStatic(Config &config, WrapperSolver &s,
-                              SpecManager &om, int nbClause, int nbVar,
-                              int sumSize, std::ostream &out);
+  PartitioningHeuristicStatic(Config &config, WrapperSolver &s, SpecManager &om,
+                              int nbClause, int nbVar, int sumSize,
+                              std::ostream &out);
 
- public:
+public:
   virtual ~PartitioningHeuristicStatic();
 
   static PartitioningHeuristicStatic *makePartitioningHeuristicStatic(
-          Config &config, WrapperSolver &s, SpecManager &om, int nbClause,
+      Config &config, WrapperSolver &s, SpecManager &om, int nbClause,
       int nbVar, int sumSize, const std::string &type, std::ostream &out);
 
   virtual void computeCutSet(std::vector<Var> &component,
@@ -70,4 +70,4 @@ class PartitioningHeuristicStatic : public PartitioningHeuristic {
   virtual bool isInitialized() { return true; }
   virtual bool isStillOk(std::vector<Var> &component) = 0;
 };
-}  // namespace d4
+} // namespace d4

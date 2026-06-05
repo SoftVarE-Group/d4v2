@@ -33,12 +33,11 @@ struct LastBreathPreproc {
 };
 
 class PreprocManager {
- public:
-  static PreprocManager *makePreprocManager(Config &config,
-                                            std::ostream &out);
+public:
+  static PreprocManager *makePreprocManager(Config &config, std::ostream &out);
 
   virtual ~PreprocManager() {}
   virtual ProblemManager *run(ProblemManager *pin,
                               LastBreathPreproc &lastBreath) = 0;
 };
-}  // namespace d4
+} // namespace d4

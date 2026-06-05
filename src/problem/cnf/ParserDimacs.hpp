@@ -32,13 +32,13 @@
 
 namespace d4 {
 class ParserDimacs {
- private:
+private:
   int parse_DIMACS_main(BufferRead &in, ProblemManagerCnf *problemManager);
 
   void readListIntTerminatedByZero(BufferRead &in, std::vector<int> &list);
   void parseWeightedLit(BufferRead &in, std::vector<double> &weightLit);
 
- public:
+public:
   int parse_DIMACS(std::string input_stream, ProblemManagerCnf *problemManager);
 };
-}  // namespace d4
+} // namespace d4

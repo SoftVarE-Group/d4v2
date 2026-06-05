@@ -17,11 +17,11 @@
  */
 #pragma once
 
+#include <cstdint>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
 #include <sys/types.h>
-#include <cstdint>
 
 #include "src/caching/CacheManager.hpp"
 #include "src/caching/CachedBucket.hpp"
@@ -119,7 +119,8 @@ public:
     assert(m_specs);
 
     // we initialize the object used to compute score and partition.
-    m_hVar = ScoringMethod::makeScoringMethod(config, *m_specs, *m_solver, m_out);
+    m_hVar =
+        ScoringMethod::makeScoringMethod(config, *m_specs, *m_solver, m_out);
     m_hPhase =
         PhaseHeuristic::makePhaseHeuristic(config, *m_specs, *m_solver, m_out);
 
@@ -145,10 +146,10 @@ public:
 
     // no partitioning heuristic for the moment.
     assert(m_hVar && m_hPhase);
-    m_cacheInd = CacheManager<T>::makeCacheManager(config, m_problem->getNbVar(),
-                                                   m_specs, m_out);
+    m_cacheInd = CacheManager<T>::makeCacheManager(
+        config, m_problem->getNbVar(), m_specs, m_out);
     m_cacheMax = CacheManager<MinSharpSatResult>::makeCacheManager(
-            config, m_problem->getNbVar(), m_specs, m_out);
+        config, m_problem->getNbVar(), m_specs, m_out);
 
     // init the clock time.
     initTimer();

@@ -21,11 +21,11 @@
 namespace d4 {
 
 class PhaseHeuristicOccurrence : public PhaseHeuristic {
- private:
+private:
   SpecManager &sm;
 
- public:
+public:
   PhaseHeuristicOccurrence(SpecManager &s, bool isRev);
   bool selectPhase(Var v);
 };
-}  // namespace d4
+} // namespace d4

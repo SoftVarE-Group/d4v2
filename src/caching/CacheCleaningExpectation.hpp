@@ -24,10 +24,8 @@
 #include "CachedBucket.hpp"
 
 namespace d4 {
-template <class T>
-class CacheCleaningManager;
-template <class T>
-class CacheManager;
+template <class T> class CacheCleaningManager;
+template <class T> class CacheManager;
 
 struct StatVarSizeCache {
   unsigned long negative;
@@ -37,7 +35,7 @@ struct StatVarSizeCache {
 
 template <class T>
 class CacheCleaningExpectation : public CacheCleaningManager<T> {
- private:
+private:
   const double INC_THRESHOD = 0.05;
   const double INIT_THRESHOD = 0;
 
@@ -51,7 +49,7 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
   std::vector<StatVarSizeCache> m_statVar;
   using CacheCleaningManager<T>::m_cache;
 
- public:
+public:
   /**
      Constructor.
 
@@ -71,7 +69,7 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
     this->m_cache = cache;
 
     m_statVar.resize(nbVar + 1, {0, 0, 0});
-  }  // constructor
+  } // constructor
 
   /**
      We init the count of a bucket with the number of times we ask for an entry
@@ -81,7 +79,7 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
    */
   void initCountCachedBucket(CachedBucket<T> *cb) {
     m_statVar[cb->nbVar()].number++;
-  }  // initCountCachedBucket
+  } // initCountCachedBucket
 
   /**
    * @brief Update the information about the bucket.
@@ -98,7 +96,7 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
       m_statVar[nbVar].negative++;
       m_nbNegativeHit++;
     }
-  }  // updateCountCachedBucket
+  } // updateCountCachedBucket
 
   /**
    * @brief We remove the entry regarding if they have been used recently and
@@ -118,7 +116,8 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
         m_statVar[i].positive >>= 1;
       }
 
-      if (ratio > m_threshold) break;
+      if (ratio > m_threshold)
+        break;
 
       limit--;
     }
@@ -136,7 +135,7 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
     std::cout << "c #rm=" << nbRemoveEntry << " #allRm=" << m_nbRemoveEntry
               << " #entries=" << m_cache->getNbEntry() << " limit=" << limit
               << "\n";
-  }  // reduceCache
+  } // reduceCache
 
   /**
      Print out statistics about the cleaning process.
@@ -149,4 +148,4 @@ class CacheCleaningExpectation : public CacheCleaningManager<T> {
   }
 };
 
-}  // namespace d4
+} // namespace d4

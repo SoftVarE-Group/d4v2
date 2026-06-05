@@ -24,7 +24,7 @@ namespace d4 {
 /**
    Constructor.
  */
-DataInfo::DataInfo() { info1 = 0; }  // constructor
+DataInfo::DataInfo() { info1 = 0; } // constructor
 
 /**
  * @brief Construct a new Data Info:: Data Info object
@@ -45,6 +45,6 @@ DataInfo::DataInfo(unsigned szData, unsigned nbVar, unsigned nbBitVar,
   assert(nbVar < (1 << 21));
   assert(szData < (1 << 21));
   assert(szData == this->szData());
-}  // constructor
+} // constructor
 
-}  // namespace d4
+} // namespace d4

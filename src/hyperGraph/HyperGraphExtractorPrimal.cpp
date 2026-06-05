@@ -36,7 +36,7 @@ HyperGraphExtractorPrimal::HyperGraphExtractorPrimal(unsigned nbVar,
   m_countClause.resize(nbClause + 1, 0);
 
   m_mapVarEdge.resize(nbVar + 1, nullptr);
-}  // constructor.
+} // constructor.
 
 /**
    Collect the set of hyper egdes (their indices actually) that are between
@@ -58,11 +58,12 @@ void HyperGraphExtractorPrimal::clashHyperEdgeIndex(
 
     for (unsigned j = 1; !clash && j < *edge; j++)
       clash = part != partition[edge[1 + j]];
-    if (clash) indices.push_back(edge);
+    if (clash)
+      indices.push_back(edge);
 
-    edge = &(edge[*edge + 1]);  // next clause.
+    edge = &(edge[*edge + 1]); // next clause.
   }
-}  // clashHyperEdgeIndex
+} // clashHyperEdgeIndex
 
 /**
    Extract the cut that make the hyper graph not partitioned.
@@ -78,7 +79,8 @@ void HyperGraphExtractorPrimal::extractCutFromEdges(
     int cpt0 = 0, cpt1 = 0;
     for (unsigned i = 0; i < *edge; i++) {
       unsigned x = edge[i + 1];
-      if (m_markedVar[x]) continue;
+      if (m_markedVar[x])
+        continue;
       if (partition[x])
         cpt1++;
       else
@@ -95,8 +97,9 @@ void HyperGraphExtractorPrimal::extractCutFromEdges(
     }
   }
 
-  for (auto &x : cutSet) m_markedVar[x] = false;  // reinit
-}  // extractCutFromEdges
+  for (auto &x : cutSet)
+    m_markedVar[x] = false; // reinit
+} // extractCutFromEdges
 
 /**
    Check all the hyper edges in order to extract those their are conflictual
@@ -114,7 +117,7 @@ void HyperGraphExtractorPrimal::extractCutFromHyperGraph(
   std::vector<unsigned *> edgesCut;
   clashHyperEdgeIndex(hypergraph, partition, edgesCut);
   extractCutFromEdges(edgesCut, partition, cutSet);
-}  // extractCutFromHyperGraph
+} // extractCutFromHyperGraph
 
 /**
    Remove the edges they are subsubmed.
@@ -126,7 +129,8 @@ void HyperGraphExtractorPrimal::removeSubsumEdges(HyperGraph &hypergraph) {
   for (unsigned i = 0; i < hypergraph.getSize(); i++) {
     if (m_hashEdges[i]) {
       // mark the varaibles of the current edge.
-      for (unsigned j = 0; j < *edge; j++) m_markedVar[edge[1 + j]] = true;
+      for (unsigned j = 0; j < *edge; j++)
+        m_markedVar[edge[1 + j]] = true;
 
       // visit the other edges to compute those that subsubmed or are subsubmed.
       bool subsumed = false;
@@ -137,12 +141,13 @@ void HyperGraphExtractorPrimal::removeSubsumEdges(HyperGraph &hypergraph) {
           if (m_hashEdges[i] == inter || m_hashEdges[k] == inter) {
             unsigned cpt = 0;
             for (unsigned j = 0; j < *kedge; j++)
-              if (m_markedVar[kedge[1 + j]]) cpt++;
+              if (m_markedVar[kedge[1 + j]])
+                cpt++;
 
             if (cpt == *edge)
-              subsumed = true;  // the current edge is smaller then include
+              subsumed = true; // the current edge is smaller then include
             else if (cpt == *kedge)
-              m_hashEdges[k] = 0;  // the edges k subsums i
+              m_hashEdges[k] = 0; // the edges k subsums i
           }
         }
 
@@ -150,11 +155,12 @@ void HyperGraphExtractorPrimal::removeSubsumEdges(HyperGraph &hypergraph) {
       }
 
       for (unsigned j = 0; j < *edge; j++)
-        m_markedVar[edge[1 + j]] = false;  // reinit
-      if (subsumed) m_hashEdges[i] = 0;
+        m_markedVar[edge[1 + j]] = false; // reinit
+      if (subsumed)
+        m_hashEdges[i] = 0;
     }
 
-    edge = &(edge[*edge + 1]);  // progress to the next clause.
+    edge = &(edge[*edge + 1]); // progress to the next clause.
   }
 
   // remove the empty edges (the edges their hash value are zero)
@@ -169,15 +175,15 @@ void HyperGraphExtractorPrimal::removeSubsumEdges(HyperGraph &hypergraph) {
           jedge[k + 1] = iedge[k + 1];
       }
 
-      jedge = &(jedge[*jedge + 1]);  // progress to the next clause.
+      jedge = &(jedge[*jedge + 1]); // progress to the next clause.
       j++;
     }
 
-    iedge = next;  // progress to the next clause.
+    iedge = next; // progress to the next clause.
   }
 
   hypergraph.setSize(j);
-}  // removeSubsumEdges
+} // removeSubsumEdges
 
 /**
    Extract the hyper graph from the problem regarding the options.
@@ -192,7 +198,7 @@ void HyperGraphExtractorPrimal::removeSubsumEdges(HyperGraph &hypergraph) {
  */
 void HyperGraphExtractorPrimal::constructHyperGraph(
     SpecManagerCnf &om, std::vector<Var> &component,
-    std::vector<Var> &equivClass, std::vector<std::vector<Var> > &equivVar,
+    std::vector<Var> &equivClass, std::vector<std::vector<Var>> &equivVar,
     bool reduceFormula, std::vector<Var> &considered, HyperGraph &hypergraph) {
   m_hashEdges.resize(0);
   m_idxClauses.resize(0);
@@ -215,7 +221,8 @@ void HyperGraphExtractorPrimal::constructHyperGraph(
       }
     }
 
-    for (unsigned i = 0; i < *edge; i++) m_markedVar[edge[i + 1]] = false;
+    for (unsigned i = 0; i < *edge; i++)
+      m_markedVar[edge[i + 1]] = false;
     if (*edge > 1) {
       assert(hash);
       m_hashEdges.push_back(hash);
@@ -225,7 +232,8 @@ void HyperGraphExtractorPrimal::constructHyperGraph(
   }
 
   // remove useless edges.
-  if (reduceFormula) removeSubsumEdges(hypergraph);
-}  // constructHyperGraph
+  if (reduceFormula)
+    removeSubsumEdges(hypergraph);
+} // constructHyperGraph
 
-}  // namespace d4
+} // namespace d4

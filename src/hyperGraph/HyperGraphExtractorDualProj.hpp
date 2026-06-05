@@ -30,20 +30,19 @@
 namespace d4 {
 class HyperGraphExtractorDualProj : public HyperGraphExtractorDual {
 private:
-  void compute_stats(SpecManagerCnf& specs);
+  void compute_stats(SpecManagerCnf &specs);
   std::vector<int> m_cost;
-  SpecManagerCnf& m_specs;
+  SpecManagerCnf &m_specs;
   int m_nproj_cost;
 
 public:
-  HyperGraphExtractorDualProj(unsigned nbVar, unsigned nbClause, SpecManagerCnf& specs,int nproj_cost=100);
+  HyperGraphExtractorDualProj(unsigned nbVar, unsigned nbClause,
+                              SpecManagerCnf &specs, int nproj_cost = 100);
 
   void constructHyperGraph(SpecManagerCnf &om, std::vector<Var> &component,
                            std::vector<Var> &equivClass,
                            std::vector<std::vector<Var>> &equivVar,
                            bool reduceFormula, std::vector<Var> &considered,
                            HyperGraph &hypergraph);
-
-
 };
 } // namespace d4

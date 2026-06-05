@@ -31,7 +31,7 @@ PhaseSelectorNone::PhaseSelectorNone(
     : PhaseSelectorManager(staticPartitioner) {
   out << "c [CONSTRUCTOR] Switching between static and dynamic decomposition:"
       << " none\n";
-}  // constructor
+} // constructor
 
 /**
    Say if it is still OK to use the static decomposition. Here we return alway
@@ -43,6 +43,6 @@ PhaseSelectorNone::PhaseSelectorNone(
  */
 bool PhaseSelectorNone::isStillOk(std::vector<Var> &component) {
   return false;
-}  // isStillok
+} // isStillok
 
-}  // namespace d4
+} // namespace d4

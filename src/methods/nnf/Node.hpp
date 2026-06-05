@@ -24,16 +24,11 @@
 #include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
-template <class T, typename U>
-class DecomposableAndNode;
-template <class T, typename U>
-class BinaryDeterministicOrNode;
-template <class T, typename U>
-class UnaryNode;
-template <class T>
-class TrueNode;
-template <class T>
-class FalseNode;
+template <class T, typename U> class DecomposableAndNode;
+template <class T, typename U> class BinaryDeterministicOrNode;
+template <class T, typename U> class UnaryNode;
+template <class T> class TrueNode;
+template <class T> class FalseNode;
 
 enum TypeNode {
   TypeIteNode,
@@ -45,9 +40,8 @@ enum TypeNode {
 };
 enum ValueVar { isTrue, isFalse, isNotAssigned };
 
-template <class T>
-class Node {
- public:
+template <class T> class Node {
+public:
   struct {
     unsigned typeNode : 4;
     unsigned stamp : 28;
@@ -55,4 +49,4 @@ class Node {
 
   Node() { header = {0, 0}; }
 };
-}  // namespace d4
+} // namespace d4

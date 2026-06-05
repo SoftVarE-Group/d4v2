@@ -25,7 +25,8 @@
 namespace d4 {
 
 /**
-   Select from the arguments store in config the good problem manager and return it.
+   Select from the arguments store in config the good problem manager and return
+   it.
 
    @param[in] config, the configuration.
 
@@ -33,15 +34,17 @@ namespace d4 {
  */
 ProblemManager *ProblemManager::makeProblemManager(Config &config,
                                                    std::ostream &out) {
-  out << "c [CONSTRUCTOR] Problem: " << config.input << " " << config.input_type << "\n";
+  out << "c [CONSTRUCTOR] Problem: " << config.input << " " << config.input_type
+      << "\n";
 
   ProblemManager *ret = NULL;
-  if (config.input_type == "cnf" || config.input_type == "dimacs") ret = new ProblemManagerCnf(config.input);
+  if (config.input_type == "cnf" || config.input_type == "dimacs")
+    ret = new ProblemManagerCnf(config.input);
 
   if (!ret)
     throw(
         FactoryException("Cannot create a ProblemManager", __FILE__, __LINE__));
   return ret;
-}  // makeProblemManager
+} // makeProblemManager
 
-}  // namespace d4
+} // namespace d4

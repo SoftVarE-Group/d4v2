@@ -25,29 +25,29 @@
 namespace d4 {
 class PartitioningHeuristicStaticSinglePrimal
     : public PartitioningHeuristicStaticSingle {
- private:
+private:
   std::vector<bool> m_markedVar;
 
- protected:
+protected:
   void setBucketLevelFromEdges(std::vector<std::vector<unsigned>> &hypergraph,
                                std::vector<unsigned> &indices,
                                std::vector<int> &mapping, unsigned level);
 
-  void setCutSetBucketLevelFromEdges(
-      std::vector<std::vector<unsigned>> &hypergraph,
-      std::vector<int> &partition, std::vector<unsigned> &indices,
-      std::vector<int> &mapping, unsigned level);
+  void
+  setCutSetBucketLevelFromEdges(std::vector<std::vector<unsigned>> &hypergraph,
+                                std::vector<int> &partition,
+                                std::vector<unsigned> &indices,
+                                std::vector<int> &mapping, unsigned level);
 
- public:
-  PartitioningHeuristicStaticSinglePrimal(Config &config,
-                                          WrapperSolver &s, SpecManager &om,
-                                          std::ostream &out);
+public:
+  PartitioningHeuristicStaticSinglePrimal(Config &config, WrapperSolver &s,
+                                          SpecManager &om, std::ostream &out);
 
-  PartitioningHeuristicStaticSinglePrimal(Config &config,
-                                          WrapperSolver &s, SpecManager &om,
-                                          int nbClause, int nbVar, int sumSize,
+  PartitioningHeuristicStaticSinglePrimal(Config &config, WrapperSolver &s,
+                                          SpecManager &om, int nbClause,
+                                          int nbVar, int sumSize,
                                           std::ostream &out);
 
   ~PartitioningHeuristicStaticSinglePrimal();
 };
-}  // namespace d4
+} // namespace d4

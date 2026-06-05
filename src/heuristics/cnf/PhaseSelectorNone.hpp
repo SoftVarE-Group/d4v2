@@ -24,11 +24,11 @@
 namespace d4 {
 
 class PhaseSelectorNone : public PhaseSelectorManager {
- public:
+public:
   PhaseSelectorNone(PartitioningHeuristicStaticSingle *staticPartitioner,
                     std::ostream &out);
 
   bool isStillOk(std::vector<Var> &component);
 };
 
-}  // namespace d4
+} // namespace d4

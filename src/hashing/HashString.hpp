@@ -25,16 +25,16 @@
 
 namespace d4 {
 class HashString {
- private:
+private:
   std::hash<std::string> hashString;
   std::hash<uint64_t> hashInt;
 
- public:
+public:
   inline unsigned hash(char *key, unsigned len, uint64_t info) {
     unsigned dataHash = hashString(std::string(key));
     unsigned infoHash = hashInt(info);
     return dataHash ^
            (infoHash + 0x9e3779b9 + (dataHash << 6) + (dataHash >> 2));
-  }  // hash
+  } // hash
 };
-}  // namespace d4
+} // namespace d4

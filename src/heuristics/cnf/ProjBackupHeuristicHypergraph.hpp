@@ -1,13 +1,13 @@
 #pragma once
 #include "PartitioningHeuristicStatic.hpp"
+#include "src/heuristics/ProjBackupHeuristic.hpp"
 #include "src/hyperGraph/HyperGraphExtractor.hpp"
 #include "src/partitioner/PartitionerManager.hpp"
 #include "src/solvers/WrapperSolver.hpp"
 #include "src/specs/cnf/SpecManagerCnf.hpp"
 #include "src/utils/EquivExtractor.hpp"
-#include "src/heuristics/ProjBackupHeuristic.hpp"
 namespace d4 {
-class ProjBackupHeuristicHypergraph:public ProjBackupHeuristic {
+class ProjBackupHeuristicHypergraph : public ProjBackupHeuristic {
 private:
   SpecManagerCnf &m_om;
   WrapperSolver &m_s;
@@ -34,8 +34,8 @@ private:
                          std::vector<std::vector<Var>> &equivVar);
 
 public:
-  ProjBackupHeuristicHypergraph(Config &config, SpecManager &om, WrapperSolver &s,
-                      std::ostream &out);
+  ProjBackupHeuristicHypergraph(Config &config, SpecManager &om,
+                                WrapperSolver &s, std::ostream &out);
   virtual ~ProjBackupHeuristicHypergraph();
 
   bool computeCutSetDyn(ProjVars &component, std::vector<Var> &cutset) final;

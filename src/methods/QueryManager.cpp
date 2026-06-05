@@ -30,14 +30,15 @@ namespace d4 {
  */
 QueryManager::QueryManager(std::string &inputFile) {
   m_in = fopen(inputFile.c_str(), "r");
-}  // constructor
+} // constructor
 
 /**
    Destructor. Close the input file.
  */
 QueryManager::~QueryManager() {
-  if (m_in) fclose(m_in);
-}  // destructor
+  if (m_in)
+    fclose(m_in);
+} // destructor
 
 /**
    Parse the next list of literals.
@@ -47,12 +48,13 @@ QueryManager::~QueryManager() {
 void QueryManager::readNextQuery(std::vector<Lit> &query) {
   int v = -1;
   do {
-    if (fscanf(m_in, "%d", &v) == EOF) break;
+    if (fscanf(m_in, "%d", &v) == EOF)
+      break;
     if (v)
       query.push_back((v > 0) ? Lit::makeLit(v, false)
                               : Lit::makeLit(-v, true));
   } while (v);
-}  // readNextQuery
+} // readNextQuery
 
 /**
    Parse the next query.
@@ -64,8 +66,10 @@ void QueryManager::readNextQuery(std::vector<Lit> &query) {
 TypeQuery QueryManager::next(std::vector<Lit> &query) {
   query.resize(0);
   int c = 0;
-  while (c != 'm' && c != 'd' && c != -1) c = fgetc(m_in);
-  if (c == -1) return QueryEnd;
+  while (c != 'm' && c != 'd' && c != -1)
+    c = fgetc(m_in);
+  if (c == -1)
+    return QueryEnd;
 
   if (c == 'm') {
     readNextQuery(query);
@@ -76,6 +80,6 @@ TypeQuery QueryManager::next(std::vector<Lit> &query) {
   }
 
   throw(ParserException("Parsing execption.", __FILE__, __LINE__));
-}  // next
+} // next
 
-}  // namespace d4
+} // namespace d4

@@ -26,10 +26,6 @@
 #include "src/methods/nnf/Node.hpp"
 #include "src/problem/ProblemTypes.hpp"
 
-
-
-
-
 namespace d4 {
 
 /**

@@ -5,9 +5,6 @@
 namespace d4 {
 
 PreprocGPMC::PreprocGPMC(Config &config, std::ostream &out) {
- 
-
-
 
   ws = WrapperSolver::makeWrapperSolverPreproc(config, out);
 }
@@ -18,32 +15,33 @@ ProblemManager *PreprocGPMC::run(ProblemManager *pin,
 
   ProblemManagerCnf *cnf = (ProblemManagerCnf *)pin;
 
-
-  
   int vars = cnf->getNbVar();
   int pvars = cnf->getSelectedVar().size();
-  int freevars =0;
+  int freevars = 0;
   std::vector<Lit> asignes;
   std::vector<Lit> gmap;
   std::vector<std::vector<Lit>> clauses = cnf->getClauses();
-  if (!GPMC::simplify(clauses,pin->getSelectedVar(),lastBreath.learnt,vars,pvars,freevars,asignes,gmap,false,true)){
-      return pin->getUnsatProblem();
+  if (!GPMC::simplify(clauses, pin->getSelectedVar(), lastBreath.learnt, vars,
+                      pvars, freevars, asignes, gmap, false, true)) {
+    return pin->getUnsatProblem();
   }
-  std::vector<double> weight(vars+1+freevars,1.0); 
-  std::vector<double> weightLit((vars+1+freevars)*2,1.0);
+  std::vector<double> weight(vars + 1 + freevars, 1.0);
+  std::vector<double> weightLit((vars + 1 + freevars) * 2, 1.0);
   std::vector<Var> selected;
-  for(Var i = 1;i<pvars;i++){
-      selected.push_back(i);
+  for (Var i = 1; i < pvars; i++) {
+    selected.push_back(i);
   }
-  std::cout<<"Vars "<<vars<<" PVars"<<pvars<<std::endl;
-  ProblemManagerCnf* out = new ProblemManagerCnf(vars,weightLit,weight,selected,freevars); 
+  std::cout << "Vars " << vars << " PVars" << pvars << std::endl;
+  ProblemManagerCnf *out =
+      new ProblemManagerCnf(vars, weightLit, weight, selected, freevars);
   out->getClauses() = std::move(clauses);
 
   ws->initSolver(*out);
   lastBreath.panic = 0;
   lastBreath.countConflict.resize(out->getNbVar() + 1, 0);
 
-  if (!ws->solve()) return out->getUnsatProblem();
+  if (!ws->solve())
+    return out->getUnsatProblem();
   lastBreath.panic = ws->getNbConflict() > 100000;
 
   // get the activity given by the solver.
@@ -52,7 +50,7 @@ ProblemManager *PreprocGPMC::run(ProblemManager *pin,
 
   std::vector<Lit> units;
   ws->getUnits(units);
-  auto final =  out->getConditionedFormula(units); 
+  auto final = out->getConditionedFormula(units);
 
   delete out;
   return final;

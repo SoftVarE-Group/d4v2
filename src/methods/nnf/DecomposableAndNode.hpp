@@ -25,9 +25,8 @@
 #include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
-template <class T, typename U>
-class DecomposableAndNode : public Node<T> {
- public:
+template <class T, typename U> class DecomposableAndNode : public Node<T> {
+public:
   using Node<T>::header;
 
   DecomposableAndNode() = delete;
@@ -47,8 +46,9 @@ class DecomposableAndNode : public Node<T> {
     header.stamp = 0;
     header.typeNode = TypeNode::TypeDecAndNode;
     size = _size;
-    for (unsigned i = 0; i < size; i++) sons[i] = _sons[i];
-  }  // constructor
+    for (unsigned i = 0; i < size; i++)
+      sons[i] = _sons[i];
+  } // constructor
 
   /**
      Deallocate the memory.
@@ -58,7 +58,8 @@ class DecomposableAndNode : public Node<T> {
      @param[in] globalstamp, get the stamp number.
   */
   static void deallocate(Node<T> *node, void (**func)(), unsigned globalStamp) {
-    if (node->header.stamp == globalStamp) return;
+    if (node->header.stamp == globalStamp)
+      return;
     node->header.stamp = globalStamp;
     reinterpret_cast<DecomposableAndNode *>(node)->nbModels.~T();
 
@@ -69,9 +70,9 @@ class DecomposableAndNode : public Node<T> {
                     ->header.typeNode](
           reinterpret_cast<DecomposableAndNode *>(node)->sons[i], func,
           globalStamp);
-  }  // destructor
+  } // destructor
 
-  ~DecomposableAndNode() { nbModels.~T(); }  // destructor
+  ~DecomposableAndNode() { nbModels.~T(); } // destructor
 
   /**
      Ask for the number of models of the formula under an interpretation.
@@ -89,20 +90,22 @@ class DecomposableAndNode : public Node<T> {
                            std::vector<ValueVar> &fixedValue,
                            ProblemManager &problem, unsigned globalStamp) {
     auto *p = reinterpret_cast<DecomposableAndNode *>(node);
-    if (node->header.stamp == globalStamp) return p->nbModels;
+    if (node->header.stamp == globalStamp)
+      return p->nbModels;
 
     p->nbModels = T(1);
     for (unsigned i = 0; i < p->size; i++) {
       p->nbModels *= reinterpret_cast<T (**)(
-          Node<T> *, T(**func)(), std::vector<ValueVar> &, ProblemManager &,
+          Node<T> *, T (**func)(), std::vector<ValueVar> &, ProblemManager &,
           unsigned)>(func)[p->sons[i]->header.typeNode](
           p->sons[i], func, fixedValue, problem, globalStamp);
-      if (p->nbModels == 0) break;
+      if (p->nbModels == 0)
+        break;
     }
 
     node->header.stamp = globalStamp;
     return p->nbModels;
-  }  // computeNbModels
+  } // computeNbModels
 
   /**
      Ask if the formula is satisfiable under an interpretation.
@@ -117,7 +120,8 @@ class DecomposableAndNode : public Node<T> {
   static bool isSAT(Node<T> *node, bool (**func)(),
                     std::vector<ValueVar> &fixedValue, unsigned globalStamp) {
     auto *p = reinterpret_cast<DecomposableAndNode *>(node);
-    if (node->header.stamp == globalStamp) return p->nbModels == 1;
+    if (node->header.stamp == globalStamp)
+      return p->nbModels == 1;
     node->header.stamp = globalStamp;
 
     for (unsigned i = 0; i < p->size; i++) {
@@ -125,11 +129,12 @@ class DecomposableAndNode : public Node<T> {
           Node<T> *, bool (**func)(), std::vector<ValueVar> &, unsigned)>(
           func)[p->sons[i]->header.typeNode](p->sons[i], func, fixedValue,
                                              globalStamp);
-      if (p->nbModels == 0) return false;
+      if (p->nbModels == 0)
+        return false;
     }
 
     return true;
-  }  // isSAT
+  } // isSAT
 
   /**
      Print out the NNF in a stream.
@@ -146,7 +151,8 @@ class DecomposableAndNode : public Node<T> {
                            std::ostream &out, unsigned &idx,
                            unsigned globalStamp) {
     auto *p = reinterpret_cast<DecomposableAndNode *>(node);
-    if (p->header.stamp == globalStamp) return (unsigned)p->nbModels;
+    if (p->header.stamp == globalStamp)
+      return (unsigned)p->nbModels;
     p->nbModels = idx++;
 
     out << "a " << (unsigned)p->nbModels << " 0\n";
@@ -162,6 +168,6 @@ class DecomposableAndNode : public Node<T> {
 
     p->header.stamp = globalStamp;
     return (unsigned)p->nbModels;
-  }  // printNNF
+  } // printNNF
 };
-}  // namespace d4
+} // namespace d4

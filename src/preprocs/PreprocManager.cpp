@@ -19,9 +19,9 @@
 
 #include "cnf/PreprocBackboneCnf.hpp"
 #include "cnf/PreprocBasicCnf.hpp"
+#include "cnf/PreprocGPMC.hpp"
 #include "cnf/PreprocProj.hpp"
 #include "src/exceptions/FactoryException.hpp"
-#include "cnf/PreprocGPMC.hpp"
 
 namespace d4 {
 
@@ -38,13 +38,17 @@ PreprocManager *PreprocManager::makePreprocManager(Config &config,
   out << "c [CONSTRUCTOR] Preproc: " << meth << " " << inputType << "\n";
 
   if (inputType == "cnf" || inputType == "dimacs") {
-    if (meth == "basic") return new PreprocBasicCnf(config, out);
-    if (meth == "backbone") return new PreprocBackboneCnf(config, out);
-    if (meth == "proj") return new PreprocProj(config, out);
-    if (meth == "gpmc") return new PreprocGPMC(config, out);
+    if (meth == "basic")
+      return new PreprocBasicCnf(config, out);
+    if (meth == "backbone")
+      return new PreprocBackboneCnf(config, out);
+    if (meth == "proj")
+      return new PreprocProj(config, out);
+    if (meth == "gpmc")
+      return new PreprocGPMC(config, out);
   }
 
   throw(FactoryException("Cannot create a PreprocManager", __FILE__, __LINE__));
-}  // makePreprocManager
+} // makePreprocManager
 
-}  // namespace d4
+} // namespace d4

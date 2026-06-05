@@ -51,11 +51,12 @@ MethodManager *MethodManager::makeMethodManager(Config &config,
   assert(initProblem);
 
   MethodManager *ret =
-      makeMethodManager(config, initProblem, config.method, config.float_precision, config.isFloat, out);
+      makeMethodManager(config, initProblem, config.method,
+                        config.float_precision, config.isFloat, out);
   delete initProblem;
 
   return ret;
-}  // makeMethodManager
+} // makeMethodManager
 
 /**
    Consider the option in order to generate an instance of the wanted method.
@@ -85,32 +86,32 @@ MethodManager *MethodManager::makeMethodManager(Config &config,
   if (meth == "counting") {
     if (!isFloat)
       return new DpllStyleMethod<mpz::mpz_int, mpz::mpz_int>(
-              config, meth, isFloat, runProblem, out, lastBreath);
+          config, meth, isFloat, runProblem, out, lastBreath);
     else
       return new DpllStyleMethod<mpz::mpf_float, mpz::mpf_float>(
-              config, meth, isFloat, runProblem, out, lastBreath);
+          config, meth, isFloat, runProblem, out, lastBreath);
   }
 
   if (meth == "ddnnf-compiler") {
     if (!isFloat)
       return new DpllStyleMethod<mpz::mpz_int, Node<mpz::mpz_int> *>(
-              config, meth, isFloat, runProblem, out, lastBreath);
+          config, meth, isFloat, runProblem, out, lastBreath);
     else
       return new DpllStyleMethod<mpz::mpf_float, Node<mpz::mpf_float> *>(
-              config, meth, isFloat, runProblem, out, lastBreath);
+          config, meth, isFloat, runProblem, out, lastBreath);
   }
 
   if (meth == "proj-ddnnf-compiler") {
     if (!isFloat)
       return new ProjDpllStyleMethod<
-              mpz::mpz_int, Node<mpz::mpz_int> *,
-              DecisionDNNFOperation<mpz::mpz_int, Node<mpz::mpz_int> *>>(
-              config, meth, isFloat, runProblem, out, lastBreath);
+          mpz::mpz_int, Node<mpz::mpz_int> *,
+          DecisionDNNFOperation<mpz::mpz_int, Node<mpz::mpz_int> *>>(
+          config, meth, isFloat, runProblem, out, lastBreath);
     else
       return new ProjDpllStyleMethod<
-              mpz::mpf_float, Node<mpz::mpf_float> *,
-              DecisionDNNFOperation<mpz::mpf_float, Node<mpz::mpf_float> *>>(
-              config, meth, isFloat, runProblem, out, lastBreath);
+          mpz::mpf_float, Node<mpz::mpf_float> *,
+          DecisionDNNFOperation<mpz::mpf_float, Node<mpz::mpf_float> *>>(
+          config, meth, isFloat, runProblem, out, lastBreath);
   }
 
   if (meth == "projMC") {
@@ -123,22 +124,22 @@ MethodManager *MethodManager::makeMethodManager(Config &config,
 
   if (meth == "max#sat") {
     if (!isFloat)
-      return new MaxSharpSAT<mpz::mpz_int>(config, meth, isFloat, runProblem, out,
-                                           lastBreath);
-    return new MaxSharpSAT<mpz::mpf_float>(config, meth, isFloat, runProblem, out,
-                                           lastBreath);
+      return new MaxSharpSAT<mpz::mpz_int>(config, meth, isFloat, runProblem,
+                                           out, lastBreath);
+    return new MaxSharpSAT<mpz::mpf_float>(config, meth, isFloat, runProblem,
+                                           out, lastBreath);
   }
 
   if (meth == "min#sat") {
     if (!isFloat)
-      return new MinSharpSAT<mpz::mpz_int>(config, meth, isFloat, runProblem, out,
-                                           lastBreath);
-    return new MinSharpSAT<mpz::mpf_float>(config, meth, isFloat, runProblem, out,
-                                           lastBreath);
+      return new MinSharpSAT<mpz::mpz_int>(config, meth, isFloat, runProblem,
+                                           out, lastBreath);
+    return new MinSharpSAT<mpz::mpf_float>(config, meth, isFloat, runProblem,
+                                           out, lastBreath);
   }
 
   throw(FactoryException("Cannot create a MethodManager", __FILE__, __LINE__));
-}  // makeMethodManager
+} // makeMethodManager
 
 /**
  * @brief Display the projected variables in order.
@@ -151,7 +152,8 @@ void MethodManager::displayInfoVariables(ProblemManager *problem,
   if (selected.size()) {
     out << "c\nc [PROJECTED VARIABLES] list: ";
     std::sort(selected.begin(), selected.end());
-    for (auto v : selected) out << v << " ";
+    for (auto v : selected)
+      out << v << " ";
     out << "\nc\n";
   }
 
@@ -159,7 +161,8 @@ void MethodManager::displayInfoVariables(ProblemManager *problem,
   if (maxVar.size()) {
     out << "c\nc [MAX VARIABLES] list: ";
     std::sort(maxVar.begin(), maxVar.end());
-    for (auto v : maxVar) out << v << " ";
+    for (auto v : maxVar)
+      out << v << " ";
     out << "\nc\n";
   }
 
@@ -167,10 +170,11 @@ void MethodManager::displayInfoVariables(ProblemManager *problem,
   if (indVar.size()) {
     out << "c\nc [IND VARIABLES] list: ";
     std::sort(indVar.begin(), indVar.end());
-    for (auto v : indVar) out << v << " ";
+    for (auto v : indVar)
+      out << v << " ";
     out << "\nc\n";
   }
-}  // displayInfoProjected
+} // displayInfoProjected
 
 /**
  * @brief Run the preproc method before constructing the method.
@@ -193,9 +197,9 @@ ProblemManager *MethodManager::runPreproc(Config &config,
   problem->displayStat(out, "c [PREPROCESSED INPUT] ");
   out << "c\n";
   assert(problem);
-  delete preproc;  // the preproc won't be used.
+  delete preproc; // the preproc won't be used.
 
   return problem;
-}  // runPreproc
+} // runPreproc
 
-}  // namespace d4
+} // namespace d4

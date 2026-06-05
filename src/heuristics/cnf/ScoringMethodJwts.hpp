@@ -22,11 +22,11 @@
 
 namespace d4 {
 class ScoringMethodJwts : public ScoringMethod {
- private:
+private:
   SpecManagerCnf &om;
 
- public:
+public:
   ScoringMethodJwts(SpecManagerCnf &om);
   double computeScore(Var v);
 };
-}  // namespace d4
+} // namespace d4

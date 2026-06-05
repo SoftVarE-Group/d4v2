@@ -22,13 +22,13 @@
 
 namespace d4 {
 class PartitioningHeuristicStaticNone : public PartitioningHeuristicStatic {
- protected:
+protected:
   void computeDecomposition(std::vector<Var> &component,
                             std::vector<Var> &equivClass,
                             std::vector<std::vector<Var>> &equivVar,
                             std::vector<unsigned> &bucketNumber);
 
- public:
+public:
   PartitioningHeuristicStaticNone(Config &config, WrapperSolver &s,
                                   SpecManager &om, std::ostream &out);
 
@@ -45,4 +45,4 @@ class PartitioningHeuristicStaticNone : public PartitioningHeuristicStatic {
   void computeCutSet(std::vector<Var> &component, std::vector<Var> &cutSet);
 };
 
-}  // namespace d4
+} // namespace d4

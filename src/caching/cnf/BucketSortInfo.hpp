@@ -21,11 +21,11 @@
 
 namespace d4 {
 class BucketSortInfo {
- public:
+public:
   unsigned start;
   unsigned end;
   unsigned counter;
-  unsigned redirected;  // redirected only if counter > 0
+  unsigned redirected; // redirected only if counter > 0
 
   BucketSortInfo() : start(0), end(0), counter(0), redirected(0) {}
   BucketSortInfo(unsigned init)
@@ -41,4 +41,4 @@ class BucketSortInfo {
     counter = redirected = 0;
   }
 };
-}  // namespace d4
+} // namespace d4

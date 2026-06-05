@@ -23,11 +23,11 @@
 
 namespace d4 {
 class ScoringMethodVsids : public ScoringMethod {
- private:
+private:
   ActivityManager &activity;
 
- public:
+public:
   ScoringMethodVsids(ActivityManager &a);
   double computeScore(Var v);
 };
-}  // namespace d4
+} // namespace d4

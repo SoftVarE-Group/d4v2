@@ -4,22 +4,25 @@
 #include <unordered_set>
 
 namespace d4 {
-ProjBackupHeuristicComponents::ProjBackupHeuristicComponents(
-    Config &config, SpecManager &om, WrapperSolver &s, std::ostream &out)
+ProjBackupHeuristicComponents::ProjBackupHeuristicComponents(Config &config,
+                                                             SpecManager &om,
+                                                             WrapperSolver &s,
+                                                             std::ostream &out)
     : m_om(dynamic_cast<SpecManagerCnf &>(om)),
       m_current_component(m_om.getNbVariable() + 1),
       m_uf(m_om.getNbVariable() + 1) {
 
   // FIXME: was not in original options, what shoud be the default values?
-  m_min_ccover = 1.0; // vm["proj-backup-min-cover"].as<double>();
-  m_scroing_method = 1; //vm["proj-backup-scoring-method"].as<int>();
+  m_min_ccover = 1.0;   // vm["proj-backup-min-cover"].as<double>();
+  m_scroing_method = 1; // vm["proj-backup-scoring-method"].as<int>();
 
 } // constructor
 
 bool ProjBackupHeuristicComponents::computeCutSetDyn(ProjVars &component,
                                                      std::vector<Var> &cutSet) {
 
-  if (component.vars.size()/double(m_om.getNbVariable())<0.3||calls>20) {
+  if (component.vars.size() / double(m_om.getNbVariable()) < 0.3 ||
+      calls > 20) {
     return false;
   }
   calls++;
@@ -110,13 +113,12 @@ bool ProjBackupHeuristicComponents::computeCutSetDyn(ProjVars &component,
         double(set.ccover.size() - set.nproj_cnt) / set.ccover.size();
     double score = 0;
 
-    
     double cut_size = set.neigh.size() / double(component.nbProj);
-    switch(m_scroing_method){
-        case 0:
-            score = cover * (1 - cut_size);
-        case 1: 
-            score = cover/cut_size;
+    switch (m_scroing_method) {
+    case 0:
+      score = cover * (1 - cut_size);
+    case 1:
+      score = cover / cut_size;
     }
     assert(set.neigh.size() > 0);
 

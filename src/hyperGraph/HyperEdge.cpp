@@ -26,6 +26,6 @@ namespace d4 {
    @param[in] data, the elements.
  */
 HyperEdge::HyperEdge(unsigned id, unsigned *data)
-    : m_id(id), m_data(data) {}  // constructor
+    : m_id(id), m_data(data) {} // constructor
 
-}  // namespace d4
+} // namespace d4

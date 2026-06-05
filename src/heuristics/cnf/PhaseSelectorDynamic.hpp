@@ -23,13 +23,13 @@
 
 namespace d4 {
 class PhaseSelectorDynamic : public PhaseSelectorManager {
- private:
+private:
   double m_limitRatio;
 
- public:
+public:
   PhaseSelectorDynamic(PartitioningHeuristicStaticSingle *staticPartitioner,
                        double limitRatio, std::ostream &out);
 
   bool isStillOk(std::vector<Var> &component);
 };
-}  // namespace d4
+} // namespace d4

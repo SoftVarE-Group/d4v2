@@ -37,6 +37,6 @@ ScoringMethodVsids::ScoringMethodVsids(ActivityManager &a) : activity(a) {}
 */
 double ScoringMethodVsids::computeScore(Var v) {
   return activity.getActivity(v);
-}  // computeScore
+} // computeScore
 
-}  // namespace d4
+} // namespace d4

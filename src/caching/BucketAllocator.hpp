@@ -25,7 +25,7 @@
 namespace d4 {
 
 class BucketAllocator {
- private:
+private:
   std::vector<char *> m_allocateData;
   char *m_data = NULL;
   unsigned long m_sizeFirstPage;
@@ -42,9 +42,10 @@ class BucketAllocator {
   bool cleanup = true;
   bool m_consumedMemory = false;
 
- public:
+public:
   ~BucketAllocator() {
-    for (auto data : m_allocateData) delete[] data;
+    for (auto data : m_allocateData)
+      delete[] data;
     m_allocateData.clear();
   }
 
@@ -62,7 +63,7 @@ class BucketAllocator {
   inline double remainingMemory() {
     return ((double)m_freeMemory + (m_sizeData - m_posInData)) /
            (double)m_allMemory;
-  }  // remainingMemory
+  } // remainingMemory
 
   void init(unsigned long sizeFirstPage, unsigned long sizeAdditionalPage);
 
@@ -71,4 +72,4 @@ class BucketAllocator {
   void releaseMemory(char *m, unsigned size);
 };
 
-}  // namespace d4
+} // namespace d4

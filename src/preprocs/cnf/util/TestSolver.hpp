@@ -111,4 +111,4 @@ private:
   void newVars(int nvars);
   void backTo(int pos);
 };
-} // namespace PPMC
+} // namespace PRE

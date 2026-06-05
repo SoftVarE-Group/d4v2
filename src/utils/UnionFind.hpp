@@ -7,7 +7,7 @@ struct UnionFind {
   int cnt;
   std::vector<int> parent;
   std::vector<int> size;
-  UnionFind(int s) :cnt(s), parent(s), size(s) { clear(); }
+  UnionFind(int s) : cnt(s), parent(s), size(s) { clear(); }
 
   int find_set(int v) {
     if (v == parent[v])

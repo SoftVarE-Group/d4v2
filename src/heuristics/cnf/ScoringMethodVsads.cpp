@@ -27,7 +27,7 @@ namespace d4 {
    @param[in] a, an activity manager linked to a solver.
  */
 ScoringMethodVsads::ScoringMethodVsads(SpecManagerCnf &o, ActivityManager &a)
-    : om(o), activity(a) {}  // constructor
+    : om(o), activity(a) {} // constructor
 
 /**
    The well-known VSADS heuristic.
@@ -42,4 +42,4 @@ double ScoringMethodVsads::computeScore(Var v) {
   return activity.getCountConflict(v) + (double)(om.getNbClause(v) << 7);
 }
 
-}  // namespace d4
+} // namespace d4

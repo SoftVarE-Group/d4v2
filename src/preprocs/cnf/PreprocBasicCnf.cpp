@@ -29,12 +29,12 @@ namespace d4 {
  */
 PreprocBasicCnf::PreprocBasicCnf(Config &config, std::ostream &out) {
   ws = WrapperSolver::makeWrapperSolverPreproc(config, out);
-}  // constructor
+} // constructor
 
 /**
    Destructor.
  */
-PreprocBasicCnf::~PreprocBasicCnf() { delete ws; }  // destructor
+PreprocBasicCnf::~PreprocBasicCnf() { delete ws; } // destructor
 
 /**
  * @brief The preprocessing itself.
@@ -48,7 +48,8 @@ ProblemManager *PreprocBasicCnf::run(ProblemManager *pin,
   lastBreath.panic = 0;
   lastBreath.countConflict.resize(pin->getNbVar() + 1, 0);
 
-  if (!ws->solve()) return pin->getUnsatProblem();
+  if (!ws->solve())
+    return pin->getUnsatProblem();
   lastBreath.panic = ws->getNbConflict() > 100000;
 
   // get the activity given by the solver.
@@ -58,5 +59,5 @@ ProblemManager *PreprocBasicCnf::run(ProblemManager *pin,
   std::vector<Lit> units;
   ws->getUnits(units);
   return pin->getConditionedFormula(units);
-}  // run
-}  // namespace d4
+} // run
+} // namespace d4

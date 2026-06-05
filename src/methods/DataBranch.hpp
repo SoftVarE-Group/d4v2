@@ -23,13 +23,12 @@
 #include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
-template <class T>
-class DataBranch {
- public:
+template <class T> class DataBranch {
+public:
   T d;
   std::vector<Lit> unitLits;
   std::vector<Var> freeVars;
 
   inline unsigned sumFreeUnit() { return unitLits.size() + freeVars.size(); }
 };
-}  // namespace d4
+} // namespace d4

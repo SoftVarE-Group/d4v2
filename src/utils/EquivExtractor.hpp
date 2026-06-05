@@ -24,19 +24,19 @@
 
 namespace d4 {
 class EquivExtractor {
- private:
+private:
   std::vector<bool> m_markedVar;
   std::vector<bool> m_markedVarInter;
   std::vector<bool> m_flagVar;
 
- public:
-  EquivExtractor() { ; }  // empty constructor
+public:
+  EquivExtractor() { ; } // empty constructor
   EquivExtractor(int nbVar);
   void initEquivExtractor(int nbVar);
   bool interCollectUnit(WrapperSolver &s, Var v, std::vector<Var> &listVarPU,
                         std::vector<bool> &flagVar);
 
   void searchEquiv(WrapperSolver &s, std::vector<Var> &v,
-                   std::vector<std::vector<Var> > &equivVar);
+                   std::vector<std::vector<Var>> &equivVar);
 };
-}  // namespace d4
+} // namespace d4

@@ -28,7 +28,7 @@ namespace d4 {
  */
 EquivExtractor::EquivExtractor(int nbVar) {
   initEquivExtractor(nbVar + 1);
-}  // constructor
+} // constructor
 
 /**
    Init the structure with the good number of variables.
@@ -39,7 +39,7 @@ void EquivExtractor::initEquivExtractor(int nbVar) {
   m_markedVar.resize(nbVar, false);
   m_markedVarInter.resize(nbVar, false);
   m_flagVar.resize(nbVar, false);
-}  // initEquivExtractor
+} // initEquivExtractor
 
 /**
    Compute the of variable that are "propagated" whatever the phase of the given
@@ -62,13 +62,16 @@ bool EquivExtractor::interCollectUnit(WrapperSolver &s, Var v,
 
   // intersection.
   for (auto &l : listVarPosLit)
-    if (flagVar[l.var()]) m_markedVarInter[l.var()] = true;
+    if (flagVar[l.var()])
+      m_markedVarInter[l.var()] = true;
   for (auto &l : listVarNegLit)
-    if (m_markedVarInter[l.var()]) listVarPU.push_back(l.var());
-  for (auto &l : listVarPosLit) m_markedVarInter[l.var()] = false;
+    if (m_markedVarInter[l.var()])
+      listVarPU.push_back(l.var());
+  for (auto &l : listVarPosLit)
+    m_markedVarInter[l.var()] = false;
 
   return true;
-}  // interCollectUnit
+} // interCollectUnit
 
 /**
    Research equivalences in the set of variable v.
@@ -78,18 +81,21 @@ bool EquivExtractor::interCollectUnit(WrapperSolver &s, Var v,
    @param[out] equivVar, le resulting equivalences.
  */
 void EquivExtractor::searchEquiv(WrapperSolver &s, std::vector<Var> &vars,
-                                 std::vector<std::vector<Var> > &equivVar) {
+                                 std::vector<std::vector<Var>> &equivVar) {
   std::vector<Var> reinit;
-  for (auto &v : vars) m_flagVar[v] = true;
+  for (auto &v : vars)
+    m_flagVar[v] = true;
 
   for (auto &v : vars) {
     assert((unsigned)v < m_markedVar.size());
-    if (m_markedVar[v] || s.varIsAssigned(v)) continue;
+    if (m_markedVar[v] || s.varIsAssigned(v))
+      continue;
 
     std::vector<Var> eqv;
     if (interCollectUnit(s, v, eqv, m_flagVar)) {
       assert(eqv.size() > 0);
-      if (eqv.size() == 1) continue;
+      if (eqv.size() == 1)
+        continue;
       equivVar.push_back(eqv);
       for (auto &vv : eqv) {
         m_markedVar[vv] = true;
@@ -98,19 +104,23 @@ void EquivExtractor::searchEquiv(WrapperSolver &s, std::vector<Var> &vars,
     }
   }
 
-  for (auto &v : reinit) m_markedVar[v] = false;
-  for (auto &v : vars) m_flagVar[v] = false;
+  for (auto &v : reinit)
+    m_markedVar[v] = false;
+  for (auto &v : vars)
+    m_flagVar[v] = false;
 
   // fusion the equivalence classes that share variables.
   for (unsigned i = 0; i < equivVar.size(); i++) {
-    for (auto &v : equivVar[i]) m_markedVar[v] = true;
+    for (auto &v : equivVar[i])
+      m_markedVar[v] = true;
 
     unsigned j = i + 1;
     while (j < equivVar.size()) {
       bool share = false;
       for (auto &v : equivVar[j]) {
         share = m_markedVar[v];
-        if (share) break;
+        if (share)
+          break;
       }
 
       if (!share)
@@ -128,18 +138,20 @@ void EquivExtractor::searchEquiv(WrapperSolver &s, std::vector<Var> &vars,
       }
     }
 
-    for (auto &v : equivVar[i]) m_markedVar[v] = false;
+    for (auto &v : equivVar[i])
+      m_markedVar[v] = false;
   }
 
   // remove the empty list
   unsigned j = 0;
   for (unsigned i = 0; i < equivVar.size(); i++) {
     if (equivVar[i].size()) {
-      if (i != j) equivVar[j] = equivVar[i];
+      if (i != j)
+        equivVar[j] = equivVar[i];
       j++;
     }
   }
   equivVar.resize(j);
-}  // searchEquiv
+} // searchEquiv
 
-}  // namespace d4
+} // namespace d4

@@ -27,7 +27,7 @@
 namespace d4 {
 class PartitioningHeuristicBipartiteDual
     : public PartitioningHeuristicBipartite {
- public:
+public:
   PartitioningHeuristicBipartiteDual(Config &config, WrapperSolver &s,
                                      SpecManager &om, std::ostream &out);
 
@@ -35,4 +35,4 @@ class PartitioningHeuristicBipartiteDual
                                      SpecManager &om, int nbClause, int nbVar,
                                      int sumSize, std::ostream &out);
 };
-}  // namespace d4
+} // namespace d4

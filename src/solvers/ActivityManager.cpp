@@ -31,7 +31,8 @@ namespace d4 {
 void ActivityManager::setCountConflict(std::vector<double> &counts,
                                        unsigned minVar, unsigned maxVar) {
   assert(minVar >= 0 && maxVar < counts.size());
-  for (unsigned i = minVar; i <= maxVar; i++) setCountConflict(i, counts[i]);
-}  // setCountConflict
+  for (unsigned i = minVar; i <= maxVar; i++)
+    setCountConflict(i, counts[i]);
+} // setCountConflict
 
-}  // namespace d4
+} // namespace d4

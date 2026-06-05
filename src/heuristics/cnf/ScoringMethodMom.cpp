@@ -24,7 +24,7 @@ namespace d4 {
 
    @param[in] o, the specification of a CNF problem.
  */
-ScoringMethodMom::ScoringMethodMom(SpecManagerCnf &o) : om(o) {}  // constructor
+ScoringMethodMom::ScoringMethodMom(SpecManagerCnf &o) : om(o) {} // constructor
 
 /**
    Compute the score following the well-known MOM heuristic.
@@ -38,6 +38,6 @@ ScoringMethodMom::ScoringMethodMom(SpecManagerCnf &o) : om(o) {}  // constructor
 */
 double ScoringMethodMom::computeScore(Var v) {
   return om.getNbBinaryClause(v) * 0.25;
-}  // computeScore
+} // computeScore
 
-}  // namespace d4
+} // namespace d4

@@ -48,7 +48,7 @@ public:
                                         std::vector<Var> &setOfVar,
                                         std::vector<Var> &freeVar) = 0;
   virtual void preUpdate(std::vector<Lit> &lits) = 0;
-  virtual void preUpdate(std::vector<Lit> &lits,std::vector<Lit>& pure ) = 0;
+  virtual void preUpdate(std::vector<Lit> &lits, std::vector<Lit> &pure) = 0;
   virtual void postUpdate(std::vector<Lit> &lits) = 0;
   virtual void initialize(std::vector<Var> &setOfVar,
                           std::vector<Lit> &units) = 0;

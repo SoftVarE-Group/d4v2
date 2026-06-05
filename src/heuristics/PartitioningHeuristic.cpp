@@ -35,11 +35,11 @@ namespace d4 {
 
    @param[in] out, the stream where is print out the log.
  */
-PartitioningHeuristic *PartitioningHeuristic::makePartitioningHeuristicNone(
-    std::ostream &out) {
+PartitioningHeuristic *
+PartitioningHeuristic::makePartitioningHeuristicNone(std::ostream &out) {
   out << "c [CONSTRUCTOR] Partitioner manager: none\n";
   return new PartitioningHeuristicNone();
-}  // makePartitioningHeuristicNone
+} // makePartitioningHeuristicNone
 
 /**
    Create a partitioner.
@@ -50,16 +50,21 @@ PartitioningHeuristic *PartitioningHeuristic::makePartitioningHeuristicNone(
    \return a partioner if the options are ocrrect, NULL otherwise.
  */
 PartitioningHeuristic *PartitioningHeuristic::makePartitioningHeuristic(
-    Config &config, SpecManager &s, WrapperSolver &ws,
-    std::ostream &out) {
-  if (config.partitioning_heuristic == "none") return makePartitioningHeuristicNone(out);
+    Config &config, SpecManager &s, WrapperSolver &ws, std::ostream &out) {
+  if (config.partitioning_heuristic == "none")
+    return makePartitioningHeuristicNone(out);
 
-  out << "c [CONSTRUCTOR] Partitioner manager: " << config.partitioning_heuristic << " " << config.input_type << " "
-      << "reduceFormula(" << config.partitioning_heuristic_simplification_hyperedge << ") "
-      << "equivSimp(" << config.partitioning_heuristic_simplification_equivalence << ") "
+  out << "c [CONSTRUCTOR] Partitioner manager: "
+      << config.partitioning_heuristic << " " << config.input_type << " "
+      << "reduceFormula("
+      << config.partitioning_heuristic_simplification_hyperedge << ") "
+      << "equivSimp("
+      << config.partitioning_heuristic_simplification_equivalence << ") "
       << "phase(" << config.partitioning_heuristic_bipartite_phase << ") "
-      << "dynamicPhase(" << config.partitioning_heuristic_bipartite_phase_dynamic << ") "
-      << "staticPhase(" << config.partitioning_heuristic_bipartite_phase_static << ")\n";
+      << "dynamicPhase("
+      << config.partitioning_heuristic_bipartite_phase_dynamic << ") "
+      << "staticPhase(" << config.partitioning_heuristic_bipartite_phase_static
+      << ")\n";
 
   if (config.input_type == "cnf" || config.input_type == "dimacs") {
     if (config.partitioning_heuristic == "bipartition-primal")
@@ -88,7 +93,7 @@ PartitioningHeuristic *PartitioningHeuristic::makePartitioningHeuristic(
 
   throw(FactoryException("Cannot create a PartitioningHeuristic", __FILE__,
                          __LINE__));
-}  // makePartitioningHeuristic
+} // makePartitioningHeuristic
 
 /**
    Associate for each variable in the component an equivalence class.
@@ -114,8 +119,9 @@ void PartitioningHeuristic::computeEquivClass(
 
   for (auto &c : equivVar) {
     Var vi = c.back();
-    for (auto &v : c) equivClass[v] = vi;
+    for (auto &v : c)
+      equivClass[v] = vi;
   }
-}  // computeEquivclass
+} // computeEquivclass
 
-}  // namespace d4
+} // namespace d4

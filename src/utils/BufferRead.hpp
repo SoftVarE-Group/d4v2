@@ -29,7 +29,7 @@ class BufferRead {
   char buffer[BUFFER_SIZE];
   FILE *f;
 
- public:
+public:
   BufferRead(std::string &name) {
     pos = 0;
     size = 0;
@@ -45,7 +45,8 @@ class BufferRead {
   }
 
   ~BufferRead() {
-    if (f) fclose(f);
+    if (f)
+      fclose(f);
   }
 
   inline char currentChar() { return buffer[pos]; }
@@ -78,7 +79,8 @@ class BufferRead {
   }
 
   inline void skipLine() {
-    while (!eof() && currentChar() != '\n') consumeChar();
+    while (!eof() && currentChar() != '\n')
+      consumeChar();
     consumeChar();
   }
 
@@ -87,7 +89,8 @@ class BufferRead {
     skipSpace();
 
     bool sign = currentChar() == '-';
-    if (sign) consumeChar();
+    if (sign)
+      consumeChar();
     while (!eof() && currentChar() >= '0' && currentChar() <= '9') {
       ret = ret * 10 + (nextChar() - '0');
     }
@@ -109,13 +112,14 @@ class BufferRead {
         consumeChar();
     }
     return true;
-  }  // canConsume
+  } // canConsume
 
   inline double nextDouble() {
     skipSpace();
 
     bool sign = currentChar() == '-';
-    if (sign) consumeChar();
+    if (sign)
+      consumeChar();
 
     std::string cur = "";
     while (!eof() && ((currentChar() >= '0' && currentChar() <= '9') ||
@@ -132,4 +136,4 @@ class BufferRead {
     return (sign) ? -ret : ret;
   }
 };
-}  // namespace d4
+} // namespace d4

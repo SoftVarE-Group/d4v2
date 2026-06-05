@@ -24,7 +24,7 @@
 
 namespace d4 {
 class WrapperMinisat : public WrapperSolver {
- private:
+private:
   minisat::Solver s;
   minisat::vec<minisat::Var> m_setOfVar_m;
 
@@ -33,15 +33,16 @@ class WrapperMinisat : public WrapperSolver {
   bool m_activeModel;
   bool m_needModel;
 
- protected:
+protected:
   using WrapperSolver::m_isInAssumption;
 
- public:
+public:
   void initSolver(ProblemManager &p) override;
-  void initSolver(ProblemManager &p,std::vector<std::vector<Lit>>& learnt) override;
-  virtual ~WrapperMinisat(){}
+  void initSolver(ProblemManager &p,
+                  std::vector<std::vector<Lit>> &learnt) override;
+  virtual ~WrapperMinisat() {}
 
-void addClause(std::vector<Lit>& cl,bool learnt);
+  void addClause(std::vector<Lit> &cl, bool learnt);
   bool solve(std::vector<Var> &setOfVar) override;
   bool solve() override;
   void uncheckedEnqueue(Lit l) override;
@@ -71,4 +72,4 @@ void addClause(std::vector<Lit>& cl,bool learnt);
   void setReversePolarity(bool value) override;
   virtual void decay();
 };
-}  // namespace d4
+} // namespace d4

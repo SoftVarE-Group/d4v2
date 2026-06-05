@@ -27,12 +27,10 @@
 #include "src/problem/ProblemTypes.hpp"
 
 namespace d4 {
-template <class T, class U>
-class DpllStyleMethod;
+template <class T, class U> class DpllStyleMethod;
 
-template <class T>
-class Counter {
- public:
+template <class T> class Counter {
+public:
   /**
      As for the method manager, but we return a counter (actually we also verify
      the it is a counter that is requiered).
@@ -51,18 +49,18 @@ class Counter {
                                  LastBreathPreproc &lastBreath) {
     out << "c [CONSTRUCTOR] MethodManager: " << meth << "\n";
     boost::multiprecision::mpf_float::default_precision(
-        precision);  // we set the precision
+        precision); // we set the precision
 
     if (meth == "counting")
       return new DpllStyleMethod<T, T>(config, meth, isFloat, problem, out,
                                        lastBreath);
     if (meth == "ddnnf-compiler")
-      return new DpllStyleMethod<T, Node<T> *>(config, meth, isFloat, problem, out,
-                                               lastBreath);
+      return new DpllStyleMethod<T, Node<T> *>(config, meth, isFloat, problem,
+                                               out, lastBreath);
 
     throw(BadBehaviourException(
         "Cannot create a counter with the given options.", __FILE__, __LINE__));
-  }  // makeCounter
+  } // makeCounter
 
   virtual ~Counter() {}
 
@@ -83,4 +81,4 @@ class Counter {
     return count(setOfVar, assum, out);
   }
 };
-}  // namespace d4
+} // namespace d4

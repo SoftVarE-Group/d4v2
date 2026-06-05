@@ -26,13 +26,13 @@
 
 namespace d4 {
 class PreprocBasicCnf : public PreprocManager {
- private:
+private:
   WrapperSolver *ws;
 
- public:
+public:
   PreprocBasicCnf(Config &config, std::ostream &out);
   ~PreprocBasicCnf();
   virtual ProblemManager *run(ProblemManager *pin,
                               LastBreathPreproc &lastBreath) override;
 };
-}  // namespace d4
+} // namespace d4

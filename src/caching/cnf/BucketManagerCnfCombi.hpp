@@ -30,16 +30,12 @@
 #include "src/problem/ProblemTypes.hpp"
 
 namespace d4 {
-template <class T>
-class BucketManagerCnfSym;
-template <class T>
-class BucketManagerCnfCl;
-template <class T>
-class BucketManagerCnfIndex;
+template <class T> class BucketManagerCnfSym;
+template <class T> class BucketManagerCnfCl;
+template <class T> class BucketManagerCnfIndex;
 
-template <class T>
-class BucketManagerCnfCombi : public BucketManagerCnf<T> {
- private:
+template <class T> class BucketManagerCnfCombi : public BucketManagerCnf<T> {
+private:
   std::vector<BucketSortInfo> m_vecBucketSortInfo;
   int m_unusedBucket;
   std::vector<unsigned long int> m_mapVar;
@@ -59,7 +55,7 @@ class BucketManagerCnfCombi : public BucketManagerCnf<T> {
   unsigned m_limitNbVarSym;
   unsigned m_limitNbVarIndex;
 
- public:
+public:
   /**
      Function called in order to initialized variables before using
 
@@ -104,7 +100,7 @@ class BucketManagerCnfCombi : public BucketManagerCnf<T> {
     m_limitNbVarIndex = limitNbVarIndex;
     m_limitNbVarSym = limitNbVarSym;
     this->m_bucketAllocator->deactiveCleanUp();
-  }  // BucketManagerCnfCombi
+  } // BucketManagerCnfCombi
 
   /**
      Destructor.
@@ -115,7 +111,7 @@ class BucketManagerCnfCombi : public BucketManagerCnf<T> {
     delete clBucketManagerBis;
     delete clBucketManager;
     this->m_bucketAllocator->activeCleanUp();
-  }  // destructor
+  } // destructor
 
   /**
      Transfer the formula store in distib in a table given in parameter.
@@ -130,6 +126,6 @@ class BucketManagerCnfCombi : public BucketManagerCnf<T> {
     if (component.size() > m_limitNbVarIndex)
       return indexBucketManager->storeFormula(component, b);
     return clBucketManager->storeFormula(component, b);
-  }  // storeFormula
+  } // storeFormula
 };
-}  // namespace d4
+} // namespace d4

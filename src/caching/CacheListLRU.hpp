@@ -34,8 +34,8 @@
 
 namespace d4 {
 // (Probalistic) LRU cache implementations, the integration into D4's
-// interface is very cluncky and prone to bugs since it 
-// depends on depth-first free/alloc behavior from DPLL. 
+// interface is very cluncky and prone to bugs since it
+// depends on depth-first free/alloc behavior from DPLL.
 // Should be rewritten...
 
 template <class T> class CacheListLRU : public CacheManager<T> {

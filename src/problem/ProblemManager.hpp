@@ -20,12 +20,12 @@
 
 #include <boost/multiprecision/gmp.hpp>
 
-#include "src/problem/ProblemTypes.hpp"
 #include "src/config/Config.hpp"
+#include "src/problem/ProblemTypes.hpp"
 
 namespace d4 {
 class ProblemManager {
- protected:
+protected:
   unsigned m_nbVar;
   unsigned m_nbFreeVars;
   std::vector<double> m_weightLit;
@@ -36,21 +36,16 @@ class ProblemManager {
   std::vector<Lit> m_gmap;
   bool m_isUnsat = false;
 
- public:
-  static ProblemManager *makeProblemManager(Config &config,
-                                            std::ostream &out);
+public:
+  static ProblemManager *makeProblemManager(Config &config, std::ostream &out);
 
   virtual ~ProblemManager() { ; }
   unsigned getNbVar() { return m_nbVar; }
   void setNbVar(int n) { m_nbVar = n; }
 
-  unsigned& freeVars(){
-    return m_nbFreeVars;
-  }
+  unsigned &freeVars() { return m_nbFreeVars; }
 
-  std::vector<Lit>& gmap() {
-    return m_gmap;
-  }
+  std::vector<Lit> &gmap() { return m_gmap; }
 
   virtual void normalize() = 0;
   virtual void normalizeInner() = 0;
@@ -76,18 +71,16 @@ class ProblemManager {
   /**
      Get the weight for a variable.
    */
-  template <typename T>
-  inline T getWeightVar(Var v) {
+  template <typename T> inline T getWeightVar(Var v) {
     return T(m_weightVar[v]);
-  }  // getWeightLar
+  } // getWeightLar
 
   /**
      Get the weight for a literal.
    */
-  template <typename T>
-  inline T getWeightLit(Lit l) {
+  template <typename T> inline T getWeightLit(Lit l) {
     return T(m_weightLit[l.intern()]);
-  }  // getWeightLit
+  } // getWeightLit
 
   /**
      Compute the value for free and unit variables.
@@ -111,6 +104,6 @@ class ProblemManager {
     }
 
     return tmp;
-  }  // computeWeightUnitFree
+  } // computeWeightUnitFree
 };
-}  // namespace d4
+} // namespace d4

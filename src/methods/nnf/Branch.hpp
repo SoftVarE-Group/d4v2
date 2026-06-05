@@ -24,9 +24,8 @@
 #include "src/problem/ProblemManager.hpp"
 
 namespace d4 {
-template <class T, typename U>
-class Branch {
- private:
+template <class T, typename U> class Branch {
+private:
   /**
      Ask if l is unsatisfiable if the variable is assigned to some given value.
 
@@ -36,12 +35,13 @@ class Branch {
      \return true if l is unsat under the value, false otherwise.
   */
   inline bool isUnsatLit(ValueVar value, U l) {
-    if (value == ValueVar::isNotAssigned) return false;
+    if (value == ValueVar::isNotAssigned)
+      return false;
     return (value == ValueVar::isTrue && (l & 1)) ||
            (value == ValueVar::isFalse && !(l & 1));
-  }  // isUnsatLit
+  } // isUnsatLit
 
- public:
+public:
   Node<T> *d;
   U nbUnits;
   U nbFree;
@@ -65,32 +65,32 @@ class Branch {
 
     for (unsigned i = 0; i < nbUnits; i++) {
       U l = data[i];
-      if (isUnsatLit(fixedValue[l >> 1], l)) return 0;
+      if (isUnsatLit(fixedValue[l >> 1], l))
+        return 0;
       computeWeight *= T(problem.getWeightLit()[l]);
     }
 
-    T c =
-        reinterpret_cast<T (**)(Node<T> *, T(**func)(), std::vector<ValueVar> &,
-                                ProblemManager &, unsigned)>(
-            func)[d->header.typeNode](d, func, fixedValue, problem,
-                                      globalStamp);
+    T c = reinterpret_cast<T (**)(Node<T> *, T (**func)(),
+                                  std::vector<ValueVar> &, ProblemManager &,
+                                  unsigned)>(func)[d->header.typeNode](
+        d, func, fixedValue, problem, globalStamp);
 
     for (unsigned i = 0; i < nbFree; i++) {
       U v = data[nbUnits + i];
       switch (fixedValue[v]) {
-        case isFalse:
-          computeWeight *= T(problem.getWeightLit()[(v << 1) | 1]);
-          break;
-        case isTrue:
-          computeWeight *= T(problem.getWeightLit()[v << 1]);
-          break;
-        default:
-          computeWeight *= T(problem.getWeightVar()[v]);
+      case isFalse:
+        computeWeight *= T(problem.getWeightLit()[(v << 1) | 1]);
+        break;
+      case isTrue:
+        computeWeight *= T(problem.getWeightLit()[v << 1]);
+        break;
+      default:
+        computeWeight *= T(problem.getWeightVar()[v]);
       }
     }
 
     return c * computeWeight;
-  }  // computeNbModels
+  } // computeNbModels
 
   /**
      Regarding a branch, ask if the problem is satisfiable under an
@@ -107,13 +107,14 @@ class Branch {
              unsigned globalStamp) {
     for (unsigned i = 0; i < nbUnits; i++) {
       U l = data[i];
-      if (isUnsatLit(fixedValue[l >> 1], l)) return false;
+      if (isUnsatLit(fixedValue[l >> 1], l))
+        return false;
     }
 
     return reinterpret_cast<bool (**)(Node<T> *, bool (**func)(),
                                       std::vector<ValueVar> &, unsigned)>(
         func)[d->header.typeNode](d, func, fixedValue, globalStamp);
-  }  // isSAT
+  } // isSAT
 
   /**
      Print out the NNF in a stream.
@@ -138,6 +139,6 @@ class Branch {
       out << ((l & 1) ? "-" : "") << (l >> 1) << " ";
     }
     out << "0\n";
-  }  // printNNF
+  } // printNNF
 };
-}  // namespace d4
+} // namespace d4

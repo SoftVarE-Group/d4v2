@@ -30,6 +30,6 @@ namespace d4 {
 void PartitioningHeuristicNone::computeCutSet(std::vector<Var> &component,
                                               std::vector<Var> &cutSet) {
   cutSet = component;
-}  // component
+} // component
 
-}  // namespace d4
+} // namespace d4

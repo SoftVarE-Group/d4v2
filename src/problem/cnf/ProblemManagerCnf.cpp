@@ -61,7 +61,6 @@ ProblemManagerCnf::ProblemManagerCnf(ProblemManager *problem) {
   m_nbFreeVars = problem->freeVars();
   m_gmap = problem->gmap();
 
-
 } // constructor
 
 /**
@@ -94,8 +93,8 @@ ProblemManagerCnf::~ProblemManagerCnf() {
 
 void ProblemManagerCnf::normalize() {
   if (m_selected.size() != m_nbVar) {
-    std::vector<bool> marked(m_nbVar+1);
-    std::vector<Var> remap(m_nbVar+1);
+    std::vector<bool> marked(m_nbVar + 1);
+    std::vector<Var> remap(m_nbVar + 1);
     int i = 1;
     for (Var v : m_selected) {
       marked[v] = true;

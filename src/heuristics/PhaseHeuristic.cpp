@@ -37,12 +37,16 @@ PhaseHeuristic *PhaseHeuristic::makePhaseHeuristic(Config &config,
   out << "c [CONSTRUCTOR] Phase heuristic: " << config.phase_heuristic
       << ((config.phase_heuristic_reversed) ? "(reversed)" : "") << "\n";
 
-  if (config.phase_heuristic == "false") return new PhaseHeuristicFalse(config.phase_heuristic_reversed);
-  if (config.phase_heuristic == "true") return new PhaseHeuristicTrue(config.phase_heuristic_reversed);
-  if (config.phase_heuristic == "polarity") return new PhaseHeuristicPolarity(p, config.phase_heuristic_reversed);
-  if (config.phase_heuristic == "occurrence") return new PhaseHeuristicOccurrence(s, config.phase_heuristic_reversed);
+  if (config.phase_heuristic == "false")
+    return new PhaseHeuristicFalse(config.phase_heuristic_reversed);
+  if (config.phase_heuristic == "true")
+    return new PhaseHeuristicTrue(config.phase_heuristic_reversed);
+  if (config.phase_heuristic == "polarity")
+    return new PhaseHeuristicPolarity(p, config.phase_heuristic_reversed);
+  if (config.phase_heuristic == "occurrence")
+    return new PhaseHeuristicOccurrence(s, config.phase_heuristic_reversed);
 
   throw(FactoryException("Cannot create a PhaseHeuristic", __FILE__, __LINE__));
-}  // makePhaseHeuristic
+} // makePhaseHeuristic
 
-}  // namespace d4
+} // namespace d4

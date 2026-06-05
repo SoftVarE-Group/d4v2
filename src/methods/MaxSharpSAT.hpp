@@ -20,6 +20,7 @@
 #include <sys/types.h>
 
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
@@ -27,7 +28,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cstdint>
 
 #include "Counter.hpp"
 #include "DataBranch.hpp"
@@ -48,11 +48,9 @@
 #include "src/utils/MemoryStat.hpp"
 
 namespace d4 {
-template <class T>
-class Counter;
+template <class T> class Counter;
 
-template <class T>
-class MaxSharpSAT : public MethodManager {
+template <class T> class MaxSharpSAT : public MethodManager {
   enum TypeDecision { NO_DEC, EXIST_DEC, MAX_DEC };
 
   struct MaxSharpSatResult {
@@ -64,12 +62,13 @@ class MaxSharpSAT : public MethodManager {
 
     void display(unsigned size) {
       assert(valuation);
-      for (unsigned i = 0; i < size; i++) std::cout << (int)valuation[i] << " ";
+      for (unsigned i = 0; i < size; i++)
+        std::cout << (int)valuation[i] << " ";
       std::cout << "\n";
     }
   };
 
- private:
+private:
   const unsigned NB_SEP = 131;
 
   bool optDomConst;
@@ -120,7 +119,7 @@ class MaxSharpSAT : public MethodManager {
   MaxSharpSatResult m_scale = {T(1), NULL};
   MaxSharpSatResult m_maxCount = {T(0), NULL};
 
- public:
+public:
   /**
      Constructor.
 
@@ -161,7 +160,8 @@ class MaxSharpSAT : public MethodManager {
     assert(m_specs);
 
     // we initialize the object used to compute score and partition.
-    m_hVar = ScoringMethod::makeScoringMethod(config, *m_specs, *m_solver, m_out);
+    m_hVar =
+        ScoringMethod::makeScoringMethod(config, *m_specs, *m_solver, m_out);
     m_hPhase =
         PhaseHeuristic::makePhaseHeuristic(config, *m_specs, *m_solver, m_out);
 
@@ -190,10 +190,10 @@ class MaxSharpSAT : public MethodManager {
 
     // no partitioning heuristic for the moment.
     assert(m_hVar && m_hPhase);
-    m_cacheInd = CacheManager<T>::makeCacheManager(config, m_problem->getNbVar(),
-                                                   m_specs, m_out);
+    m_cacheInd = CacheManager<T>::makeCacheManager(
+        config, m_problem->getNbVar(), m_specs, m_out);
     m_cacheMax = CacheManager<MaxSharpSatResult>::makeCacheManager(
-            config, m_problem->getNbVar(), m_specs, m_out);
+        config, m_problem->getNbVar(), m_specs, m_out);
 
     // init the clock time.
     initTimer();
@@ -216,9 +216,10 @@ class MaxSharpSAT : public MethodManager {
 
     // set the m_scale variable if needed.
     m_scale.valuation = getArray();
-    for (unsigned i = 0; i < m_sizeArray; i++) m_scale.valuation[i] = 0;
+    for (unsigned i = 0; i < m_sizeArray; i++)
+      m_scale.valuation[i] = 0;
     m_maxCount.valuation = getArray();
-  }  // constructor
+  } // constructor
 
   /**
      Destructor.
@@ -232,10 +233,11 @@ class MaxSharpSAT : public MethodManager {
     delete m_cacheInd;
     delete m_cacheMax;
 
-    for (auto page : m_memoryPages) delete[] page;
-  }  // destructor
+    for (auto page : m_memoryPages)
+      delete[] page;
+  } // destructor
 
- private:
+private:
   /**
    * @brief Print out the solution.
    *
@@ -252,7 +254,7 @@ class MaxSharpSAT : public MethodManager {
     std::cout << "0\n";
     std::cout << status << " " << std::fixed << std::setprecision(50)
               << solution.count << "\n";
-  }  // printSolution
+  } // printSolution
 
   /**
      Print out information about the solving process.
@@ -273,7 +275,7 @@ class MaxSharpSAT : public MethodManager {
         << std::setw(WIDTH_PRINT_COLUMN_MC) << m_nbDecisionNode << "|"
         << std::scientific << std::setw(WIDTH_PRINT_COLUMN_MC)
         << m_maxCount.count << "|\n";
-  }  // showInter
+  } // showInter
 
   /**
      Print out a line of dashes.
@@ -282,9 +284,10 @@ class MaxSharpSAT : public MethodManager {
    */
   inline void separator(std::ostream &out) {
     out << "c ";
-    for (int i = 0; i < NB_SEP; i++) out << "-";
+    for (int i = 0; i < NB_SEP; i++)
+      out << "-";
     out << "\n";
-  }  // separator
+  } // separator
 
   /**
      Print out the header information.
@@ -306,7 +309,7 @@ class MaxSharpSAT : public MethodManager {
         << "|" << std::setw(WIDTH_PRINT_COLUMN_MC) << "max#count"
         << "|\n";
     separator(out);
-  }  // showHeader
+  } // showHeader
 
   /**
      Print out information when it is required.
@@ -315,9 +318,11 @@ class MaxSharpSAT : public MethodManager {
    */
   inline void showRun(std::ostream &out) {
     unsigned nbCall = m_nbCallCall + m_nbCallProj;
-    if (!(nbCall & (MASK_HEADER))) showHeader(out);
-    if (nbCall && !(nbCall & MASK_SHOWRUN_MC)) showInter(out);
-  }  // showRun
+    if (!(nbCall & (MASK_HEADER)))
+      showHeader(out);
+    if (nbCall && !(nbCall & MASK_SHOWRUN_MC))
+      showInter(out);
+  } // showRun
 
   /**
      Print out the final stat.
@@ -338,7 +343,7 @@ class MaxSharpSAT : public MethodManager {
     m_cacheMax->printCacheInformation(out);
     out << "c Final time: " << getTimer() << "\n";
     out << "c\n";
-  }  // printFinalStat
+  } // printFinalStat
 
   /**
    * @brief Get a pointer on an allocated array of size m_sizeArray (which is
@@ -355,7 +360,7 @@ class MaxSharpSAT : public MethodManager {
       ret = m_memoryPages.back();
     }
     return ret;
-  }  // getArray
+  } // getArray
 
   /**
    * Expel from a set of variables the ones they are marked as being decidable.
@@ -366,9 +371,10 @@ class MaxSharpSAT : public MethodManager {
   void expelNoDecisionVar(std::vector<Var> &vars) {
     unsigned j = 0;
     for (unsigned i = 0; i < vars.size(); i++)
-      if (m_isDecisionVariable[vars[i]]) vars[j++] = vars[i];
+      if (m_isDecisionVariable[vars[i]])
+        vars[j++] = vars[i];
     vars.resize(j);
-  }  // expelNoDecisionVar
+  } // expelNoDecisionVar
 
   /**
      Expel from a set of variables the ones they are marked as being decidable.
@@ -381,9 +387,10 @@ class MaxSharpSAT : public MethodManager {
   void expelNoDecisionLit(std::vector<Lit> &lits) {
     unsigned j = 0;
     for (unsigned i = 0; i < lits.size(); i++)
-      if (m_isDecisionVariable[lits[i].var()]) lits[j++] = lits[i];
+      if (m_isDecisionVariable[lits[i].var()])
+        lits[j++] = lits[i];
     lits.resize(j);
-  }  // expelNoDecisionLit
+  } // expelNoDecisionLit
 
   /**
    * @brief Estimate the maximum number of models we can get when considering
@@ -395,9 +402,10 @@ class MaxSharpSAT : public MethodManager {
   T computeUpper(std::vector<Var> &setOfVar) {
     T ret = 1;
     for (auto v : setOfVar)
-      if (m_isProjectedVariable[v]) ret = ret * 2;
+      if (m_isProjectedVariable[v])
+        ret = ret * 2;
     return ret;
-  }  // computeUpper
+  } // computeUpper
 
   /**
    * @brief Apply an or logic between resValuation and orValuation (the result
@@ -414,7 +422,7 @@ class MaxSharpSAT : public MethodManager {
       if (m_isMaxDecisionVariable[v])
         resValuation[m_redirectionPos[v]] |= orValuation[m_redirectionPos[v]];
     }
-  }  // disjunctionOnMaxVariable
+  } // disjunctionOnMaxVariable
 
   /**
    * @brief Update the bound if needed.
@@ -448,7 +456,7 @@ class MaxSharpSAT : public MethodManager {
         m_stopProcess = true;
       }
     }
-  }  // updateBound
+  } // updateBound
 
   /**
    * @brief Search for a valuation of the max variables that maximizes the
@@ -465,7 +473,8 @@ class MaxSharpSAT : public MethodManager {
                           std::vector<Lit> &unitsLit,
                           std::vector<Var> &freeVariable, std::ostream &out,
                           MaxSharpSatResult &result) {
-    if (m_stopProcess) return;
+    if (m_stopProcess)
+      return;
 
     showRun(out);
     m_nbCallCall++;
@@ -476,7 +485,7 @@ class MaxSharpSAT : public MethodManager {
       return;
     }
 
-    m_solver->whichAreUnits(setOfVar, unitsLit);  // collect unit literals
+    m_solver->whichAreUnits(setOfVar, unitsLit); // collect unit literals
     m_specs->preUpdate(unitsLit);
 
     // compute the connected composant
@@ -486,7 +495,8 @@ class MaxSharpSAT : public MethodManager {
 
     // init the returned result.
     result.valuation = getArray();
-    for (unsigned i = 0; i < m_sizeArray; i++) result.valuation[i] = 0;
+    for (unsigned i = 0; i < m_sizeArray; i++)
+      result.valuation[i] = 0;
 
     // set a valuation for fixed variables.
     T saveCount = m_scale.count;
@@ -495,7 +505,8 @@ class MaxSharpSAT : public MethodManager {
     for (auto &v : freeVariable)
       if (m_isMaxDecisionVariable[v]) {
         Lit l = Lit::makeLitTrue(v);
-        if (m_problem->getWeightLit(l) < m_problem->getWeightLit(~l)) l = ~l;
+        if (m_problem->getWeightLit(l) < m_problem->getWeightLit(~l))
+          l = ~l;
 
         m_scale.valuation[m_redirectionPos[v]] = 1 - l.sign();
         result.valuation[m_redirectionPos[v]] = 1 - l.sign();
@@ -569,7 +580,7 @@ class MaxSharpSAT : public MethodManager {
                   result.valuation[m_redirectionPos[v]];
         }
       }
-    }  // else we have a tautology
+    } // else we have a tautology
 
     m_isUnderAnd = wasUnderAnd;
     m_scale.count = saveCount;
@@ -581,7 +592,7 @@ class MaxSharpSAT : public MethodManager {
     m_scale.count *= fixInd;
     updateBound(result, setOfVar);
     m_scale.count = saveCount;
-  }  // searchMaxValuation
+  } // searchMaxValuation
 
   /**
    * @brief Given the selected heuristic, return the way we want to assign the
@@ -593,7 +604,8 @@ class MaxSharpSAT : public MethodManager {
   inline bool selectPhase(Var v) {
     assert(m_isMaxDecisionVariable[v]);
     int rdm = rand() % 100;
-    if (rdm <= m_heuristicMaxRdm) return rdm & 1;
+    if (rdm <= m_heuristicMaxRdm)
+      return rdm & 1;
 
     if (m_heuristicMax == "weight")
       return m_problem->getWeightLit(Lit::makeLitTrue(v)) <
@@ -601,7 +613,7 @@ class MaxSharpSAT : public MethodManager {
     if (m_scale.count > 0 && m_heuristicMax == "best")
       return m_scale.valuation[m_redirectionPos[v]];
     return m_hPhase->selectPhase(v);
-  }  // selectPhase
+  } // selectPhase
 
   /**
    * This function select a variable and compile a decision node.
@@ -613,7 +625,8 @@ class MaxSharpSAT : public MethodManager {
    */
   void searchMaxSharpSatDecision(std::vector<Var> &connected, std::ostream &out,
                                  MaxSharpSatResult &result) {
-    if (m_stopProcess) return;
+    if (m_stopProcess)
+      return;
 
     // search the next variable to branch on
     Var v =
@@ -661,7 +674,7 @@ class MaxSharpSAT : public MethodManager {
     // aggregation with max.
     result.count = (b[0].d > b[1].d) ? b[0].d : b[1].d;
     result.valuation = (b[0].d > b[1].d) ? res[0].valuation : res[1].valuation;
-  }  // searchMaxSharpSatDecision
+  } // searchMaxSharpSatDecision
 
   /**
    * @brief Count the number of projected models.
@@ -675,14 +688,16 @@ class MaxSharpSAT : public MethodManager {
    */
   T countInd_(std::vector<Var> &setOfVar, std::vector<Lit> &unitsLit,
               std::vector<Var> &freeVariable, std::ostream &out) {
-    if (m_stopProcess) return T(0);
+    if (m_stopProcess)
+      return T(0);
 
     showRun(out);
     m_nbCallProj++;
 
-    if (!m_solver->solve(setOfVar)) return T(0);
+    if (!m_solver->solve(setOfVar))
+      return T(0);
 
-    m_solver->whichAreUnits(setOfVar, unitsLit);  // collect unit literals
+    m_solver->whichAreUnits(setOfVar, unitsLit); // collect unit literals
     m_specs->preUpdate(unitsLit);
 
     // compute the connected composant
@@ -709,12 +724,12 @@ class MaxSharpSAT : public MethodManager {
           result = result * curr;
         }
       }
-    }  // else we have a tautology
+    } // else we have a tautology
 
     m_specs->postUpdate(unitsLit);
     expelNoDecisionLit(unitsLit);
     return result;
-  }  // countInd_
+  } // countInd_
 
   /**
    * @brief This function select a variable and compile a decision node.
@@ -725,12 +740,14 @@ class MaxSharpSAT : public MethodManager {
    * \return the number of computed models.
    */
   T countIndDecisionNode(std::vector<Var> &connected, std::ostream &out) {
-    if (m_stopProcess) return T(0);
+    if (m_stopProcess)
+      return T(0);
 
     // search the next variable to branch on
     Var v = m_hVar->selectVariable(connected, *m_specs, m_isDecisionVariable);
 
-    if (v == var_Undef) return T(1);
+    if (v == var_Undef)
+      return T(1);
 
     // select a variable for decision.
     Lit l = Lit::makeLit(v, m_hPhase->selectPhase(v));
@@ -759,7 +776,7 @@ class MaxSharpSAT : public MethodManager {
 
     b[1].d *= m_problem->computeWeightUnitFree<T>(b[1].unitLits, b[1].freeVars);
     return b[0].d + b[1].d;
-  }  // computeDecisionNode
+  } // computeDecisionNode
 
   /**
    * @brief Search for an interpretation that maximize the number of models in
@@ -807,7 +824,7 @@ class MaxSharpSAT : public MethodManager {
           result.count * multiply *
           m_problem->computeWeightUnitFree<T>(unitsLit, freeVariable);
     m_solver->popAssumption(cpt);
-  }  // greedySearch
+  } // greedySearch
 
   /**
    * @brief Search an assignation of Max variables that maximize the number of
@@ -841,9 +858,9 @@ class MaxSharpSAT : public MethodManager {
     if (!m_stopProcess)
       result.count *=
           m_problem->computeWeightUnitFree<T>(b.unitLits, b.freeVars);
-  }  // compute
+  } // compute
 
- public:
+public:
   /**
    * @brief Stop the current search and print out the best solution found so
    * far.
@@ -856,7 +873,7 @@ class MaxSharpSAT : public MethodManager {
       std::cout << "Processus interrupted, here is the best solution found\n";
       printSolution(m_maxCount, 'k');
     }
-  }  // interrupt
+  } // interrupt
 
   /**
    * @brief Search for the instantiation of the variables of
@@ -868,7 +885,8 @@ class MaxSharpSAT : public MethodManager {
    */
   void run(Config &config) {
     std::vector<Var> setOfVar;
-    for (int i = 1; i <= m_specs->getNbVariable(); i++) setOfVar.push_back(i);
+    for (int i = 1; i <= m_specs->getNbVariable(); i++)
+      setOfVar.push_back(i);
 
     MaxSharpSatResult result;
     compute(setOfVar, m_out, result);
@@ -886,7 +904,7 @@ class MaxSharpSAT : public MethodManager {
         }
       }
     }
-  }  // run
+  } // run
 
-};  // end class
-}  // namespace d4
+}; // end class
+} // namespace d4

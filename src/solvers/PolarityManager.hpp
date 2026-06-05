@@ -22,7 +22,7 @@
 
 namespace d4 {
 class PolarityManager {
- public:
+public:
   virtual bool getPolarity(Var v) = 0;
 };
-}  // namespace d4
+} // namespace d4
