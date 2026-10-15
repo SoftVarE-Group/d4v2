@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake ];
 
   buildInputs = [
-    mt-kahypar.dev
+    mt-kahypar
     cryptominisat.dev
     sbva.dev
     arjun.dev
