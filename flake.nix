@@ -216,7 +216,7 @@
             buildInputs = [
               pkgs.boost.dev
               pkgs.gmp.dev
-              selfPkgs.mt-kahypar.dev
+              selfPkgs.mt-kahypar
               selfPkgs.glucose.dev
               selfPkgs.gpmc.dev
             ];

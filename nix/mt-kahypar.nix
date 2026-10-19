@@ -9,6 +9,13 @@
   windows,
 }:
 let
+  cli11 = fetchFromGitHub {
+    owner = "CLIUtils";
+    repo = "CLI11";
+    rev = "v2.7.2";
+    hash = "sha256-lFMv7WH/Gv+lRjs9tH6QYk+E/QC39ndzvtYKwpGNkmg=";
+  };
+
   shared-resources = fetchFromGitHub {
     owner = "kahypar";
     repo = "kahypar-shared-resources";
@@ -19,24 +26,26 @@ let
   WHFC = fetchFromGitHub {
     owner = "larsgottesbueren";
     repo = "WHFC";
-    rev = "30b0eeb0e49577d06c3deb09a44b035d81c529d2";
-    hash = "sha256-2+l3PGOT3dqtL39OZHNQGNwrvEH75xXJOK5SaXmDk8A=";
+    rev = "dd3b7901f73ba9a1de44788172ded5ce33b83338";
+    hash = "sha256-mGCjTp6QTyWFO16RfXYHSIQbVWgOAa37NRCKOHArGH4=";
+  };
+
+  parlay = fetchFromGitHub {
+    owner = "cmuparlay";
+    repo = "parlaylib";
+    rev = "e1f1dc0ccf930492a2723f7fbef8510d35bf57f5";
+    hash = "sha256-Hg4OVHC1LDvBf1tFUMW7YAugnFk0ju1VzgEzT2OoT8Y=";
   };
 in
 stdenv.mkDerivation rec {
   pname = "mt-kahypar";
-  version = "1.5.1";
-
-  outputs = [
-    "out"
-    "dev"
-  ];
+  version = "1.7";
 
   src = fetchFromGitHub {
     owner = "kahypar";
     repo = "mt-kahypar";
     rev = "v${version}";
-    hash = "sha256-2USu34LV60boup+hDftMPpAWdrFyimZA6q5Rx40xW7s=";
+    hash = "sha256-sFx2FBlq9JvCYjZqpNo2Q6rffUt8PNY+L08l/dutvPs=";
   };
 
   nativeBuildInputs = [
@@ -53,18 +62,26 @@ stdenv.mkDerivation rec {
   patches = [
     ./mt-kahypar-cmake.patch
     ./mt-kahypar-pc.patch
-    ./mt-kahypar-windows.patch
+    ./mt-kahypar-whfc.patch
+    # ./mt-kahypar-windows.patch
   ];
 
   cmakeFlags = [
-    "-D FETCHCONTENT_SOURCE_DIR_KAHYPAR-SHARED-RESOURCES=${shared-resources}"
-    "-D FETCHCONTENT_SOURCE_DIR_WHFC=${WHFC}"
-    "-D KAHYPAR_DISABLE_HWLOC=ON"
+    (lib.cmakeFeature "CMAKE_CXX_STANDARD" "20")
+    (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_CLI11" "${cli11}")
+    (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_KAHYPAR-SHARED-RESOURCES" "${shared-resources}")
+    (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_WHFC" "${WHFC}")
+    (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_PARLAY" "${parlay}")
+    (lib.cmakeBool "KAHYPAR_DISABLE_HWLOC" true)
   ]
-  ++ lib.optionals stdenv.hostPlatform.isWindows [ "-D BUILD_SHARED_LIBS=ON" ];
+  ++ lib.optionals stdenv.hostPlatform.isWindows [ (lib.cmakeBool "BUILD_SHARED_LIBS" true) ];
 
   buildPhase = "cmake --build . --target mtkahypar --parallel $NIX_BUILD_CORES";
-  installPhase = "cmake --install .";
+  installPhase = ''
+    cmake --install .
+    rm -r $out/include/parlay
+    rm -r $out/share/parlay
+  '';
 
   meta = {
     description = "A shared-memory multilevel graph and hypergraph partitioner";
