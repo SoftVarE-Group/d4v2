@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8dfb842b..7b97dd9f 100644
+index 8dfb842b..193eaca7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -425,30 +425,37 @@ FetchContent_Declare(
+@@ -12,6 +12,8 @@ project(MtKaHyPar
+         LANGUAGES CXX C)
+ set(PROJECT_URL "https://github.com/kahypar/mt-kahypar")
+ 
++set(CMAKE_CXX_STANDARD 20)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+ #################################################################
+ ## Sanity checks and policies                                  ##
+@@ -425,30 +427,37 @@ FetchContent_Declare(
  FetchContent_MakeAvailable(cli11)
  target_link_libraries(MtKaHyPar-Include INTERFACE CLI11::CLI11)
  
@@ -46,12 +55,15 @@ index 8dfb842b..7b97dd9f 100644
    target_compile_options(MtKaHyPar-BuildFlags INTERFACE -DPARLAY_TBB)
  endif()
  
-@@ -568,7 +575,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -568,10 +577,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
        DEPENDS MtKaHyPar-CLI)
    endif()
  
 -  if(NOT WIN32 AND BUILD_SHARED_LIBS)
-+  if(NOT WIN32)
-     # library installation target
-     include(SetupInstallation)
-   endif()
+-    # library installation target
+-    include(SetupInstallation)
+-  endif()
++  include(SetupInstallation)
+ 
+   if(KAHYPAR_BUILD_DEBIAN_PACKAGE)
+     # packaging via CPack
