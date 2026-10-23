@@ -1,0 +1,80 @@
+diff --git a/mt-kahypar/partition/refinement/flows/flow_common.h b/mt-kahypar/partition/refinement/flows/flow_common.h
+index 3d217195..925eb94d 100644
+--- a/mt-kahypar/partition/refinement/flows/flow_common.h
++++ b/mt-kahypar/partition/refinement/flows/flow_common.h
+@@ -26,7 +26,7 @@
+ 
+ #pragma once
+ 
+-#include "WHFC/datastructure/flow_hypergraph.h"
++#include "datastructure/flow_hypergraph.h"
+ #include "mt-kahypar/datastructures/hypergraph_common.h"
+ #include "mt-kahypar/parallel/stl/scalable_vector.h"
+ 
+@@ -83,4 +83,4 @@ inline std::ostream& operator<<(std::ostream& out, const Subhypergraph& sub_hg)
+   return out;
+ }
+ 
+-} // namespace mt_kahypar
+\ No newline at end of file
++} // namespace mt_kahypar
+diff --git a/mt-kahypar/partition/refinement/flows/flow_hypergraph_builder.h b/mt-kahypar/partition/refinement/flows/flow_hypergraph_builder.h
+index eb9b92c3..897787e4 100644
+--- a/mt-kahypar/partition/refinement/flows/flow_hypergraph_builder.h
++++ b/mt-kahypar/partition/refinement/flows/flow_hypergraph_builder.h
+@@ -29,7 +29,7 @@
+ 
+ #include <atomic>
+ 
+-#include "WHFC/datastructure/flow_hypergraph.h"
++#include "datastructure/flow_hypergraph.h"
+ #include "mt-kahypar/parallel/stl/scalable_vector.h"
+ #include "mt-kahypar/macros.h"
+ 
+diff --git a/mt-kahypar/partition/refinement/flows/flow_refiner.h b/mt-kahypar/partition/refinement/flows/flow_refiner.h
+index 1e41075f..752b25d2 100644
+--- a/mt-kahypar/partition/refinement/flows/flow_refiner.h
++++ b/mt-kahypar/partition/refinement/flows/flow_refiner.h
+@@ -31,9 +31,9 @@
+ 
+ #include <tbb/concurrent_vector.h>
+ 
+-#include "WHFC/algorithm/hyperflowcutter.h"
+-#include "WHFC/algorithm/sequential_push_relabel.h"
+-#include "WHFC/algorithm/parallel_push_relabel.h"
++#include "algorithm/hyperflowcutter.h"
++#include "algorithm/sequential_push_relabel.h"
++#include "algorithm/parallel_push_relabel.h"
+ 
+ #include "mt-kahypar/partition/context.h"
+ #include "mt-kahypar/partition/refinement/flows/i_flow_refiner.h"
+diff --git a/mt-kahypar/partition/refinement/flows/parallel_construction.h b/mt-kahypar/partition/refinement/flows/parallel_construction.h
+index df92db2b..943b5d3d 100644
+--- a/mt-kahypar/partition/refinement/flows/parallel_construction.h
++++ b/mt-kahypar/partition/refinement/flows/parallel_construction.h
+@@ -29,8 +29,8 @@
+ #include <tbb/concurrent_vector.h>
+ #include <tbb/enumerable_thread_specific.h>
+ 
+-#include "WHFC/algorithm/hyperflowcutter.h"
+-#include "WHFC/algorithm/parallel_push_relabel.h"
++#include "algorithm/hyperflowcutter.h"
++#include "algorithm/parallel_push_relabel.h"
+ 
+ #include "mt-kahypar/partition/context.h"
+ #include "mt-kahypar/datastructures/sparse_map.h"
+diff --git a/mt-kahypar/partition/refinement/flows/sequential_construction.h b/mt-kahypar/partition/refinement/flows/sequential_construction.h
+index 6f39332d..e1a3efad 100644
+--- a/mt-kahypar/partition/refinement/flows/sequential_construction.h
++++ b/mt-kahypar/partition/refinement/flows/sequential_construction.h
+@@ -28,8 +28,8 @@
+ 
+ #include <tbb/concurrent_vector.h>
+ 
+-#include "WHFC/algorithm/hyperflowcutter.h"
+-#include "WHFC/algorithm/sequential_push_relabel.h"
++#include "algorithm/hyperflowcutter.h"
++#include "algorithm/sequential_push_relabel.h"
+ 
+ #include "mt-kahypar/partition/context.h"
+ #include "mt-kahypar/datastructures/sparse_map.h"
