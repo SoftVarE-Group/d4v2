@@ -1,18 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 854e52a6..64064719 100644
+index 8dfb842b..193eaca7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -263,30 +263,27 @@ set(KAHYPAR_PYBIND11_VERSION     v2.13.6)
- message(STATUS "Fetching dependencies...")
+@@ -12,6 +12,8 @@ project(MtKaHyPar
+         LANGUAGES CXX C)
+ set(PROJECT_URL "https://github.com/kahypar/mt-kahypar")
  
- # Include header-only dependencies
++set(CMAKE_CXX_STANDARD 20)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+ #################################################################
+ ## Sanity checks and policies                                  ##
+@@ -425,30 +427,37 @@ FetchContent_Declare(
+ FetchContent_MakeAvailable(cli11)
+ target_link_libraries(MtKaHyPar-Include INTERFACE CLI11::CLI11)
+ 
 -FetchContent_Populate(
 +FetchContent_Declare(
    kahypar-shared-resources QUIET EXLUDE_FROM_ALL
    GIT_REPOSITORY https://github.com/kahypar/kahypar-shared-resources.git
    GIT_TAG        ${KAHYPAR_SHARED_RESOURCES_TAG}
    SOURCE_DIR     external_tools/kahypar-shared-resources
-+  OVERRIDE_FIND_PACKAGE
  )
 -FetchContent_Populate(
 +FetchContent_Declare(
@@ -20,41 +28,34 @@ index 854e52a6..64064719 100644
    GIT_REPOSITORY https://github.com/larsgottesbueren/WHFC.git
    GIT_TAG        ${KAHYPAR_WHFC_TAG}
    SOURCE_DIR     external_tools/WHFC
--)
--FetchContent_Populate(
--  growt QUIET EXLUDE_FROM_ALL
--  GIT_REPOSITORY https://github.com/TooBiased/growt.git
--  GIT_TAG        ${KAHYPAR_GROWT_TAG}
--  SOURCE_DIR     external_tools/growt
-+  OVERRIDE_FIND_PACKAGE
  )
- 
--target_include_directories(MtKaHyPar-Include INTERFACE
++
++FetchContent_MakeAvailable(
++  kahypar-shared-resources
++  WHFC
++)
++
+ target_include_directories(MtKaHyPar-Include INTERFACE
 -                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/kahypar-shared-resources
--                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/growt
--                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools/WHFC)
-+find_package(kahypar-shared-resources)
-+find_package(WHFC)
- 
-+target_include_directories(MtKaHyPar-Include INTERFACE
+-                           ${CMAKE_CURRENT_BINARY_DIR}/external_tools)
 +                           ${kahypar-shared-resources_SOURCE_DIR}
 +                           ${WHFC_SOURCE_DIR})
  
- if (KAHYPAR_ENABLE_TESTING)
-   FetchContent_Declare(
-@@ -438,11 +435,6 @@ if (KAHYPAR_X86 AND KAHYPAR_ENABLE_EXTENDED_INSTRUCTIONS)
-   if(BUILTIN_POPCNT)
-     target_compile_options(MtKaHyPar-BuildFlags INTERFACE -msse4.2)
-   endif()
--  if(BUILTIN_POPCNT AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
--    # growt requires SSE instructions
--    # TODO: it is not clear whether/why Linux is required for growt
--    target_compile_definitions(MtKaHyPar-BuildFlags INTERFACE KAHYPAR_USE_GROWT)
--  endif()
+ if(NOT KAHYPAR_DISABLE_PARLAY)
+-  FetchContent_Populate(
++  FetchContent_Declare(
+     parlay QUIET EXLUDE_FROM_ALL
+     GIT_REPOSITORY https://github.com/cmuparlay/parlaylib.git
+     GIT_TAG        ${KAHYPAR_PARLAY_TAG}
+     SOURCE_DIR     external_tools/parlay
+   )
+-  target_include_directories(MtKaHyPar-Include INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/external_tools/parlay/include)
++  FetchContent_MakeAvailable(parlay)
++  target_include_directories(MtKaHyPar-Include INTERFACE ${parlay_SOURCE_DIR}/include)
+   target_compile_options(MtKaHyPar-BuildFlags INTERFACE -DPARLAY_TBB)
  endif()
  
- if(KAHYPAR_ENABLE_ARCH_COMPILE_OPTIMIZATIONS)
-@@ -506,10 +498,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -568,10 +577,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
        DEPENDS MtKaHyPar-CLI)
    endif()
  
@@ -62,7 +63,6 @@ index 854e52a6..64064719 100644
 -    # library installation target
 -    include(SetupInstallation)
 -  endif()
-+  # library installation target
 +  include(SetupInstallation)
  
    if(KAHYPAR_BUILD_DEBIAN_PACKAGE)

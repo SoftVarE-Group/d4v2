@@ -11,18 +11,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# FIXME: libmtkahypar currently can not be built statically (https://github.com/kahypar/mt-kahypar/pull/161)
 option(BUILD_SHARED_LIBS "Build shared libraries." ON)
+
+set(GPMC_USE_STATIC_LIBS ON)
 
 if(NOT BUILD_SHARED_LIBS)
     set(GMP_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_LIBS ON)
     set(MtKaHyPar_USE_STATIC_LIBS ON)
     set(glucose_USE_STATIC_LIBS ON)
+
+    find_package(TBB REQUIRED)
 endif()
 
-set(GPMC_USE_STATIC_LIBS ON)
-
+find_package(mimalloc)
 find_package(GMP REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(MtKaHyPar REQUIRED)
@@ -155,13 +157,35 @@ add_library(core STATIC
     $<TARGET_OBJECTS:utils>
 )
 
-target_link_libraries(core MtKaHyPar::mtkahypar GPMC::GPMC arjun glucose::glucose GMP::GMPXX GMP::GMP cadiback cadical)
+target_link_libraries(
+  core
+  MtKaHyPar::MtKaHyPar
+  GPMC::GPMC
+  arjun
+  glucose::glucose
+  GMP::GMPXX
+  GMP::GMP
+  cadiback
+  cadical
+)
 
 if(USE_GLUCOSE)
     target_link_libraries(core glucose::glucose)
 endif()
 
+if(NOT BUILD_SHARED_LIBS)
+    target_link_libraries(core TBB::tbb TBB::tbbmalloc)
+endif()
+
 add_executable(d4 src/Main.cpp)
 target_link_libraries(d4 core Boost::program_options)
+
+if(mimalloc_FOUND AND BUILD_SHARED_LIBS)
+    target_link_libraries(d4 mimalloc)
+endif()
+
+if(mimalloc_FOUND AND NOT BUILD_SHARED_LIBS)
+  target_link_libraries(d4 mimalloc-static)
+endif()
 
 install(TARGETS d4)

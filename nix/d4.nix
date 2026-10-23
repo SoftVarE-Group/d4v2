@@ -1,7 +1,6 @@
 {
   lib,
   stdenv,
-  fetchgit,
   cmake,
   boost,
   gmp,
@@ -15,8 +14,24 @@
   glucose,
   cadical,
   cadiback,
+  tbb_2022,
+  mimalloc,
 }:
-stdenv.mkDerivation rec {
+let
+  tbb = tbb_2022.overrideAttrs (
+    finalAttrs: previousAttrs: {
+      meta.badPlatforms = [ ];
+      postPatch = lib.optionalString stdenv.hostPlatform.isMusl ''
+        substituteInPlace test/CMakeLists.txt \
+          --replace-fail 'tbb_add_test(SUBDIR conformance NAME conformance_resumable_tasks DEPENDENCIES TBB::tbb)' "" \
+          --replace-fail 'tbb_add_test(SUBDIR tbb NAME test_eh_algorithms DEPENDENCIES TBB::tbb)' ""
+      '';
+    }
+  );
+
+  enableMimalloc = stdenv.hostPlatform.isLinux;
+in
+stdenv.mkDerivation {
   pname = "d4";
   version = "2.0";
 
@@ -25,7 +40,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake ];
 
   buildInputs = [
-    mt-kahypar.dev
+    mt-kahypar
     cryptominisat.dev
     sbva.dev
     arjun.dev
@@ -37,7 +52,9 @@ stdenv.mkDerivation rec {
     glucose.dev
     cadical.dev
     cadiback.dev
-  ];
+    tbb.dev
+  ]
+  ++ lib.optionals enableMimalloc [ mimalloc.dev ];
 
   meta = with lib; {
     mainProgram = "d4";
