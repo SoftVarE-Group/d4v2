@@ -36,7 +36,7 @@ template <class T, typename U> class NodeManagerTyped : public NodeManager<T> {
   using NodeManager<T>::m_posInMemoryPage;
   using NodeManager<T>::m_data;
   using NodeManager<T>::m_globalStamp;
-  using NodeManager<T>::PAGE_SIZE;
+  using NodeManager<T>::M_PAGE_SIZE;
 
   TrueNode<T> *trueNode;
   FalseNode<T> *falseNode;
@@ -46,7 +46,7 @@ public:
      The constructor allocate the first memory page.
    */
   NodeManagerTyped() {
-    m_data = new uint8_t[PAGE_SIZE];
+    m_data = new uint8_t[M_PAGE_SIZE];
     m_memoryPages.push_back(m_data);
     m_posInMemoryPage = 0;
     m_globalStamp = 0;
@@ -222,10 +222,11 @@ protected:
      \return a pointer on the memory we allocate.
    */
   inline uint8_t *getMemory(unsigned nbBytes) {
-    assert(nbBytes < PAGE_SIZE); // we check out that the PAGE is large enough.
-    if (m_posInMemoryPage + nbBytes >= PAGE_SIZE) {
+    assert(nbBytes <
+           M_PAGE_SIZE); // we check out that the PAGE is large enough.
+    if (m_posInMemoryPage + nbBytes >= M_PAGE_SIZE) {
       m_posInMemoryPage = 0;
-      m_data = new uint8_t[PAGE_SIZE];
+      m_data = new uint8_t[M_PAGE_SIZE];
       m_memoryPages.push_back(m_data);
     }
 
@@ -234,7 +235,7 @@ protected:
   } // getMemory
 
 public:
-  static const unsigned PAGE_SIZE = 1 << 24;
+  static const unsigned M_PAGE_SIZE = 1 << 24;
 
   /**
      The destructor free the memory.
