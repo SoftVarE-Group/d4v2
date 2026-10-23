@@ -24,7 +24,7 @@ if(NOT BUILD_SHARED_LIBS)
     find_package(TBB REQUIRED)
 endif()
 
-find_package(mimalloc REQUIRED)
+find_package(mimalloc)
 find_package(GMP REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(MtKaHyPar REQUIRED)
@@ -180,9 +180,11 @@ endif()
 add_executable(d4 src/Main.cpp)
 target_link_libraries(d4 core Boost::program_options)
 
-if(BUILD_SHARED_LIBS)
+if(mimalloc_FOUND AND BUILD_SHARED_LIBS)
     target_link_libraries(d4 mimalloc)
-else()
+endif()
+
+if(mimalloc_FOUND AND NOT BUILD_SHARED_LIBS)
   target_link_libraries(d4 mimalloc-static)
 endif()
 
