@@ -15,6 +15,7 @@
   cadical,
   cadiback,
   tbb_2022,
+  mimalloc,
 }:
 let
   tbb = tbb_2022.overrideAttrs (
@@ -27,6 +28,8 @@ let
       '';
     }
   );
+
+  enableMimalloc = stdenv.hostPlatform.isLinux;
 in
 stdenv.mkDerivation {
   pname = "d4";
@@ -50,7 +53,8 @@ stdenv.mkDerivation {
     cadical.dev
     cadiback.dev
     tbb.dev
-  ];
+  ]
+  ++ lib.optionals enableMimalloc [ mimalloc.dev ];
 
   meta = with lib; {
     mainProgram = "d4";
