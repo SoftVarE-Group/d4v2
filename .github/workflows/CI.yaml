@@ -33,13 +33,14 @@ jobs:
             flake: d4-static
           - double: aarch64-darwin
             runner: macos-26
-            flake: bundled
+            flake: d4-static
           - double: x86_64-darwin
             runner: macos-26-intel
-            flake: bundled
+            flake: d4-static
+          # TODO: Windows build is currently broken
           # - double: x86_64-windows
           #   runner: ubuntu-24.04
-          #   flake: bundled-windows
+          #   flake: d4-windows
     runs-on: ${{ matrix.target.runner }}
     steps:
       - name: Checkout

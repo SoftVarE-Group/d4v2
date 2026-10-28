@@ -38,17 +38,6 @@ let
   };
 
   enableParlay = !stdenv.hostPlatform.isWindows;
-
-  tbb = tbb_2022.overrideAttrs (
-    finalAttrs: previousAttrs: {
-      meta.badPlatforms = [ ];
-      postPatch = lib.optionalString stdenv.hostPlatform.isMusl ''
-        substituteInPlace test/CMakeLists.txt \
-          --replace-fail 'tbb_add_test(SUBDIR conformance NAME conformance_resumable_tasks DEPENDENCIES TBB::tbb)' "" \
-          --replace-fail 'tbb_add_test(SUBDIR tbb NAME test_eh_algorithms DEPENDENCIES TBB::tbb)' ""
-      '';
-    }
-  );
 in
 stdenv.mkDerivation rec {
   pname = "mt-kahypar";
@@ -68,7 +57,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     boost.dev
-    tbb.dev
+    tbb_2022.dev
   ]
   ++ lib.optionals stdenv.hostPlatform.isWindows [ windows.pthreads ];
 
