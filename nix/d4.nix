@@ -16,6 +16,7 @@
   cadiback,
   tbb_2022,
   mimalloc,
+  enableMimalloc ? stdenv.hostPlatform.isLinux,
 }:
 let
   tbb = tbb_2022.overrideAttrs (
@@ -28,8 +29,6 @@ let
       '';
     }
   );
-
-  enableMimalloc = stdenv.hostPlatform.isLinux;
 in
 stdenv.mkDerivation {
   pname = "d4";
