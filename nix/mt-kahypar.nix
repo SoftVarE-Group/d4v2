@@ -36,6 +36,19 @@ let
     rev = "e1f1dc0ccf930492a2723f7fbef8510d35bf57f5";
     hash = "sha256-Hg4OVHC1LDvBf1tFUMW7YAugnFk0ju1VzgEzT2OoT8Y=";
   };
+
+  enableParlay = !stdenv.hostPlatform.isWindows;
+
+  tbb = tbb_2022.overrideAttrs (
+    finalAttrs: previousAttrs: {
+      meta.badPlatforms = [ ];
+      postPatch = lib.optionalString stdenv.hostPlatform.isMusl ''
+        substituteInPlace test/CMakeLists.txt \
+          --replace-fail 'tbb_add_test(SUBDIR conformance NAME conformance_resumable_tasks DEPENDENCIES TBB::tbb)' "" \
+          --replace-fail 'tbb_add_test(SUBDIR tbb NAME test_eh_algorithms DEPENDENCIES TBB::tbb)' ""
+      '';
+    }
+  );
 in
 stdenv.mkDerivation rec {
   pname = "mt-kahypar";
@@ -55,33 +68,36 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     boost.dev
-    tbb_2022.dev
+    tbb.dev
   ]
   ++ lib.optionals stdenv.hostPlatform.isWindows [ windows.pthreads ];
 
   patches = [
     ./mt-kahypar-cmake.patch
-    ./mt-kahypar-pc.patch
+    ./mt-kahypar-install.patch
     ./mt-kahypar-whfc.patch
-    # ./mt-kahypar-windows.patch
   ];
 
   cmakeFlags = [
-    (lib.cmakeFeature "CMAKE_CXX_STANDARD" "20")
     (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_CLI11" "${cli11}")
     (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_KAHYPAR-SHARED-RESOURCES" "${shared-resources}")
     (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_WHFC" "${WHFC}")
     (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_PARLAY" "${parlay}")
     (lib.cmakeBool "KAHYPAR_DISABLE_HWLOC" true)
-  ]
-  ++ lib.optionals stdenv.hostPlatform.isWindows [ (lib.cmakeBool "BUILD_SHARED_LIBS" true) ];
+    (lib.cmakeBool "KAHYPAR_DISABLE_PARLAY" (!enableParlay))
+  ];
 
   buildPhase = "cmake --build . --target mtkahypar --parallel $NIX_BUILD_CORES";
-  installPhase = ''
-    cmake --install .
-    rm -r $out/include/parlay
-    rm -r $out/share/parlay
-  '';
+
+  installPhase =
+    if enableParlay then
+      ''
+        cmake --install .
+        rm -r $out/include/parlay
+        rm -r $out/share
+      ''
+    else
+      "cmake --install .";
 
   meta = {
     description = "A shared-memory multilevel graph and hypergraph partitioner";
