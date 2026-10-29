@@ -25,14 +25,12 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - double: aarch64-linux # target we are building for
-            runner: ubuntu-24.04-arm # GitHub runner the build is running on
-            flake: bundled # flake package to build
-            interpreter: /lib/ld-linux-aarch64.so.1 # path to libc interpreter
+          - double: aarch64-linux
+            runner: ubuntu-24.04-arm
+            flake: d4-static
           - double: x86_64-linux
             runner: ubuntu-24.04
-            flake: bundled
-            interpreter: /lib64/ld-linux-x86-64.so.2
+            flake: d4-static
           - double: aarch64-darwin
             runner: macos-26
             flake: bundled
@@ -55,15 +53,6 @@ jobs:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build
         run: nix build -L .#${{ matrix.target.flake }}
-      - name: Set interpreter
-        if: ${{ matrix.target.interpreter }}
-        run: |
-          cp -rL result output
-          rm -rf result
-          chmod +w output/bin/*
-          nix run nixpkgs#patchelf -- --set-interpreter ${{ matrix.target.interpreter }} output/bin/*
-          chmod -w output/bin/*
-          mv output result
       - name: Upload
         uses: actions/upload-artifact@v7
         with:
@@ -75,9 +64,9 @@ jobs:
     strategy:
       matrix:
         target:
-          - double: aarch64-linux # target we are building for
-            architecture: arm64 # container architecture label
-            runner: ubuntu-24.04-arm # GitHub runner the build is running on
+          - double: aarch64-linux
+            architecture: arm64
+            runner: ubuntu-24.04-arm
           - double: x86_64-linux
             architecture: amd64
             runner: ubuntu-24.04
