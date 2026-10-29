@@ -4,23 +4,28 @@
 
 ### Pre-built
 
-There are prebuilt binaries available for each commit and release.
-These binaries are bundled with their dependencies.
-For details, see the README inside the release folder.
-
-On (Linux) systems with an older glibc, the normal variant might not work.
-In this case, there is also the portable variant which is a self-extracting archive with everything bundled in one binary.
+There are prebuilt binaries available for each release.
 
 ### Nix
 
 This project can be used and developed via a [Nix][nix] [flake][flake].
+There are two package outputs: One for a dynamically linked executable (`d4`) and one for a static build (`d4-static`)
+which is used for the prebuilt binaries.
 
-With Nix installed simply run the following for a build:
+With Nix installed simply run the following to build a dynamically linked executable:
 
 ```
 nix build
 ```
 
+This will build the default output (`.#d4`).
+For a static build use the following instead:
+
+```
+nix build .#d4-static
+```
+
+You might want to add `-L` for build logs.
 The result will be at `result`.
 
 To build without the need to clone the repository, use:
@@ -50,65 +55,28 @@ The following mounts `<local/directory>` on `/work` inside the container:
 docker run -v <local/directory>:/work d4v2 --input /work/input.cnf --method ddnnf-compiler --dump-ddnnf /work/output.ddnnf
 ```
 
-### Manual
+## Development
 
-#### Prerequisites
-
- - [CMake][cmake]
- - [GMP][gmp] (with C++ bindings)
- - [Boost][boost] (headers and `program_options`)
- - [zlib][zlib] (optional, for glucose)
- - [Mt-KaHyPar][mtkahypar]
-
-#### Build
-
-This is a CMake project.
-To configure a debug build in the `build` directory (will be created), run:
+For a development environment with the dependencies set up, run:
 
 ```
-cmake -B build
+nix develop
 ```
 
-A generator can be specified, for example [Ninja][ninja]:
+### Formatting
+
+We enforce formatting for C++ and Nix code.
+Use the following to format all code:
 
 ```
-cmake -B build -G Ninja
+nix fmt
 ```
 
-Optionally, CMake variables can be set to alter the build:
+A flake check will output any formatting issues:
 
 ```
-cmake -D <variable>=<value> -D <variable>=<value> -B build
+nix flake check -L
 ```
-
-Of interest for this project are:
-
-| Variable               | Value                                                | Description                                                       |
-|------------------------|------------------------------------------------------|-------------------------------------------------------------------|
-| `CMAKE_BUILD_TYPE`     | `Debug`, `Release`, `RelWithDebInfo` or `MinSizeRel` | Whether to create a debug or release build.                       |
-| `D4_SOLVER`            | `minisat` or `glucose`                               | Which SAT solver to use. Defaults to `minisat`.                   |
-| `D4_PREPROC_SOLVER`    | `minisat` or `glucose`                               | Which SAT solver to use for preprocessing. Defaults to `minisat`. |
-| `CMAKE_INSTALL_PREFIX` | Path                                                 | Where to install built files to using `cmake --install`.          |
-| `MtKaHyPar_ROOT`       | Path                                                 | Alternative root directory so search for Mt-KaHyPar.              |
-| `glucose_ROOT`         | Path                                                 | Alternative root directory so search for glucose.                 |
-
-After configuring, build the project with:
-
-```
-cmake --build build
-```
-
-The resulting executable will be built at `build/d4`.
-
-#### Install
-
-To install the built files, use:
-
-```
-cmake --install build
-```
-
-The installation prefix can be changed as described in the build section.
 
 ## Usage
 
@@ -126,13 +94,6 @@ d4 --input /path/to/input.cnf --method ddnnf-compiler --dump-ddnnf /path/to/outp
 
 [nix]: https://nixos.org
 [flake]: https://nixos.wiki/wiki/Flakes
-[cmake]: https://cmake.org
-[gmp]: https://gmplib.org
-[boost]: https://boost.org
-[zlib]: https://zlib.net
-[ninja]: https://github.com/ninja-build/ninja
-[mtkahypar]: https://github.com/kahypar/mt-kahypar
-[msys2]: https://msys2.org
 [docker]: https://docker.com
 [podman]: https://podman.io
 [container]: https://github.com/SoftVarE-Group/d4v2/pkgs/container/d4v2

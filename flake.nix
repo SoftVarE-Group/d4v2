@@ -27,162 +27,62 @@
         "x86_64-linux"
       ];
 
-      # If building for Windows, appends -windows, otherwise nothing.
-      windowsSuffix = pkgs: name: if pkgs.stdenv.hostPlatform.isWindows then "${name}-windows" else name;
-
-      # All required runtime dependencies.
-      dependencies =
-        pkgs:
-        let
-          system = pkgs.stdenv.buildPlatform.system;
-          windowsSuffix' = windowsSuffix pkgs;
-        in
-        pkgs.buildEnv {
-          name = "d4-dependencies";
-          paths = [
-            self.packages.${system}.${windowsSuffix' "mt-kahypar"}
-            pkgs.tbb_2022
-            pkgs.boost
-          ]
-          ++ lib.optionals pkgs.stdenv.cc.isGNU [ pkgs.libgcc ]
-          ++ lib.optionals pkgs.stdenv.cc.isClang [ pkgs.libcxx ];
-        };
-
-      documentation =
-        pkgs:
-        pkgs.stdenv.mkDerivation {
-          name = "d4-documentation";
-          src = ./doc;
-          installPhase = ''
-            mkdir $out
-            cp ${pkgs.stdenv.system}.md $out/README.md
-          '';
-        };
-
-      # The binary with all dependencies.
-      bundled =
-        pkgs:
-        let
-          system = pkgs.stdenv.buildPlatform.system;
-          windowsSuffix' = windowsSuffix pkgs;
-        in
-        pkgs.buildEnv {
-          name = "d4";
-          paths = [
-            self.packages.${system}.${windowsSuffix' "d4"}
-            self.packages.${system}.${windowsSuffix' "dependencies"}
-            self.packages.${system}.${windowsSuffix' "documentation"}
-          ];
-        };
-
       treefmt =
         system:
         (treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} ./nix/treefmt.nix).config.build;
     in
     {
       formatter = lib.genAttrs systems (system: (treefmt system).wrapper);
+
+      overlays.default = final: prev: {
+        # Enable TBB to be built statically.
+        tbb_2022 = prev.tbb_2022.overrideAttrs (
+          finalAttrs: previousAttrs: {
+            meta.badPlatforms = [ ];
+            postPatch = lib.optionalString prev.stdenv.hostPlatform.isMusl ''
+              substituteInPlace test/CMakeLists.txt \
+                --replace-fail 'tbb_add_test(SUBDIR conformance NAME conformance_resumable_tasks DEPENDENCIES TBB::tbb)' "" \
+                --replace-fail 'tbb_add_test(SUBDIR tbb NAME test_eh_algorithms DEPENDENCIES TBB::tbb)' ""
+            '';
+          }
+        );
+
+        glucose = final.callPackage ./nix/glucose.nix { };
+        cadical = final.callPackage ./nix/cadical.nix { };
+        cadiback = final.callPackage ./nix/cadiback.nix { };
+        cryptominisat = final.callPackage ./nix/cryptominisat.nix { };
+        sbva = final.callPackage ./nix/sbva.nix { };
+        arjun = final.callPackage ./nix/arjun.nix { };
+        gpmc = final.callPackage ./nix/gpmc.nix { };
+        mt-kahypar = final.callPackage ./nix/mt-kahypar.nix { };
+        d4 = final.callPackage ./nix/d4.nix { };
+      };
+
       packages = lib.genAttrs systems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
-          pkgs-static = pkgs.pkgsStatic;
-          pkgs-windows = pkgs.pkgsCross.mingwW64;
+          pkgs = nixpkgs.legacyPackages.${system}.extend self.overlays.default;
         in
         {
           default = self.packages.${system}.d4;
 
-          glucose = pkgs-static.callPackage ./nix/glucose.nix { };
-          glucose-windows = pkgs-windows.callPackage ./nix/glucose.nix { };
+          d4 = pkgs.d4;
+          d4-static = pkgs.pkgsStatic.d4;
+          # TODO: Windows build is currently broken
+          # d4-windows = pkgs.pkgsCross.mingwW64.d4;
 
-          cadical = pkgs-static.callPackage ./nix/cadical.nix { };
-          cadical-windows = pkgs-windows.callPackage ./nix/cadical.nix { };
-
-          cadiback = pkgs-static.callPackage ./nix/cadiback.nix {
-            cadical = self.packages.${system}.cadical;
-          };
-
-          cadiback-windows = pkgs-windows.callPackage ./nix/cadiback.nix {
-            cadical = self.packages.${system}.cadical-windows;
-          };
-
-          cryptominisat = pkgs-static.callPackage ./nix/cryptominisat.nix {
-            cadical = self.packages.${system}.cadical;
-            cadiback = self.packages.${system}.cadiback;
-          };
-
-          cryptominisat-windows = pkgs-windows.callPackage ./nix/cryptominisat.nix {
-            cadical = self.packages.${system}.cadical-windows;
-            cadiback = self.packages.${system}.cadiback-windows;
-          };
-
-          sbva = pkgs-static.callPackage ./nix/sbva.nix { };
-          sbva-windows = pkgs-windows.callPackage ./nix/sbva.nix { };
-
-          arjun = pkgs-static.callPackage ./nix/arjun.nix {
-            cryptominisat = self.packages.${system}.cryptominisat;
-            sbva = self.packages.${system}.sbva;
-          };
-
-          arjun-windows = pkgs-windows.callPackage ./nix/arjun.nix {
-            cryptominisat = self.packages.${system}.cryptominisat-windows;
-            sbva = self.packages.${system}.sbva-windows;
-          };
-
-          gpmc = pkgs-static.callPackage ./nix/gpmc.nix {
-            arjun = self.packages.${system}.arjun;
-            cryptominisat = self.packages.${system}.cryptominisat;
-          };
-
-          gpmc-windows = pkgs-windows.callPackage ./nix/gpmc.nix {
-            arjun = self.packages.${system}.arjun-windows;
-            cryptominisat = self.packages.${system}.cryptominisat-windows;
-          };
-
-          mt-kahypar = pkgs.callPackage ./nix/mt-kahypar.nix { };
-          mt-kahypar-static = pkgs-static.callPackage ./nix/mt-kahypar.nix { };
-          mt-kahypar-windows = pkgs-windows.callPackage ./nix/mt-kahypar.nix { };
-
-          d4 = pkgs.callPackage ./nix/d4.nix {
-            mt-kahypar = self.packages.${system}.mt-kahypar;
-            cryptominisat = self.packages.${system}.cryptominisat;
-            sbva = self.packages.${system}.sbva;
-            arjun = self.packages.${system}.arjun;
-            gpmc = self.packages.${system}.gpmc;
-            glucose = self.packages.${system}.glucose;
-            cadical = self.packages.${system}.cadical;
-            cadiback = self.packages.${system}.cadiback;
-          };
-
-          d4-static = pkgs-static.callPackage ./nix/d4.nix {
-            mt-kahypar = self.packages.${system}.mt-kahypar-static;
-            cryptominisat = self.packages.${system}.cryptominisat;
-            sbva = self.packages.${system}.sbva;
-            arjun = self.packages.${system}.arjun;
-            gpmc = self.packages.${system}.gpmc;
-            glucose = self.packages.${system}.glucose;
-            cadical = self.packages.${system}.cadical;
-            cadiback = self.packages.${system}.cadiback;
-          };
-
-          d4-windows = pkgs-windows.callPackage ./nix/d4.nix {
-            mt-kahypar = self.packages.${system}.mt-kahypar-windows;
-            cryptominisat = self.packages.${system}.cryptominisat-windows;
-            sbva = self.packages.${system}.sbva-windows;
-            arjun = self.packages.${system}.arjun-windows;
-            gpmc = self.packages.${system}.gpmc-windows;
-            glucose = self.packages.${system}.glucose-windows;
-            cadical = self.packages.${system}.cadical-windows;
-            cadiback = self.packages.${system}.cadiback-windows;
-          };
-
-          container = pkgs.dockerTools.buildLayeredImage {
+          container = pkgs.dockerTools.buildImage {
             name = "d4";
-            contents = [
-              self.packages.${system}.d4
-              nixpkgs.legacyPackages.${system}.time
-            ];
+            copyToRoot = pkgs.buildEnv {
+              name = "d4";
+              paths = [
+                pkgs.pkgsStatic.d4
+                pkgs.time
+              ];
+              pathsToLink = [ "/bin" ];
+            };
             config = {
-              Entrypoint = [ "/bin/d4" ];
+              Entrypoint = [ "d4" ];
               Labels = {
                 "org.opencontainers.image.source" = "https://github.com/SoftVarE-Group/d4v2";
                 "org.opencontainers.image.description" = "A CNF to d-DNNF compiler";
@@ -190,15 +90,6 @@
               };
             };
           };
-
-          dependencies = dependencies pkgs;
-          dependencies-windows = dependencies pkgs-windows;
-
-          documentation = documentation pkgs;
-          documentation-windows = documentation pkgs-windows;
-
-          bundled = bundled pkgs;
-          bundled-windows = bundled pkgs-windows;
         }
       );
 
@@ -209,8 +100,7 @@
       devShells = lib.genAttrs systems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
-          selfPkgs = self.packages.${system};
+          pkgs = nixpkgs.legacyPackages.${system}.extend self.overlays.default;
         in
         {
           default = pkgs.mkShell {
@@ -220,10 +110,10 @@
 
             buildInputs = [
               pkgs.boost.dev
+              pkgs.glucose.dev
               pkgs.gmp.dev
-              selfPkgs.mt-kahypar
-              selfPkgs.glucose.dev
-              selfPkgs.gpmc.dev
+              pkgs.gpmc.dev
+              pkgs.mt-kahypar
             ];
           };
         }
